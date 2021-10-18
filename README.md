@@ -1,3 +1,3 @@
 # Automatic-Sanitizing-System
 ## IoT Automatic Door Handle Sanitizing System
-By David Hutchins, Austin Welch, Branden Evangelista Brontë Cadogan
+By David Hutchins, Austin Welch, Branden Evangelista, and Brontë Cadogan

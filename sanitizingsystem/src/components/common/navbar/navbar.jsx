@@ -19,13 +19,13 @@ function Navbar() {
         <nav>
           <ul>
             <li>
-              <Link to="/">Home</Link>
+              <Link to="/" className="link">Home</Link>
             </li>
             <li>
-              <Link to="/stats">Sanitizing Statistics</Link>
+              <Link to="/stats" className="link">Sanitizing Statistics</Link>
             </li>
             <li>
-              <Link to="/levels">Power Levels</Link>
+              <Link to="/levels"className="link">Power Levels</Link>
             </li>
           </ul>
         </nav>

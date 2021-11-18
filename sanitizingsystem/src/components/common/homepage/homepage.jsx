@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './homepage.css'
+import ProgressBar from 'react-bootstrap/ProgressBar'
 
 function Home() {
+   
     return (
-       <section>
-           Hello
-       </section>
+        <useEffect>FUCK</useEffect>
 
     )
 }

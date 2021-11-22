@@ -6,14 +6,14 @@ import {Navbar} from '../../common';
 
 function Header() {
     return (
-        <section className="header">
-            <section className="header-top">
-                        <section className="header-top-logo">
+        <section>
+            <section>
+                        <section>
                                {/**  <a href="/" className="header-logo"> <img src={AppLogo} alt="logo" className="header-logo-img"/></a> */} 
                             <Navbar/>
                         </section>
                 </section>
-                            <section className="SideNavBar">
+                            <section>
                             </section>
                             </section>
     )

@@ -6,7 +6,7 @@ import ProgressBar from 'react-bootstrap/ProgressBar'
 
 function Levels() {
     return (
-           <div id="Header">
+           <div id="page">
                <Devices/>
            </div>
 

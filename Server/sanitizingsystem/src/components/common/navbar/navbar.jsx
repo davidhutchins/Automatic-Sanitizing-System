@@ -13,7 +13,7 @@ import {
 
 function Navbar() {
     return (
-       <section>
+       <section id="router">
            <Router>
       <div>
         <nav>
@@ -27,6 +27,9 @@ function Navbar() {
             <li>
               <Link to="/levels"className="link">Power Levels</Link>
             </li>
+            <li>
+              <Link to={GUIDE} target="_blank"className="link">Setup Guide</Link>
+            </li>
           </ul>
         </nav>
         <Switch>
@@ -39,10 +42,14 @@ function Navbar() {
           <Route path="/">
             <Home />
           </Route>
+          <Route path="/guide" component={() => { 
+     window.location.href = {GUIDE} 
+     return null;
+}}/>
+
         </Switch>
       </div>
     </Router>
-      <a href= {GUIDE} rel="noreferrer" target = "_blank" className="setup_guide">Setup Guide</a>
        </section>
 
     )

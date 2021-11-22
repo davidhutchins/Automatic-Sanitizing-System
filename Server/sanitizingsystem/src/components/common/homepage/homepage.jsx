@@ -5,7 +5,9 @@ import ProgressBar from 'react-bootstrap/ProgressBar'
 function Home() {
    
     return (
-        <useEffect>FUCK</useEffect>
+       <div>
+           hi mom
+       </div>
 
     )
 }

@@ -1,0 +1,35 @@
+.content{
+    position: absolute;
+    top: 50%;
+    left: 35%;
+    width: 100px;
+    height: 100px;
+    margin-top: 0%;
+    }
+
+    #pageTitle{
+        width: max-content;
+        margin-top: 0;
+        margin-left: 60%;
+        font-size: xxx-large;
+    }
+
+    #subheader{
+        font-size: large;
+        margin-top: 0;
+        width: max-content;
+    }
+   
+    #germKill{
+        font-size: large;
+        margin-top: 0;
+        width: max-content;
+        margin-left: 60%;
+    }
+
+    #deviceStatistics{
+        font-size: large;
+        margin-top: 0;
+        width: max-content;
+        margin-left: 150%;
+    }

@@ -3,19 +3,7 @@
     list-style-type: none;
   }
 
-  .setupGuide{
-    position:fixed;
-    top:0;
-    width: 100%;
-  }
-
-  .setupGuide a {
-    float: left;
-  display: block;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-  }
+  
  #router
  {
     position:fixed;

@@ -5,7 +5,7 @@ import './stats.css'
 function Stats() {
   
     return (
-       <section className="header">
+       <section className="content">
            
            <div id="pageTitle">
                <h1>Sanitizing Statistics</h1>

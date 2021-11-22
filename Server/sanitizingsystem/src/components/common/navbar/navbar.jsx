@@ -46,7 +46,6 @@ function Navbar() {
      window.location.href = {GUIDE} 
      return null;
 }}/>
-
         </Switch>
       </div>
     </Router>

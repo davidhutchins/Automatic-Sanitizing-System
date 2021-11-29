@@ -1,0 +1,12 @@
+#top{
+    position:fixed;
+    top:0;
+    width: 100%;
+}
+
+#undertop
+{
+        position:relative;
+        top:100px;
+        width: 100%;
+}

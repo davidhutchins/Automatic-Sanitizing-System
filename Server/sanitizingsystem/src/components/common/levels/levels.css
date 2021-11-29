@@ -25,4 +25,26 @@
         width: max-content;
         font-size: large;
     }
+
+    #devID{
+        margin-top: 0;
+        margin-left: 0%;
+        width: max-content;
+        font-size: x-large;
+    }
+
+    #bat
+    {
+        margin-top: 0;
+        text-align: center;
+        margin-left: 300%;
+        font-size: x-large;
+    }
    
+    #frce
+    {
+        margin-top: 0;
+        text-align: center;
+        margin-left: 300%;
+        font-size: x-large;
+    }

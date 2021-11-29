@@ -2,18 +2,19 @@ import React from "react";
 import "./levels.css";
 import { deviceData } from "./pwr";
 import ProgressBar from 'react-bootstrap/ProgressBar'
+import { Col } from "react-bootstrap";
 
 
 
 //Title Bar
 const PageTitle = () => {
     return (
+        <div className="page">
       <header id="page-title">
-        <h2>Sanitizer Power Levels</h2>
-        
-      </header>
-      
-      
+        <h2>Sanitizer Power Levels</h2>  
+      </header> 
+</div>
+
     );
   };
 
@@ -29,8 +30,8 @@ export const Devices = () => {
                 key={key}
                 DeviceID={data.DeviceID}
                 Battery={data.Battery}
-                DoorsSanitized={data.DoorsSanitized}
-                GermsKilled={data.GermsKilled}
+              //  DoorsSanitized={data.DoorsSanitized}
+               // GermsKilled={data.GermsKilled}
               />
             </div>
           );
@@ -46,22 +47,26 @@ const Device = ({ DeviceID, Battery, DoorsSanitized, GermsKilled }) => {
   if (!DeviceID) return <div />;
   return (
     <table>
-                  <ProgressBar variant="success" now={DeviceID} />
       <tbody>
         <tr>
           <td>
-            <h5>{DeviceID}</h5>
+            <h5 id="devID">{DeviceID}</h5>
                   
           </td>
+
           <td>
-            <h5>{Battery}</h5>
+            <Col id= "frce">
+            <h5 id="bat">{Battery}</h5>
+            </Col>
           </td>
-          <td>
+       {/* 
+         <td>
             <h4>{DoorsSanitized}</h4>
           </td>
           <td>
             <p>{GermsKilled}</p>
           </td>
+          */} 
         </tr>
       </tbody>
     </table>

@@ -20,16 +20,41 @@
         width: max-content;
     }
    
+ {/*
     #germKill{
         font-size: large;
         margin-top: 0;
         width: max-content;
         margin-left: 60%;
     }
+*/}
 
     #deviceStatistics{
         font-size: large;
         margin-top: 0;
         width: max-content;
         margin-left: 150%;
+    }
+
+    #title{
+        margin-top: 0;
+        margin-left: 0%;
+        width: max-content;
+        font-size: x-large;
+    }
+
+    #numsanis{
+        text-align: center;
+        margin-top: 0;
+        margin-left: 40%;
+        width: max-content;
+        font-size: x-large;
+    }
+
+    #germy{
+        text-align: center;
+        margin-top: 0;
+        margin-left: 0%;
+        width: max-content;
+        font-size: x-large;
     }

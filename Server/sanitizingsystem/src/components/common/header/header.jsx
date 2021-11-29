@@ -7,15 +7,20 @@ import {Navbar} from '../../common';
 function Header() {
     return (
         <section>
-            <section>
-                        <section>
+            <section id="top">
+                
+                <Navbar/>
+            </section>
+
+            <section id="undertop" >
+                
+                            
                                {/**  <a href="/" className="header-logo"> <img src={AppLogo} alt="logo" className="header-logo-img"/></a> */} 
-                            <Navbar/>
-                        </section>
-                </section>
+            </section>
+                
                             <section>
-                            </section>
-                            </section>
+            </section>
+        </section>
     )
 }
 

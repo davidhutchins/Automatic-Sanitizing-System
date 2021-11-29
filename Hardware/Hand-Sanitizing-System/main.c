@@ -5,6 +5,7 @@
 #include "driverlib.h"
 
 int count = 0;
+#define half_second  0xF424
 
 /****** Initializing GPIO and Interrupts for main and safety mechanisms ******/
 void gpio_init(void) {
@@ -23,16 +24,11 @@ void gpio_init(void) {
 
 void timer_init(void)
 {
-    TA1CTL |= (BIT9 | ~BIT8)    //Timer A source = SMCLK
-           | (BIT7 | BIT6)      //Input divider: /8
-           | (~BIT5 | ~BIT4)    //Mode control: Stop mode
-           | (BIT2)             //Clear timer A
-           | (BIT1);            //Timer A interrupt enable
-
-    TA1EX0 |= (BIT2 | BIT1 | BIT0);  // Dividing by 8 a second time.
-
-    TA1CCR0 |= 0xF44C; // Set the overflow value to be 0xF4CC, or 62540, which is 4x (1MHz / 64). So each timer is 4 seconds
-    TA1IV |= 0x0E; //Set the interrupt source to the TA1CTL register
+    TA1CTL = TASSEL_2 | MC_1 | ID_3;    // Configuring Timer A1 to SMCLK, Mode 1, and Divider 8.
+    TA1CCTL0 = CCIE;                    // Enabling interrupt for CC0 on Timer A1
+    // TA1EX0 |= (BIT2 | BIT1 | BIT0);  // Dividing by 8 a second time.
+    TA1CCR0 = 0;                        // Timer will start when this is set to a nonzero value.
+    // TA1IV |= 0x0E;                   // Set the interrupt source to the TA1CTL register
 }
 
 /****** Helper Function To Start the Timer ******/
@@ -46,12 +42,12 @@ void start_timer(void)
 /****** Helper Function to Stop Timer ******/
 void stop_timer(void)
 {
-    TA1CTL |= (~BIT5 | ~BIT4);         // Mode control: STOP mode
+    TA1CTL |= (~BIT5 | ~BIT4);          // Mode control: STOP mode
 }
 
 void main(void)
 {
-    WDTCTL = WDTPW | WDTHOLD;   // stop watchdog timer
+    WDTCTL = WDTPW | WDTHOLD;           // stop watchdog timer
 
     //Initialize relevant modules
     gpio_init();
@@ -66,34 +62,33 @@ void main(void)
 #pragma vector=PORT1_VECTOR
 __interrupt void Port_1_interrupt(void)
 {
-    if (P1IFG & BIT2)
+    if (P1IFG & BIT2)       // Bit 2 is safety (low-to-high)
     {
+        count = 0;
         P1IFG &= ~BIT2;     // clearing the interrupt flag
         P6OUT &= ~BIT1;
+        
     }
-    else if (P1IFG & BIT4)
+    else if (P1IFG & BIT4)  // Bit 4 is main mechanism (high-to-low)
     {
-        P1IFG &= ~BIT4;     // clearing the interrupt flag
-        P6OUT ^= BIT1;
-        P6OUT |= BIT2;
-        start_timer();
+        count = 0;
+        P1IFG &= ~BIT4;         // clearing the interrupt flag
+        P6OUT |= BIT1;
+        TA1CCR0 = half_second;  // Start the timer
     }
 }
 /****** Timer Interrupt ******/
 #pragma vector=TIMER1_A1_VECTOR
 __interrupt void Timer_A_interrupt(void)
 {
-    TA1CTL &= ~BIT0;       // Clear interrupt flag
-    if (count < 15)
+    if (count < 4)      // With a clock time of .5 seconds. This will count for 2 seconds.
     {
         count++;
-        // start_timer();  // Interrupt should automatically restart the timer
     }
-
     else
     {
         count = 0;
-        P6OUT &= ~BIT2; // Turn off light after time has passed
-        stop_timer();   // Stop the timer now that 1 minute has passed
+        P6OUT &= ~BIT1; // Turn off light after time has passed
+        TA1CCR0 = 0;    // Stop the timer
     }
 }

@@ -8,7 +8,13 @@ char PASSKEY[100]     =    "hotspotpassword";
 
 int main(void)
 {
-	WDTCTL = WDTPW | WDTHOLD;
+    char request[1024];
+    char requestTemplate[512];
+    char parsedResponse[1024];
+
+    WDT_A_hold(WDT_A_BASE);
+    PMM_unlockLPM5();
+    printf("Starting!");
 	
 	int32_t retVal;
 
@@ -26,13 +32,6 @@ int main(void)
 
     sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
 
-    connectionType = conntype;
-    if (connectionType == CLOSE_CONNECTION)
-    {
-        disconnectFromAP();
-        sl_Stop(0xFF);
-    }
-
     sprintf(request, requestTemplate, "/ping");
     if (sendRequestToServer(request))
     {
@@ -48,5 +47,4 @@ int main(void)
     printf("Could not connect to server. Retrying.\n");
     return 0;
 	
-	return 0;
 }

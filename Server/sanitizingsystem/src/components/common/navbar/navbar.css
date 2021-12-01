@@ -1,0 +1,10 @@
+
+ ul {
+    list-style-type: none;
+  }
+
+  .link{
+    text-align: left;
+    position: relative;
+    left:-40px;
+  }

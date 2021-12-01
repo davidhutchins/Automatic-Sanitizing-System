@@ -2,7 +2,6 @@
 ## IoT Automatic Door Handle Sanitizing System
 
 By David Hutchins, Austin Welch, Branden Evangelista, and Brontë Cadogan
-Success! Created sanitizingsystem at C:\Users\Techn\Desktop\Automatic-Sanitizing-System\sanitizingsystem
 
 ## Building the Embedded Code
 ### Install CCS

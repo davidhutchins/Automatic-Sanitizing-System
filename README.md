@@ -4,7 +4,22 @@
 By David Hutchins, Austin Welch, Branden Evangelista, and Brontë Cadogan
 Success! Created sanitizingsystem at C:\Users\Techn\Desktop\Automatic-Sanitizing-System\sanitizingsystem
 
-# Running the Automatic Hand Cleaning System App on a Local Machine
+## Building the embedded code
+### Install CCS
+1. Download CCS from https://www.ti.com/tool/download/CCSTUDIO
+2. Proceed through the installer, when asked to select between full and custom installation, choose custom and click next
+3. On 'Select Components' Select 'SimpleLink MSP432 low power + performance MCUs
+4. On the next page, select only 'Spectrum Digital Debug Probes and Boards'
+5. Proceed until program is installed
+
+### In CCS
+1. Goto File > Import 
+2. Choose Code Composer Studio > CCS Projects
+3. Clone/Download the repository and select Hardware > Hand-Sanitizing-System as the search directory
+4. Select Hand-Sanitizing-System_MSP432 and Finish
+5. Hit the hammer icon on the top left bar to build the project
+
+## Running the Automatic Hand Cleaning System App (Webapp) on a Local Machine
 Make sure NodeJS is installed https://nodejs.org/en/
 
 Download the the repo from GitHub using 

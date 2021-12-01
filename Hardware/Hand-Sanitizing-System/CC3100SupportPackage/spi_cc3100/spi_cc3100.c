@@ -44,22 +44,14 @@
 #define ASSERT_CS()          (P4OUT &= ~BIT4)
 #define DEASSERT_CS()        (P4OUT |= BIT4)
 
-#ifdef ENABLE_DMA
-unsigned long g_ucDinDout[20];
-#define DMA_BUFF_SIZE_MIN               100
-#define MAX_DMA_RECV_TRANSACTION_SIZE   1024
-#endif
 
 int spi_Close(Fd_t fd)
 {
     /* Disable WLAN Interrupt ... */
     CC3100_InterruptDisable();
 
-#ifdef SL_PLATFORM_MULTI_THREADED
-    return OSI_OK;
-#else
     return NONOS_RET_OK;
-#endif
+
 }
 
 Fd_t spi_Open(char *ifName, unsigned long flags)
@@ -85,11 +77,6 @@ Fd_t spi_Open(char *ifName, unsigned long flags)
     UCB0BR1 = 0;
     UCB0CTL1 &= ~UCSWRST;
 
-#ifdef ENABLE_DMA
-    memset(g_ucDinDout,0xFF,sizeof(g_ucDinDout));
-
-    DMACTL0 = DMA1TSEL_18+DMA0TSEL_19;    /* DMA0 - UCA0TXIFG */
-#endif
 
     /* P1.6 - WLAN enable full DS */
     P6SELC &= ~BIT2;
@@ -113,82 +100,30 @@ Fd_t spi_Open(char *ifName, unsigned long flags)
     /* Enable WLAN interrupt */
     CC3100_InterruptEnable();
 
-#ifdef SL_PLATFORM_MULTI_THREADED
-    return OSI_OK;
-#else
     return NONOS_RET_OK;
-#endif
+
 }
-
-#ifdef ENABLE_DMA
-void SetupDMASend(unsigned char *ucBuff,int len)
-{
-
-    UCB0IFG &= ~UCTXIFG;
-
-    /* Setup DMA0 */
-    __data16_write_addr((unsigned short) &DMA0SA,(unsigned long) ucBuff);
-                                            /* Source block address */
-
-    __data16_write_addr((unsigned short) &DMA0DA,(unsigned long) &UCB0TXBUF);
-                                            /* Destination address */
-
-    DMA0SZ = len;                           /* Block size */
-    DMA0CTL = DMADT_0 + DMASRCINCR_3 + DMASBDB + DMAEN + DMALEVEL;
-
-
-    __data16_write_addr((unsigned short) &DMA1SA,(unsigned long) &UCB0RXBUF);
-                                            /* Source block address */
-
-    __data16_write_addr((unsigned short) &DMA1DA,(unsigned long) &g_ucDinDout[5]);
-                                            /* Destination single address */
-
-    DMA1SZ = len;                             /* Block size */
-
-    DMA1CTL = DMADT_0 + DMADSTINCR_0 + DMASBDB + DMALEVEL + DMAEN;
-
-    /* Signal to start xfer */
-    UCB0IFG |=  UCTXIFG;
-
-    /* Wait for completation of DMA xfer */
-    while(!(DMA0CTL&DMAIFG) || !(DMA1CTL&DMAIFG));
-}
-#endif
 
 
 int spi_Write(Fd_t fd, unsigned char *pBuff, int len)
 {
     int len_to_return = 0;
 
-#ifdef ENABLE_DMA
-    unsigned int pBuffAddr = (unsigned int)pBuff;
-#endif
 
     ASSERT_CS();
 
-#ifdef ENABLE_DMA
 
-    if( len > DMA_BUFF_SIZE_MIN && ((pBuffAddr % 2 == 0)))
+    len_to_return = len;
+    while (len)
     {
-        SetupDMASend(pBuff,len);
-        len_to_return += len;
+        while (!(UCB0IFG&UCTXIFG));
+        UCB0TXBUF = *pBuff;
+        while (!(UCB0IFG&UCRXIFG));
+        UCB0RXBUF;
+        len --;
+        pBuff++;
     }
-    else
-    {
-#endif
-        len_to_return = len;
-        while (len)
-        {
-            while (!(UCB0IFG&UCTXIFG));
-            UCB0TXBUF = *pBuff;
-            while (!(UCB0IFG&UCRXIFG));
-            UCB0RXBUF;
-            len --;
-            pBuff++;
-        }
-#ifdef ENABLE_DMA
-    }
-#endif
+
 
     /* At lower SPI clock frequencies the clock may not be in idle state
      * soon after exiting the above loop. Therefore, the user should poll for
@@ -199,78 +134,16 @@ int spi_Write(Fd_t fd, unsigned char *pBuff, int len)
      */
 
     DEASSERT_CS();
+
     return len_to_return;
 }
-
-#ifdef ENABLE_DMA
-void SetupDMAReceive(unsigned char *ucBuff,int len)
-{
-    UCB0IFG &= ~UCTXIFG;
-
-    /* Setup DMA1 */
-    __data16_write_addr((unsigned short) &DMA1SA,(unsigned long) &UCB0RXBUF);
-                                            /* Source block address */
-
-    __data16_write_addr((unsigned short) &DMA1DA,(unsigned long) ucBuff);
-                                            /* Destination single address */
-
-    DMA1SZ = len;                           /* Block size */
-
-    DMA1CTL = DMADT_0 + DMADSTINCR_3 + DMASBDB + DMALEVEL + DMAEN;
-
-
-    // Set up DMA0
-    __data16_write_addr((unsigned short) &DMA0SA,(unsigned long) &g_ucDinDout[10]);
-                                            /* Source block address */
-
-    __data16_write_addr((unsigned short) &DMA0DA,(unsigned long) &UCB0TXBUF);
-                                            /* Destination address */
-
-    DMA0SZ = len;                           /* Block size */
-    DMA0CTL = DMADT_0 + DMASRCINCR_0 + DMASBDB + DMALEVEL + DMAEN;
-
-    /* Signal DMA xfer */
-    UCB0IFG |=  UCTXIFG;
-
-    /* Wait for completation of DMA xfer */
-    while(!(DMA0CTL&DMAIFG) || !(DMA1CTL&DMAIFG));
-}
-#endif
 
 int spi_Read(Fd_t fd, unsigned char *pBuff, int len)
 {
     int i = 0;
-#ifdef ENABLE_DMA
-    int read_size = 0;
-    unsigned int pBuffAddr = (unsigned int)pBuff;
-#endif
 
     ASSERT_CS();
 
-#ifdef ENABLE_DMA
-
-    if(len>DMA_BUFF_SIZE_MIN && ((pBuffAddr % 2) == 0) )
-    {
-        while (len>0)
-        {
-            if( len < MAX_DMA_RECV_TRANSACTION_SIZE)
-            {
-                SetupDMAReceive(&pBuff[read_size],len);
-                read_size += len;
-                len = 0;
-            }
-            else
-            {
-                SetupDMAReceive(&pBuff[read_size],MAX_DMA_RECV_TRANSACTION_SIZE);
-                read_size += MAX_DMA_RECV_TRANSACTION_SIZE;
-                len -= MAX_DMA_RECV_TRANSACTION_SIZE;
-            }
-        }
-        len = read_size;
-    }
-    else
-    {
-#endif
     for (i = 0; i < len; i ++)
     {
         while (!(UCB0IFG&UCTXIFG));
@@ -278,9 +151,7 @@ int spi_Read(Fd_t fd, unsigned char *pBuff, int len)
         while (!(UCB0IFG&UCRXIFG));
         pBuff[i] = UCB0RXBUF;
     }
-#ifdef ENABLE_DMA
-  }
-#endif
+
 
     /* At lower SPI clock frequencies the clock may not be in idle state
      * soon after exiting the above loop. Therefore, the user should poll for

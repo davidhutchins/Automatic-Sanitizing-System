@@ -8,11 +8,13 @@ char PASSKEY[100]     =    "hotspotpassword";
 
 int main(void)
 {
+    stopWDT();
+    initClk();
+
     char request[1024];
     char requestTemplate[512];
     char parsedResponse[1024];
 
-    WDT_A_hold(WDT_A_BASE);
     PMM_unlockLPM5();
     printf("Starting!");
 	

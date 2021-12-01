@@ -6,18 +6,21 @@ import {Navbar} from '../../common';
 
 function Header() {
     return (
-        <section className="header">
-            <section className="header-top">
-                        <section className="header-top-logo">
-                                 <a href="/" className="header-logo"> <img src={AppLogo} alt="logo" className="header-logo-img"/></a>
-                        </section>
-                        
+        <section>
+            <section id="top">
+                
+                <Navbar/>
+            </section>
 
-                </section>
-                            <section className="SideNavBar">
-                            <Navbar/>
-                            </section>
-                            </section>
+            <section id="undertop" >
+                
+                            
+                               {/**  <a href="/" className="header-logo"> <img src={AppLogo} alt="logo" className="header-logo-img"/></a> */} 
+            </section>
+                
+                            <section>
+            </section>
+        </section>
     )
 }
 

@@ -3,8 +3,18 @@
     list-style-type: none;
   }
 
-  .link{
-    text-align: left;
-    position: relative;
-    left:-40px;
-  }
+  
+ #router
+ {
+    position:fixed;
+    top:0;
+    width: 100%;
+ }
+
+ #router a {
+  float: left;
+  display: block;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}

@@ -1,0 +1,22 @@
+#homepageContent{
+position: absolute;
+top: 50%;
+left: 35%;
+width: 100px;
+height: 100px;
+margin-top: 4%;
+}
+
+#headerText{
+    width: max-content;
+    font-size: xx-large;
+    background-color: lightgray;
+    border: solid black 4px;
+}
+
+.btn-info{
+    width: max-content;
+    background-color: lightgray;
+    border: solid black 4px;
+
+}

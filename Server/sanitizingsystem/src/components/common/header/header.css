@@ -1,40 +1,12 @@
-.SideNavBar{
-  height: 100%;
-  width: 160px;
-  position: fixed;
-  z-index: 1;
-  top: 0;
-  left: 0;
-  background-color: #111;
-  overflow-x: hidden;
-  padding-top: 20px;
-  margin-top: 40px;
+#top{
+    position:fixed;
+    top:0;
+    width: 100%;
 }
 
-.SideNavBar a {
-  padding: 6px 8px 6px 16px;
-  text-decoration: none;
-  font-size: 25px;
-  color: #818181;
-  display: block;
-}
-
-.SideNavBar a:hover {
-  color: #f1f1f1;
-}
-
-.header-top-logo{
-  position:absolute;
-  top:0;
-  left:0;
-}
-
-.header-logo-img
+#undertop
 {
-  width:10%;
-  height:10%;
-}
-
-.header-top{
-  background-color: #333;
+        position:relative;
+        top:100px;
+        width: 100%;
 }

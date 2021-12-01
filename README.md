@@ -3,19 +3,18 @@
 
 By David Hutchins, Austin Welch, Branden Evangelista, and Brontë Cadogan
 Success! Created sanitizingsystem at C:\Users\Techn\Desktop\Automatic-Sanitizing-System\sanitizingsystem
-Inside that directory, you can run several commands:
 
-  npm start
+# Running the Automatic Hand Cleaning System App on a Local Machine
+Make sure NodeJS is installed https://nodejs.org/en/
 
-  npm run build
-    Bundles the app into static files for production.
+Download the the repo from GitHub using 
 
-  npm test
-  npm run eject
-    Removes this tool and copies build dependencies, configuration files
-    and scripts into the app directory. If you do this, you can’t go back!
+git clone https://github.com/davidhutchins/Automatic-Sanitizing-System.git
 
-We suggest that you begin by typing:
+Install dependencies using  npm i
 
-  cd sanitizingsystem
-  npm start
+Open the command prompt and navigate to the folder containing the webapp
+
+cd Automatic-Sanitizing-System/Server/sanitizingsystem
+
+Run using npm start

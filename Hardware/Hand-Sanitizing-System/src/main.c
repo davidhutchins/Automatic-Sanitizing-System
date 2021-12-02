@@ -29,11 +29,10 @@ int main(void)
 	gpio_init();
 	timer_init();
 
-	//while(wifi_init() < 0);
+	while(wifi_init() < 0);
 
 	NVIC_EnableIRQ(PORT4_IRQn);
 	NVIC_EnableIRQ(TA1_0_IRQn);
-
 
 	while(1);
 }

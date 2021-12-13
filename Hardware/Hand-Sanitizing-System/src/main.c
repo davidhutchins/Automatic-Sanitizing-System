@@ -26,13 +26,13 @@ int main(void)
 	WDTCTL = WDTPW | WDTHOLD;
 	
 	BSP_InitBoard();
-	gpio_init();
 	timer_init();
 
-	while(wifi_init() < 0);
+	//while(wifi_init() < 0);
 
 	NVIC_EnableIRQ(PORT4_IRQn);
 	NVIC_EnableIRQ(TA1_0_IRQn);
+	gpio_init();
 
 	while(1);
 }
@@ -50,6 +50,7 @@ void gpio_init(void) {
     P4IE    |= BIT5 | BIT4;     // Enabling both interrupts
     P4REN   |= BIT4;            // Enabling pull up for main mechanism
     P4OUT   |= BIT4;            // Setting it to pull up as opposed to pull down
+    P4OUT   &= BIT5;
 }
 
 void timer_init(void)

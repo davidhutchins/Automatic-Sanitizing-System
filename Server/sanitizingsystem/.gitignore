@@ -11,9 +11,6 @@
 # production
 /build
 
-# issue with babel-jest, delete the node modules folder under user directory
-SKIP_PREFLIGHT_CHECK=true
-
 # misc
 .DS_Store
 .env.local

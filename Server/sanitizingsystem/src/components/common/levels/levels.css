@@ -1,57 +1,49 @@
-/*#page{
-   
-        position: fixed;
-        text-align: center;
-        top : 30%;
-        left: 34%;
-        width: 440px;
-        border: 3px solid #73AD21;
-        
-    }
-*/
-   #page-title{
-    position: fixed;
-    text-align: center;
-    top : 7%;
-    left: 34%;
-    width: 440px;
-    border: 3px solid #73AD21;
-    font-size:xx-large;
-        
-    }
-/*
-    #subheader{
-        font-size: large;
-        margin-top: 0;
-        width: max-content;
-    }
+#page-title{
+ position: fixed;
+ text-align: center;
+ top : 8%;
+ left: 34%;
+ width: 440px;
+ border: 3px solid #21a4ad;
+ font-size:x-large;   
+ }
 
     .device-list{
-        margin-top: 0;
-        width: max-content;
+        position: fixed;
+        top : 20%;
+        left: 34%;
+        width: 300px;
         font-size: large;
+        border: 3px solid #73AD21;
     }
 
     #devID{
         margin-top: 0;
-        margin-left: 0%;
-        width: max-content;
+        width: 200px;
         font-size: x-large;
+        border: 3px solid #ad3621;
     }
 
-    #bat
+    #prcnt-container
     {
         margin-top: 0;
-        text-align: center;
-        margin-left: 300%;
+        width: 200px;
         font-size: x-large;
+        border: 3px solid #2f21ad;
     }
    
-    #frce
+    #percent
     {
         margin-top: 0;
-        text-align: center;
-        margin-left: 300%;
+        margin-left: 100px;;
+        width: 200px;
         font-size: x-large;
+        border: 3px solid #ad217e;
+
     }
-    */
+   
+    #containment
+    {
+        border: 3px solid #2198ad;
+
+    }

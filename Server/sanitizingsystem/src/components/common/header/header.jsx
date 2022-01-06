@@ -5,7 +5,7 @@ import {Navbar} from '../../common';
 
 function Header() {
     return (
-        <section>
+        <section id = "navigation">
                 <Navbar/>   
         </section>
     )

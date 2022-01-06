@@ -7,16 +7,11 @@ document.title = "A.H.C.S.";
 function App() {
   return (
     <div className="App">
-      <div className='nav-container'>
       <Header/>
-      </div>
     <Particles options={particle}/>
-        <div className="App-body">
-          Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-        </div>
     </div>
   );
-};
+}
 
 
 

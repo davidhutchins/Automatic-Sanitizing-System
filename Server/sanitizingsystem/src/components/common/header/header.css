@@ -1,13 +1,23 @@
-#top{
-    background-color: #232741;
+#navigation{
+    grid-area: header;
+    padding-left: 100px;
+    background-color: black;
     position:fixed;
-    top:0;
     width: 100%;
 }
 
-#undertop
-{
-        position:relative;
-        top:100px;
-        width: 100%;
-}
+#navigation a {
+    float: left;
+    display: block;
+    color: white;
+    text-align: center;
+    padding: 13px 16px;
+    position: relative;
+    bottom: 8px;
+    text-decoration: none;
+  }
+
+  #navigation a:hover
+  {
+    color: #5e9a50;
+  }

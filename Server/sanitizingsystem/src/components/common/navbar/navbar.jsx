@@ -4,16 +4,13 @@ import {
     BrowserRouter as Router,
     Routes,
     Route,
-    Link,
-    useRouteMatch,
-    useParams
+    Link
   } from "react-router-dom";
   import{Levels, Home, Stats} from '../../common';
   import GUIDE from '../../../components/setup.pdf'
 
 function Navbar() {
   return (
-    <section id="navbar-brand">
     <section id="router">
     <Router>
       <div>
@@ -43,7 +40,6 @@ function Navbar() {
     </Routes>
       </div>
     </Router>
-  </section>
   </section>
 
   )}

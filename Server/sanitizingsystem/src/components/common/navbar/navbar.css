@@ -2,22 +2,4 @@
  ul {
     list-style-type: none;
   }
- #router
- {
-    background-color: black;
-    color: white;
-    position:fixed;
-    top:0;
-    width: 100%;
-    padding-left: 100px;
-    z-index: 1;
- }
 
- #router a {
-  float: left;
-  color: white;
-  text-align: center;
-  padding: 16px 16px;
-  text-decoration: none;
-  z-index: 2;
-}

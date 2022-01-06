@@ -1,19 +1,25 @@
-#page{
-    position: absolute;
-    top: 50%;
-    left: 35%;
-    width: 100px;
-    height: 100px;
-    margin-top: 0%;
+/*#page{
+   
+        position: fixed;
+        text-align: center;
+        top : 30%;
+        left: 34%;
+        width: 440px;
+        border: 3px solid #73AD21;
+        
     }
-
+*/
    #page-title{
-        width: max-content;
-        margin-top: 0;
-        margin-left: 60%;
-        font-size: x-large;
+    position: fixed;
+    text-align: center;
+    top : 7%;
+    left: 34%;
+    width: 440px;
+    border: 3px solid #73AD21;
+    font-size:xx-large;
+        
     }
-
+/*
     #subheader{
         font-size: large;
         margin-top: 0;
@@ -48,3 +54,4 @@
         margin-left: 300%;
         font-size: x-large;
     }
+    */

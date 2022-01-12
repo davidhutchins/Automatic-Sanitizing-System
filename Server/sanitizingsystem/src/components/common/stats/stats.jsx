@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import './stats.css'
 
-//!! Remove all references to germs killed and you will see 25 pop up on the stats page, so there is reading being done
 const Device = (props) => {
   return (
     

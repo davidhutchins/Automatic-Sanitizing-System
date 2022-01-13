@@ -1,52 +1,5 @@
 import React, { useEffect, useState } from "react";
 import './stats.css'
-import { deviceStats } from "./data";
-import { Col } from 'react-bootstrap';
-
-
-export const StatusDoors = () => {
-    return (
-      <>
-        <div className="device-stats">
-          {deviceStats.map((data, key) => {
-            return (
-              <div key={key}>
-                <Device
-                  key={key}
-                  doorsSanid={data.doorsSanid}
-                //  grmsKild={data.grmsKild}
-                //  DoorsSanitized={data.DoorsSanitized}
-                 // GermsKilled={data.GermsKilled}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </>
-    );
-  };
-
-  export const StatusGerms = () => {
-    return (
-      <>
-        <div className="device-sta">
-          {deviceStats.map((data, key) => {
-            return (
-              <div key={key}>
-                <Device
-                  key={key}
-                  grmsKild={data.grmsKild}
-                 // doorsSanid={data.doorsSanid}
-                //  DoorsSanitized={data.DoorsSanitized}
-                 // GermsKilled={data.GermsKilled}
-                />
-              </div>
-            );
-          })}
-        </div>
-      </>
-    );
-  };
 
 const Device = (props) => {
   return (
@@ -57,11 +10,6 @@ const Device = (props) => {
               <h3>{props.doorsSanid.doorsSanid}</h3>
             </td>
           </tr>
-          {/* <tr>
-          <td>
-              <h3>{props.doorsSanid.grmsKild}</h3>
-            </td>
-          </tr> */}
         </tbody>
   );
 };
@@ -137,8 +85,7 @@ return (
           <div id="subheader">
            <h2 id="title">Total Number Of Doors Sanitized</h2>
              <div id="stats">
-             {/*  <StatusDoors /> */}
-            { StatusDoors() }
+                { StatusDoors() }
              </div>
            </div>
            <div id="subheader">
@@ -154,5 +101,3 @@ return (
 );
 
 }
-
-

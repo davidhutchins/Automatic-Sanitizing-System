@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
 import './stats.css'
 import { deviceStats } from "./data";
 import { Col } from 'react-bootstrap';
@@ -47,62 +47,112 @@ export const StatusDoors = () => {
       </>
     );
   };
-  
-  
-  
-  const Device = ({ doorsSanid, grmsKild, DoorsSanitized, GermsKilled }) => {
-   // if (!doorsSanid) return <div />;
-    return (
-      <table>
+
+const Device = (props) => {
+  return (
+    
         <tbody>
           <tr>
             <td>
-              <h5 id="devID">{doorsSanid}</h5>
-                    
+              <h3>{props.doorsSanid.doorsSanid}</h3>
             </td>
-  
-            <td>
-              <h5 id="bat">{grmsKild}</h5>
+          </tr>
+          {/* <tr>
+          <td>
+              <h3>{props.doorsSanid.grmsKild}</h3>
+            </td>
+          </tr> */}
+        </tbody>
+  );
+};
+
+const Dev = (props) => {
+  return (
+    
+        <tbody>
+          <tr>
+          <td>
+              <h3>{props.doorsSanid.grmsKild}</h3>
             </td>
           </tr>
         </tbody>
-      </table>
-    );
-  };
+  );
+};
 
-function Stats() {
-  
-    return (
-       <section className="content">
-           
-           <div id="pageTitle">
-               <h1>Sanitizing Statistics</h1>
+
+//attempt to GET data from the mongodb server
+export default function Statistics() 
+{
+    const [stat, setstat] = useState([]);
+
+    useEffect(() => {
+          async function getStats() 
+          {
+            //gets the data from the database at the localhost specified
+            const resp = await fetch(`http://localhost:2000/data/`);
+              //if there is no response then give this message
+              if (!resp.ok) 
+              {
+                  const msg = `An error occurred: ${resp.statusText}`;
+                  window.alert(msg);
+                  return;
+              }
+
+              //stat = the fetched data in json format
+              const stat = await resp.json();
+              setstat(stat);
+             
+          }
+          getStats();
+    }, [stat.length]);
+
+
+//Door Statistics
+function StatusDoors () {
+  return stat.map( (doors) => {
+          return (
+              <Device
+                key={stat._id}
+                doorsSanid={doors}
+              />
+          );
+    })}
+
+
+    function StatusGerms () {
+      return stat.map( (germs) => {
+              return (
+                  <Dev
+                    key={stat._id}
+                    doorsSanid={germs}
+                  />
+              );
+        })}
+
+return (
+  <section className="content">
+      
+      <div id="pageTitle">
+          <h1>Sanitizing Statistics</h1>  
+          <div id="subheader">
+           <h2 id="title">Total Number Of Doors Sanitized</h2>
+             <div id="stats">
+             {/*  <StatusDoors /> */}
+            { StatusDoors() }
+             </div>
            </div>
-
            <div id="subheader">
-               <h2 id="title">Total Number Of Doors Sanitized</h2>
-               <div id="numsanis">
-               <StatusDoors />
-               </div>
-           </div>
-
-           <div id="germKill">
                <h2 id="title">Total Number Of Germs Killed</h2>
-               <div id="germy">
-               <StatusGerms />
+                 <div id="stats">
+                 { StatusGerms() }
+               
                </div>
            </div>
-{/*
-           <div id = "deviceStatistics">
-           <h4>Device Statistics</h4>
-           
-           
-           </div>
-*/ }
-           
-       </section>
+      </div>          
+  </section>
 
-    )
+);
+
 }
 
-export default Stats;
+

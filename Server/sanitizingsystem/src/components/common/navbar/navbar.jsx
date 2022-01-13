@@ -2,19 +2,17 @@ import React from 'react';
 import './navbar.css'
 import {
     BrowserRouter as Router,
-    Switch,
+    Routes,
     Route,
-    Link,
-    useRouteMatch,
-    useParams
+    Link
   } from "react-router-dom";
   import{Levels, Home, Stats} from '../../common';
   import GUIDE from '../../../components/setup.pdf'
 
 function Navbar() {
-    return (
-       <section id="router">
-           <Router>
+  return (
+    <section id="router">
+    <Router>
       <div>
         <nav>
           <ul>
@@ -32,26 +30,18 @@ function Navbar() {
             </li>
           </ul>
         </nav>
-        <Switch>
-          <Route path="/stats">
-            <Stats />
-          </Route>
-          <Route path="/levels">
-            <Levels />
-          </Route>
-          <Route path="/">
-            <Home />
-          </Route>
-          <Route path="/guide" component={() => { 
-     window.location.href = {GUIDE} 
-     return null;
-}}/>
-        </Switch>
+    <Routes>
+      <Route path="/stats" element={<Stats/>}/>
+      <Route path="/levels" element={<Levels/>}/>
+      <Route path="/" element={<Home/>}/>
+      <Route path="/guide" component={() => {window.location.href = {GUIDE} 
+          return null;
+        }}/>
+    </Routes>
       </div>
     </Router>
-       </section>
+  </section>
 
-    )
-}
+  )}
 
 export default Navbar;

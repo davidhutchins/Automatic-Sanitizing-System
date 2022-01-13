@@ -3,18 +3,3 @@
     list-style-type: none;
   }
 
-  
- #router
- {
-    position:fixed;
-    top:0;
-    width: 100%;
- }
-
- #router a {
-  float: left;
-  display: block;
-  text-align: center;
-  padding: 14px 16px;
-  text-decoration: none;
-}

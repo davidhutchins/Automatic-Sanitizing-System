@@ -6,7 +6,7 @@ import {
     Route,
     Link
   } from "react-router-dom";
-  import{Levels, Home, Stats} from '../../common';
+  import{Levels, Home, Stats, Data} from '../../common';
   import GUIDE from '../../../components/setup.pdf'
 
 function Navbar() {
@@ -26,6 +26,9 @@ function Navbar() {
               <Link to="/levels"className="link">Power Levels</Link>
             </li>
             <li>
+              <Link to="/data"className="link">Data</Link>
+            </li>
+            <li>
               <Link to={GUIDE} target="_blank"className="link">Setup Guide</Link>
             </li>
           </ul>
@@ -33,6 +36,7 @@ function Navbar() {
     <Routes>
       <Route path="/stats" element={<Stats/>}/>
       <Route path="/levels" element={<Levels/>}/>
+      <Route path="/data" element={<Data/>}/>
       <Route path="/" element={<Home/>}/>
       <Route path="/guide" component={() => {window.location.href = {GUIDE} 
           return null;

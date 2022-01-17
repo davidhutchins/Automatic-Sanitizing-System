@@ -1,9 +1,39 @@
-# Automatic-Sanitizing-System
-## IoT Automatic Door Handle Sanitizing System
+# Alpha Test Plan   
 
 By David Hutchins, Austin Welch, Branden Evangelista, and Brontë Cadogan
 
-## Building the Embedded Code
+## Specification
+
+### Usability
+#### Interface
+
+#### Navigation
+
+#### Perception
+
+#### Responsiveness
+
+### Build Quality
+#### Robustness
+
+#### Consistency
+
+#### Aesthetic Rigor
+
+### Vertical Features
+#### External Interface
+
+#### Persistent State
+
+#### Internal Systems
+
+
+
+## Links
+- Repo: https://github.com/davidhutchins/Automatic-Sanitizing-System
+- Google Drive: https://drive.google.com/drive/u/1/folders/1yFWsin02HhbcQPVtgGXrDhR7vxmtbRYc
+
+## Build Instructions (also included in README.md in default folder of the repository)
 ### Install CCS
 1. Download CCS from https://www.ti.com/tool/download/CCSTUDIO
 2. Proceed through the installer, when asked to select between full and custom installation, choose custom and click next
@@ -12,7 +42,7 @@ By David Hutchins, Austin Welch, Branden Evangelista, and Brontë Cadogan
 5. Proceed until program is installed
 
 ### In CCS
-1. Goto File > Import 
+1. Go to File > Import 
 2. Choose Code Composer Studio > CCS Projects
 3. Clone/Download the repository and select Hardware > Hand-Sanitizing-System as the search directory
 4. Select Hand-Sanitizing-System_MSP432 and Finish

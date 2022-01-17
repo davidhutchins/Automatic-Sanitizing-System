@@ -6,6 +6,7 @@
  width: 440px;
  border: 3px solid #21a4ad;
  font-size:x-large;   
+ text-shadow: -5px 4px 4px #000000;
  }
 
     .device-list{
@@ -15,6 +16,7 @@
         width: 530px;
         font-size: large;
         border: 3px solid #73AD21;
+        text-shadow: -6px 4px 4px #000000;
     }
 
     #devID{

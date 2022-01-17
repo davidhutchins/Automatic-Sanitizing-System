@@ -18,6 +18,7 @@ module.exports = {
          });
   },
  
+  //returns the server
   returnDatabase: function () {
     return database;
   },

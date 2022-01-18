@@ -6,12 +6,18 @@ By David Hutchins, Austin Welch, Branden Evangelista, and Brontë Cadogan
 
 ### Usability
 #### Interface
+For this alpha build, the web application pages have been updated, both in functionality and design.
 
 #### Navigation
 
 #### Perception
 
 #### Responsiveness
+The external interface makes use of hardware interrupts and software timers to control the use of the UVC-light. Whenever the
+motion sensor detects motion near the door handle, an interrupt will be triggered to tell the microcontroller to turn off the
+UVC-light. As long as the user's hand is over the sensor (or there is constant movement near the motion sensor), the UVC-light should turn off, representing the "safety mode" of the system. Once the user takes their hand away from the sensor, another interrupt will be triggered, turning the UVC-light back on. A software timer is then triggered, allowing the UVC to stay on for four seconds before turning back off again. This process is nearly the same as in the prototype; however, for this alpha build, we have incorporated the UVC-light and connected it to a MOSFET transistor. The MOSFET transistor acts like a switch, allowing us to control when the UVC-light will turn on and off (via the interrupts).
+
+For future builds, this process will move from the breadboard to a PCB, which not only cleans up the aesthetic of the product.
 
 ### Build Quality
 #### Robustness

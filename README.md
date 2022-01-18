@@ -20,7 +20,7 @@ By David Hutchins, Austin Welch, Branden Evangelista, and Brontë Cadogan
 
 ## Running the Automatic Hand Cleaning System App (Webapp) on a Local Machine
 1. Make sure NodeJS is installed https://nodejs.org/en/
-2. Download the the repo from GitHub using 
+2. Download the repo from GitHub using 
     `git clone https://github.com/davidhutchins/Automatic-Sanitizing-System.git`
 3. Install dependencies using: `npm i`
 4. Open the command prompt and navigate to the folder containing the server.js file:

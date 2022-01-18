@@ -15,6 +15,7 @@ For future iterations of the project, we should be able to connect more than one
 #### Navigation
 The web application is easy to navigate due to the navigation bar at the top of the web page. Users can switch between the home page, statistics page, setup guide page, and device connection page using this navigation bar.
 
+For future builds, the UI will continue to be updated and will focus on the readability of data coming from the microcontroller. The web application will also aim to read connections from multiple devices.
 #### Perception
 The current iteration of the hardware (i.e. the microcontroller's connection to the WiFi backpack, bluetooth receiver, UVC-light, and motion sensor) are all connected on a breadboard. For future iterations, this breadboard will be consolidated into one PCB board; this board and our external power source will then be placed in a custom-made housing unit for a more simplistic look.
 
@@ -44,7 +45,7 @@ For future builds, this process will move from the breadboard to a PCB, which no
 - Repo: https://github.com/davidhutchins/Automatic-Sanitizing-System
 - Google Drive: https://drive.google.com/drive/u/1/folders/1yFWsin02HhbcQPVtgGXrDhR7vxmtbRYc
 
-## Build Instructions (also included in README.md in default folder of the repository)
+## Build Instructions
 ### Install CCS
 1. Download CCS from https://www.ti.com/tool/download/CCSTUDIO
 2. Proceed through the installer, when asked to select between full and custom installation, choose custom and click next

@@ -60,6 +60,7 @@ const Device = (props) => {
   {
     ldata[z].sanitizations = x;
   }
+
   
   return true;
 };
@@ -129,7 +130,7 @@ export default function Data() {
   
   return (
     <section>
-      {getter()};
+      {getter()}
   
       <section>
         <div id="toplvlhead">

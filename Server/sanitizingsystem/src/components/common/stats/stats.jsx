@@ -1,31 +1,36 @@
 import React, { useEffect, useState } from "react";
 import './stats.css'
 
-const Device = (props) => {
+
+const Device = (props) => { 
+  let x = props.doorsSanid.doorsSanid;
   return (
-    
         <tbody>
           <tr>
             <td>
-              <h3>{props.doorsSanid.doorsSanid}</h3>
+              <h3>{x}</h3>
             </td>
           </tr>
         </tbody>
   );
 };
 
+
+
 const Dev = (props) => {
+  let y = props.doorsSanid.grmsKild;
   return (
     
-        <tbody>
+    <tbody>
           <tr>
           <td>
-              <h3>{props.doorsSanid.grmsKild}</h3>
+              <h3>{y}</h3>
             </td>
           </tr>
         </tbody>
   );
 };
+
 
 
 //attempt to GET data from the mongodb server
@@ -49,26 +54,35 @@ export default function Statistics()
               //stat = the fetched data in json format
               const stat = await resp.json();
               setstat(stat);
-             
-          }
-          getStats();
+
+              
+            }
+            getStats();
+         //   console.log(stat);
     }, [stat.length]);
 
 
-//Door Statistics
-function StatusDoors () {
-  return stat.map( (doors) => {
-          return (
-              <Device
-                key={stat._id}
-                doorsSanid={doors}
-              />
-          );
-    })}
+  //Door Statistics
+  function StatusDoors () {
+    return stat.map( (doors) => {
+      console.log(doors.doorsSanid); //this is it too
+      let valued = doors.doorsSanid;
+      console.log(valued);
+            return (
+                <Device
+                  key={stat._id}
+                  doorsSanid={doors}
+                />
+                
+            );
+           
+      })}
 
 
     function StatusGerms () {
       return stat.map( (germs) => {
+        console.log(germs);
+        console.log(germs.doorsSanid); //this is it
               return (
                   <Dev
                     key={stat._id}
@@ -76,7 +90,10 @@ function StatusDoors () {
                   />
               );
         })}
-
+        console.log("BF");
+        console.log(stat.length);
+        //stat[0] only exists
+        // console.log(stat.doorsSanid); undefined
 return (
   <section className="content">
       
@@ -95,7 +112,9 @@ return (
                
                </div>
            </div>
-      </div>          
+      </div>       
+  
+   
   </section>
 
 );

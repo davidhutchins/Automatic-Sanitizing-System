@@ -3,17 +3,17 @@
 
 #define QUARTER_SECOND 46875
 
-#define WEBPAGE "34.227.194.176"
+#define WEBPAGE "54.196.144.98"
  
-signed char SSID_NAME[100]   =    "hotspot";
-char PASSKEY[100]     =    "hotspotpassword";   
+signed char SSID_NAME[100]   =    "The GAT";
+char PASSKEY[100]     =    "cloudyjungle778";
 
 char request[1024];
 char requestTemplate[512];
 char parsedResponse[1024];
 int count = 0;
 
-int32_t wifi_init();
+uint8_t wifi_init();
 void gpio_init();
 void timer_init();
 void timer_start();
@@ -28,7 +28,8 @@ int main(void)
 	BSP_InitBoard();
 	timer_init();
 
-	//while(wifi_init() < 0);
+	while(wifi_init() < 0);
+	printf("WIFI STARTED");
 
 	NVIC_EnableIRQ(PORT4_IRQn);
 	NVIC_EnableIRQ(TA1_0_IRQn);
@@ -61,8 +62,8 @@ void timer_init(void)
     TA1CCR0 = 0;                        // Timer will start when this is set to a nonzero value.
 }
 
-
-int32_t wifi_init() {
+uint8_t wifi_init(uint32_t conntype)
+{
     int32_t retVal;
 
     sprintf(requestTemplate, "GET %s HTTP/1.1\r\nHost:%s\r\n\r\n", "%s", WEBPAGE);
@@ -79,21 +80,27 @@ int32_t wifi_init() {
 
     sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
 
+    connectionType = conntype;
+    if (connectionType == CLOSE_CONNECTION)
+    {
+        disconnectFromAP();
+        sl_Stop(0xFF);
+    }
 
     sprintf(request, requestTemplate, "/ping");
     if (sendRequestToServer(request))
     {
-        
+
         parseServerResponse(parsedResponse, "pre-wrap\">");
         if (strstr(parsedResponse, "pong"))
         {
             printf("Connected to Server!\n");
-            return 0;
+            return 1;
         }
     }
 
-    printf("Could not connect to server.\n");
-    return -1;
+    printf("Could not connect to server. Retrying.\n");
+    return 0;
 }
 
 /****** Helper Function To Start the Timer ******/

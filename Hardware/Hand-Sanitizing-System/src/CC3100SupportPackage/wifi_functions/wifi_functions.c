@@ -4,47 +4,54 @@
  * June 21, 2019
 */
 
-#include <wifi_usage.h>
+#include "wifi_functions.h"
+
+// AP Name and Password
+signed char SSID_NAME[100]   =    "The GAT";
+char PASSKEY[100]            =    "cloudyjungle778";
 
 char Recvbuff[MAX_RECV_BUFF_SIZE];
 char SendBuff[MAX_SEND_BUFF_SIZE];
 
+uint8_t wifi_init(uint32_t conntype)
+{
+    int32_t retVal;
 
-void parseServerResponse(char* parsedResponse, char* keyword){
-    char *pt = 0;
-    char *endpt = 0;
-    char parsedRecvBuff[MAX_RECV_BUFF_SIZE];
+    sprintf(requestTemplate, "GET %s HTTP/1.1\r\nHost:%s\r\n\r\n", "%s", WEBPAGE);
 
-    pt = strstr(Recvbuff, keyword);
-    endpt = strstr(Recvbuff, "</span>");
-    *endpt = '\0';
+    retVal = configureSimpleLinkToDefaultState();
+    if (retVal < 0)
+        printf("Error with SL configuration!");
 
-    int i = 0;
-    if(pt != 0){
-        pt += strlen(keyword);
-        while(pt < endpt){
-            parsedRecvBuff[i] = *pt;
-            pt++; i++;
-        }
-        strcpy(parsedResponse, parsedRecvBuff);
-        parsedResponse[i] = '\0';
-    } else {
-        strcpy(parsedResponse, Recvbuff);
-        printf("Could not parse response, received buffer:\n%s", parsedResponse);
-        restartWIFI();
+    sl_Start(0, 0, 0);
+
+    retVal = establishConnectionWithAP();
+    if (retVal < 0)
+        printf("Could not connect to AP!");
+
+    sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
+
+    connectionType = conntype;
+    if (connectionType == CLOSE_CONNECTION)
+    {
+        disconnectFromAP();
+        sl_Stop(0xFF);
     }
+
+    sendRequestToServer("/ping");
+    if (strstr(serverResponse, "pong"))
+    {
+        printf("Connected to Server!\n");
+        return 1;
+    }
+
+    printf("Could not connect to server. Retrying.\n");
+    return 0;
 }
 
-void restartWIFI(){
-    disconnectFromAP();
-    sl_Stop(SL_STOP_TIMEOUT);
-    if(connectionType == KEEP_CONNECTION){
-        sl_Start(0, 0, 0);
-        establishConnectionWithAP();
-    }
-}
+int32_t sendRequestToServer(char* requestParams){
 
-int32_t sendRequestToServer(char* request){
+    sprintf(request, requestTemplate, requestParams);
 
     int32_t retVal;
     int32_t ASize = 0;
@@ -81,12 +88,48 @@ int32_t sendRequestToServer(char* request){
         return 0;
     }
 
+    parseServerResponse(serverResponse, "pre-wrap\">");
+
     if(connectionType == CLOSE_CONNECTION){
         disconnectFromAP();
         sl_Stop(SL_STOP_TIMEOUT);
     }
 
     return 1;
+}
+
+void parseServerResponse(char* parsedResponse, char* keyword){
+    char *pt = 0;
+    char *endpt = 0;
+    char parsedRecvBuff[MAX_RECV_BUFF_SIZE];
+
+    pt = strstr(Recvbuff, keyword);
+    endpt = strstr(Recvbuff, "</span>");
+    *endpt = '\0';
+
+    int i = 0;
+    if(pt != 0){
+        pt += strlen(keyword);
+        while(pt < endpt){
+            parsedRecvBuff[i] = *pt;
+            pt++; i++;
+        }
+        strcpy(parsedResponse, parsedRecvBuff);
+        parsedResponse[i] = '\0';
+    } else {
+        strcpy(parsedResponse, Recvbuff);
+        printf("Could not parse response, received buffer:\n%s", parsedResponse);
+        restartWIFI();
+    }
+}
+
+void restartWIFI(){
+    disconnectFromAP();
+    sl_Stop(SL_STOP_TIMEOUT);
+    if(connectionType == KEEP_CONNECTION){
+        sl_Start(0, 0, 0);
+        establishConnectionWithAP();
+    }
 }
 
 

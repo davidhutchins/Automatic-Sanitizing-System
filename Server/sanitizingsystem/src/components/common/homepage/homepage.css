@@ -1,13 +1,31 @@
 #Titletxt{
 position: fixed;
 text-align: center;
-top : 7%;
+top : 10%;
 left: 34%;
 width: 440px;
-border: 3px solid #73AD21;
+text-shadow: -5px 4px 4px black;
 font-size:xx-large;
+animation: title 2.5s ease-in-out infinite alternate;
 }
 
+
+/*Note to self, try and get a flickering light anumation to work */
+@keyframes title {
+
+    from {
+      /*  text-shadow:  0 0 100px #ff1fe9, 0 0 110px #ea00ff; */
+      text-shadow:   0 0 10px #fff, 0 0 20px #fff, 0 0 30px #b9b9b9, 0 0 40px #969696, 0 0 50px #6b6b6b, 0 0 60px #7e7d7d, 0 0 70px grey;
+    }
+  /*  to{
+       /* text-shadow: 60 60 350px #ea00ff, 60 60 300px #d400ff; */
+     
+
+    
+}
+
+
+  
 /*
 #headerText{
     width: max-content;

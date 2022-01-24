@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import './stats.css'
 
-
 const Device = (props) => { 
   let x = props.doorsSanid.doorsSanid;
   return (
@@ -55,17 +54,15 @@ export default function Statistics()
               const stat = await resp.json();
               setstat(stat);
 
-              
             }
             getStats();
-         //   console.log(stat);
     }, [stat.length]);
 
 
   //Door Statistics
   function StatusDoors () {
     return stat.map( (doors) => {
-      console.log(doors.doorsSanid); //this is it too
+      // console.log(doors.doorsSanid); //this is it too
       let valued = doors.doorsSanid;
       console.log(valued);
             return (
@@ -78,11 +75,10 @@ export default function Statistics()
            
       })}
 
-
     function StatusGerms () {
       return stat.map( (germs) => {
-        console.log(germs);
-        console.log(germs.doorsSanid); //this is it
+        // console.log(germs);
+        // console.log(germs.doorsSanid); //this is it
               return (
                   <Dev
                     key={stat._id}
@@ -90,33 +86,30 @@ export default function Statistics()
                   />
               );
         })}
-        console.log("BF");
-        console.log(stat.length);
-        //stat[0] only exists
-        // console.log(stat.doorsSanid); undefined
-return (
-  <section className="content">
-      
-      <div id="pageTitle">
-          <h1>Sanitizing Statistics</h1>  
-          <div id="subheader">
-           <h2 id="title">Total Number Of Doors Sanitized</h2>
-             <div id="stats">
-                { StatusDoors() }
-             </div>
-           </div>
-           <div id="subheader">
-               <h2 id="title">Total Number Of Germs Killed</h2>
-                 <div id="stats">
-                 { StatusGerms() }
-               
-               </div>
-           </div>
-      </div>       
-  
-   
-  </section>
 
-);
+  return (
+    <section className="content">
+        
+        <div id="pageTitle">
+            <h1>Sanitizing Statistics</h1>  
+            <div id="subheader">
+            <h2 id="title">Total Number Of Doors Sanitized</h2>
+              <div id="stats">
+                  { StatusDoors() }
+              </div>
+            </div>
+            <div id="subheader">
+                <h2 id="title">Total Number Of Germs Killed</h2>
+                  <div id="stats">
+                  { StatusGerms() }
+                
+                </div>
+            </div>
+        </div>       
+    
+    
+    </section>
+
+  );
 
 }

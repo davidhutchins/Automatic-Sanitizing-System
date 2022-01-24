@@ -4,8 +4,7 @@ import './data.css'
 import Statistics from "../stats/stats";
 const doorNum = require("../stats/stats");
 
-
- let data =  [
+export let data =  [
   { name: 'Sanitizer X', value: 2 },
   { name: 'The Seventh Ring', value: 4 },
   { name: 'Jims Office', value: 5 },
@@ -14,62 +13,38 @@ const doorNum = require("../stats/stats");
   { name: 'Borgs', value: 8 },
 ];
 
-
-let ldata = [
-  {
-    name: "Mon",
-    sanitizations: 10
-  },
-  {
-    name: "Tues",
-    sanitizations: 10
-  },
-  {
-    name: "Wed",
-    sanitizations: 20
-  },
-  {
-    name: "Thurs",
-    sanitizations: 40
-  },
-  {
-    name: "Fri",
-    sanitizations: 50
-  },
-  {
-    name: "Sat",
-    sanitizations: 60
-  },
-  {
-    name: "Sun",
-    sanitizations: 110
-  }
+export let ldata = [
+  { name: "Mon", sanitizations: 10 },
+  { name: "Tues", sanitizations: 10 },
+  { name: "Wed", sanitizations: 20 },
+  { name: "Thurs", sanitizations: 40 },
+  { name: "Fri", sanitizations: 50 },
+  { name: "Sat", sanitizations: 60 },
+  { name: "Sun", sanitizations: 110 }
 ];
 
+let test = [];
+let lineGraphTest = []
 
+//test function to verify read from database
 const Device = (props) => { 
+
   let x = props.doorsSanid.doorsSanid;
-  data[1].value  = x
+  let y = props.doorsSanid.grmsKild;
+
   for(let i = 0; i <data.length; i++)
   {
-    data[i].value = x;
-
+    data[i].value = y;
   }
 
-  for(let z = 0; z <ldata.length; z++)
+  for(let i = 0; i <ldata.length; i++)
   {
-    ldata[z].sanitizations = x;
+    ldata[i].sanitizations = x;
   }
 
   
   return true;
 };
-
-
-
-
-
-
 
 export default function Data() {  
 
@@ -92,14 +67,36 @@ export default function Data() {
             //stat = the fetched data in json format
             const stat = await resp.json();
             setstat(stat);
-
-            
           }
           getStats();
-       //   console.log(stat);
+
   }, [stat.length]);
 
-  function getter () {
+  function setter() {
+    console.log("Setter")
+    //Push read data to dynamic data array
+    for (let i = 0; i < stat.length; i++)
+    {
+      if (typeof test[i] == 'undefined')
+      {
+        test.push({name: 'Device ' + (i+1).toString(), value: stat[i].doorsSanid})
+      }
+
+      if (test[i].name === 'Device ' + (i+1).toString() && test[i].value !== stat[i].doorsSanid)
+      {
+        test[i].value = stat[i].doorsSanid;
+      }
+      else if (test[i].name === 'Device ' + (i+1).toString() && test[i].value === stat[i].doorsSanid)
+      {
+        continue;
+      }
+    }
+    console.log(test)
+  }
+
+  function getter() {
+    console.log("Getter")
+
     return stat.map( (doors) => {
             return (
                 <Device
@@ -110,27 +107,10 @@ export default function Data() {
             );   
       })}
 
-  // console.log(stat);
-  // console.log("god I hope this is 28");
-
-  // function getDatObj () {
-  //   return stat.map( (doors) => {
-  //     console.log(doors.doorsSanid); //this is it too
-  //     let valued = doors.doorsSanid;
-  //     console.log(valued);
-  //           return (
-  //               <Device
-  //                 key={stat._id}
-  //                 doorsSanid={doors}
-  //               />
-                
-  //           );
-           
-  //     })}
-  
   return (
     <section>
       {getter()}
+      {setter()}
   
       <section>
         <div id="toplvlhead">
@@ -144,7 +124,7 @@ export default function Data() {
         </div>
           <div id="pie">
             <PieChart width={440} height={340}>
-              <Pie dataKey="value" isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={80} fill="#5E9A50" label/>
+              <Pie dataKey="value" isAnimationActive={true} data={test} cx={200} cy={200} outerRadius={80} fill="#5E9A50" label/>
               <Tooltip />
             </PieChart>
           </div>
@@ -169,5 +149,3 @@ export default function Data() {
     </section>
   );
 }
-
-

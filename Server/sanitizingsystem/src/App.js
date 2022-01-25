@@ -2,7 +2,7 @@ import './App.css';
 import particle from "./configs/particle";
 import Particles from 'react-tsparticles';
 import {Header} from './components/common';
-document.title = "A.H.C.S.";
+document.title = "A.C.H.S.";
 
 function App() {
   return (

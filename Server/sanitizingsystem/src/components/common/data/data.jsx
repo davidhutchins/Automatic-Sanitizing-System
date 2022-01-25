@@ -24,7 +24,15 @@ export let ldata = [
 ];
 
 let test = [];
-let lineGraphTest = []
+let lineGraphTest = [
+  { name: "Sun", sanitizations: 0 },
+  { name: "Mon", sanitizations: 0 },
+  { name: "Tues", sanitizations: 0 },
+  { name: "Wed", sanitizations: 0 },
+  { name: "Thurs", sanitizations: 0 },
+  { name: "Fri", sanitizations: 0 },
+  { name: "Sat", sanitizations: 0 }
+];
 
 //test function to verify read from database
 const Device = (props) => { 
@@ -32,15 +40,15 @@ const Device = (props) => {
   let x = props.doorsSanid.doorsSanid;
   let y = props.doorsSanid.grmsKild;
 
-  for(let i = 0; i <data.length; i++)
-  {
-    data[i].value = y;
-  }
+  // for(let i = 0; i <data.length; i++)
+  // {
+  //   data[i].value = y;
+  // }
 
-  for(let i = 0; i <ldata.length; i++)
-  {
-    ldata[i].sanitizations = x;
-  }
+  // for(let i = 0; i <ldata.length; i++)
+  // {
+  //   ldata[i].sanitizations = x;
+  // }
 
   
   return true;
@@ -74,17 +82,22 @@ export default function Data() {
 
   function setter() {
     console.log("Setter")
-    //Push read data to dynamic data array
+
+    //Push read data to dynamic data array (pie chart and line graph)
+    const d = new Date();
     for (let i = 0; i < stat.length; i++)
     {
       if (typeof test[i] == 'undefined')
       {
-        test.push({name: 'Device ' + (i+1).toString(), value: stat[i].doorsSanid})
+        test.push({name: 'Device ' + (i+1).toString(), value: stat[i].doorsSanid});
+        lineGraphTest[d.getDay()].sanitizations += stat[i].doorsSanid;
       }
 
       if (test[i].name === 'Device ' + (i+1).toString() && test[i].value !== stat[i].doorsSanid)
       {
+        lineGraphTest[d.getDay()].sanitizations -= test[i].value; //subtract the old value
         test[i].value = stat[i].doorsSanid;
+        lineGraphTest[d.getDay()].sanitizations += stat[i].doorsSanid; //add the new value
       }
       else if (test[i].name === 'Device ' + (i+1).toString() && test[i].value === stat[i].doorsSanid)
       {
@@ -92,10 +105,11 @@ export default function Data() {
       }
     }
     console.log(test)
+    console.log(lineGraphTest[d.getDay()].sanitizations)
   }
 
   function getter() {
-    console.log("Getter")
+    console.log("Getter called")
 
     return stat.map( (doors) => {
             return (
@@ -135,7 +149,7 @@ export default function Data() {
           <h1>Operations Over The Week</h1>
         </div>
           <div id="line">
-            <LineChart width={440} height={340} data={ldata} margin={{top: 40, right: 0, left: 0, bottom: 0}}>
+            <LineChart width={440} height={340} data={lineGraphTest} margin={{top: 40, right: 0, left: 0, bottom: 0}}>
             <CartesianGrid stroke="#ccc" strokeDasharray="1 1"  />
             <XAxis dataKey="name" />
             <YAxis />

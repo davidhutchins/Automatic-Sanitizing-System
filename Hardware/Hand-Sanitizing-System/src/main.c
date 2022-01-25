@@ -1,25 +1,18 @@
 #include <msp432.h>
-#include "wifi_usage.h"
+#include <wifi_functions.h>
+#include "handleServer.h"
+#include "BSP.h"
+
+#define HANDLE_ID 123
 
 #define QUARTER_SECOND 46875
-
-#define WEBPAGE "34.227.194.176"
  
-signed char SSID_NAME[100]   =    "hotspot";
-char PASSKEY[100]     =    "hotspotpassword";   
-
-char request[1024];
-char requestTemplate[512];
-char parsedResponse[1024];
-int count = 0;
-
-int32_t wifi_init();
 void gpio_init();
 void timer_init();
 void timer_start();
 void timer_stop();
 
-
+int count = 0;
 
 int main(void)
 {
@@ -28,7 +21,7 @@ int main(void)
 	BSP_InitBoard();
 	timer_init();
 
-	//while(wifi_init() < 0);
+	while(wifi_init() != 0);
 
 	NVIC_EnableIRQ(PORT4_IRQn);
 	NVIC_EnableIRQ(TA1_0_IRQn);
@@ -36,7 +29,6 @@ int main(void)
 
 	while(1);
 }
-
 
 
 void gpio_init(void) {
@@ -62,40 +54,6 @@ void timer_init(void)
 }
 
 
-int32_t wifi_init() {
-    int32_t retVal;
-
-    sprintf(requestTemplate, "GET %s HTTP/1.1\r\nHost:%s\r\n\r\n", "%s", WEBPAGE);
-
-    retVal = configureSimpleLinkToDefaultState();
-    if (retVal < 0)
-        printf("Error with SL configuration!");
-
-    sl_Start(0, 0, 0);
-
-    retVal = establishConnectionWithAP();
-    if (retVal < 0)
-        printf("Could not connect to AP!");
-
-    sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
-
-
-    sprintf(request, requestTemplate, "/ping");
-    if (sendRequestToServer(request))
-    {
-        
-        parseServerResponse(parsedResponse, "pre-wrap\">");
-        if (strstr(parsedResponse, "pong"))
-        {
-            printf("Connected to Server!\n");
-            return 0;
-        }
-    }
-
-    printf("Could not connect to server.\n");
-    return -1;
-}
-
 /****** Helper Function To Start the Timer ******/
 void timer_start(void)
 {
@@ -111,6 +69,7 @@ void timer_stop(void)
 }
 
 void PORT4_IRQHandler(){
+    // Disable UV if light is currently on
     if (P4IFG & BIT5)       // Bit 5 is safety (low-to-high)
     {
         count = 0;
@@ -118,12 +77,22 @@ void PORT4_IRQHandler(){
         P6OUT &= ~BIT0;
 
     }
+
+    // Enable UV
     else if (P4IFG & BIT4)  // Bit 4 is main mechanism (high-to-low)
     {
         count = 0;
         P4IFG &= ~BIT4;         // clearing the interrupt flag
         P6OUT |= BIT0;
-        //Increment value in server
+
+        //TODO: Move this out of the IRQ
+        uint8_t attempts = 0;
+        while(incrementInteractionCounter(HANDLE_ID) == 0) { // Update handle interaction counter, quit after 3 tries
+            attempts++;
+            if (attempts == 3)
+                break;
+        }
+
         timer_start();
     }
 }

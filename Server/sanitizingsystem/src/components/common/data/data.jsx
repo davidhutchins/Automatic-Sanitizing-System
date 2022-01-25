@@ -4,40 +4,40 @@ import './data.css'
 import {LineChartData} from './linechart';
 
 
-//!! To fix the issue of having to read several collections, lets make one jsx file dedicated to the line chart
-//!! It has all the code needed to read it in the JSON format then we can call it in the html portion below
-
-
-//main Concern is how the hell do you scale this
-
- let data =  [
-  { name: 'Sanitizer X', value: null },
-  { name: 'The Seventh Ring', value: null },
-  { name: 'Jims Office', value: null },
-  { name: 'Swamp Office', value: null },
-  { name: 'Korgs', value: null },
-  { name: 'Borgs', value: null },
+export let data =  [
+  { name: 'Sanitizer X', value: 2 },
+  { name: 'The Seventh Ring', value: 4 },
+  { name: 'Jims Office', value: 5 },
+  { name: 'Swamp Office', value: 6 },
+  { name: 'Korgs', value: 7 },
+  { name: 'Borgs', value: 8 },
 ];
 
 
+let test = [];
+let lineGraphTest = [
+  { name: "Sun", sanitizations: 0 },
+  { name: "Mon", sanitizations: 0 },
+  { name: "Tues", sanitizations: 0 },
+  { name: "Wed", sanitizations: 0 },
+  { name: "Thurs", sanitizations: 0 },
+  { name: "Fri", sanitizations: 0 },
+  { name: "Sat", sanitizations: 0 }
+];
+
 
 const Device = (props) => { 
-  let x = props.doorsSanid.doorsSanid;
-  data[1].value  = x
-  for(let i = 0; i <data.length; i++)
-  {
-    data[i].value = x;
 
-  }
+  let x = props.doorsSanid.doorsSanid;
+  let y = props.doorsSanid.grmsKild;
+
+  // for(let i = 0; i <data.length; i++)
+  // {
+  //   data[i].value = y;
+  // }
 
   return true;
 };
-
-
-
-
-
-
 
 export default function Data() {  
 
@@ -64,9 +64,41 @@ export default function Data() {
             setstat(stat);
           }
           getStats();
-  }, [stat.length, ]);
 
-  function getter () {
+  }, [stat.length]);
+
+
+  function setter() {
+    console.log("Setter")
+
+    //Push read data to dynamic data array (pie chart and line graph)
+    const d = new Date();
+    for (let i = 0; i < stat.length; i++)
+    {
+      if (typeof test[i] == 'undefined')
+      {
+        test.push({name: 'Device ' + (i+1).toString(), value: stat[i].doorsSanid});
+        lineGraphTest[d.getDay()].sanitizations += stat[i].doorsSanid;
+      }
+
+      if (test[i].name === 'Device ' + (i+1).toString() && test[i].value !== stat[i].doorsSanid)
+      {
+        lineGraphTest[d.getDay()].sanitizations -= test[i].value; //subtract the old value
+        test[i].value = stat[i].doorsSanid;
+        lineGraphTest[d.getDay()].sanitizations += stat[i].doorsSanid; //add the new value
+      }
+      else if (test[i].name === 'Device ' + (i+1).toString() && test[i].value === stat[i].doorsSanid)
+      {
+        continue;
+      }
+    }
+    console.log(test)
+    console.log(lineGraphTest[d.getDay()].sanitizations)
+  }
+
+  function getter() {
+    console.log("Getter called")
+
     return stat.map( (doors) => {
             return (
                 <Device
@@ -79,7 +111,9 @@ export default function Data() {
   return (
     <section id="containment-field">
       {getter()}
-{/*   
+      {setter()}
+  
+
       <section>
         <div id="toplvlhead">
           <h1>   & Data</h1>
@@ -92,7 +126,7 @@ export default function Data() {
         </div>
           <div id="pie">
             <PieChart width={440} height={340}>
-              <Pie dataKey="value" isAnimationActive={true} data={data} cx={200} cy={200} outerRadius={80} fill="#5E9A50" label/>
+              <Pie dataKey="value" isAnimationActive={true} data={test} cx={200} cy={200} outerRadius={80} fill="#5E9A50" label/>
               <Tooltip />
             </PieChart>
           </div>
@@ -102,11 +136,11 @@ export default function Data() {
         <div id = "desc">
           <h1>Operations Over The Week</h1>
         </div>
+
           <LineChartData/>
+
       </section>
 
     </section>
   );
 }
-
-

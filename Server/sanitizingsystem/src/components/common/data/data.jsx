@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, LabelList} from 'recharts';
 import './data.css'
-import Statistics from "../stats/stats";
-const doorNum = require("../stats/stats");
+import {LineChartData} from './linechart';
+
 
 export let data =  [
   { name: 'Sanitizer X', value: 2 },
@@ -13,15 +13,6 @@ export let data =  [
   { name: 'Borgs', value: 8 },
 ];
 
-export let ldata = [
-  { name: "Mon", sanitizations: 10 },
-  { name: "Tues", sanitizations: 10 },
-  { name: "Wed", sanitizations: 20 },
-  { name: "Thurs", sanitizations: 40 },
-  { name: "Fri", sanitizations: 50 },
-  { name: "Sat", sanitizations: 60 },
-  { name: "Sun", sanitizations: 110 }
-];
 
 let test = [];
 let lineGraphTest = [
@@ -34,7 +25,7 @@ let lineGraphTest = [
   { name: "Sat", sanitizations: 0 }
 ];
 
-//test function to verify read from database
+
 const Device = (props) => { 
 
   let x = props.doorsSanid.doorsSanid;
@@ -45,12 +36,6 @@ const Device = (props) => {
   //   data[i].value = y;
   // }
 
-  // for(let i = 0; i <ldata.length; i++)
-  // {
-  //   ldata[i].sanitizations = x;
-  // }
-
-  
   return true;
 };
 
@@ -64,6 +49,8 @@ export default function Data() {
         {
           //gets the data from the database at the localhost specified
           const resp = await fetch(`http://localhost:2000/data/`);
+
+
             //if there is no response then give this message
             if (!resp.ok) 
             {
@@ -79,6 +66,7 @@ export default function Data() {
           getStats();
 
   }, [stat.length]);
+
 
   function setter() {
     console.log("Setter")
@@ -117,20 +105,20 @@ export default function Data() {
                   key={stat._id}
                   doorsSanid={doors}
                 />
-                
             );   
       })}
 
   return (
-    <section>
+    <section id="containment-field">
       {getter()}
       {setter()}
   
+
       <section>
         <div id="toplvlhead">
-          <h1>Sanitizer Data</h1>
+          <h1>   & Data</h1>
         </div>
-      </section>
+      </section> */}
 
       <section>
         <div id = "desc1">
@@ -148,16 +136,9 @@ export default function Data() {
         <div id = "desc">
           <h1>Operations Over The Week</h1>
         </div>
-          <div id="line">
-            <LineChart width={440} height={340} data={lineGraphTest} margin={{top: 40, right: 0, left: 0, bottom: 0}}>
-            <CartesianGrid stroke="#ccc" strokeDasharray="1 1"  />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Legend />
-            <Line type="monotone" dataKey="sanitizations" stroke="#5E9A50" activeDot={{ r: 10 }}/>
-            </LineChart>
-          </div>
+
+          <LineChartData/>
+
       </section>
 
     </section>

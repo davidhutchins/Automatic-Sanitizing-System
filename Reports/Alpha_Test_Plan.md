@@ -16,6 +16,7 @@ For future iterations of the project, we should be able to connect more than one
 The web application is easy to navigate due to the navigation bar at the top of the web page. Users can switch between the home page, statistics page, setup guide page, and device connection page using this navigation bar.
 
 For future builds, the UI will continue to be updated and will focus on the readability of data coming from the microcontroller. The web application will also aim to read connections from multiple devices.
+
 #### Perception
 The current iteration of the hardware (i.e. the microcontroller's connection to the WiFi backpack, bluetooth receiver, UVC-light, and motion sensor) are all connected on a breadboard. For future iterations, this breadboard will be consolidated into one PCB board; this board and our external power source will then be placed in a custom-made housing unit for a more simplistic look.
 
@@ -28,18 +29,33 @@ For future builds, this process will move from the breadboard to a PCB, which no
 
 ### Build Quality
 #### Robustness
+In terms of robustness, the hardware is able to handle normal use case scenarios. The MOSFET we are using as a switch for the 24V UV-C LED strip is rated for 60V so usage for this product is well within its parameters. The current power source is connected to a wall socket so we are also well within the parameters for power draw. Migrating this to a portable power source will be a concern for robustness; however, the alpha build is robust in its power needs. Each component of the schematic has been tested individually and as a whole to make sure there are no points of failure on the hardware.
+
+For the microcontroller, the interrupts and timers are robust and are resistant to unusual use cases on the MSP432. The timer can be interrupted before it runs through a full cycle and can smoothly transition to off for safety, and still operate correctly. The communication with our AWS server is as robust as the server itself and will work as long as both the network it is connected to and the server it runs on are up.
+
+Our website will most likely be the least robust as it relies on external APIs and tools. Currently, the website has a basic and functional UI that does not allow too much user input so there are not many unusual use cases that can occur; thus, the website and its function are robust.
 
 #### Consistency
+Our system as a whole is consistent in its operation. When it detects movement, it activates an external signal that will enable the UV-C LEDs and send the usage to an AWS server. The website will consistently check for updated information from the database it uses.
 
 #### Aesthetic Rigor
+The hardware aesthetic as is will not cause any functional issues in its operation. The UI for the website is polished and provides a clean, consistent, and reliable experience. Unfinished aesthetics on the hardware will not inhibit functionality at all. The aesthetic of the website is established and will continue to be improved however in its current state, it is fully functional and gives a good impression of the final product. 
 
 ### Vertical Features
 #### External Interface
+Just like with the prototype, the external interface can be split into a hardware and software section.
+
+The hardware section builds upon the circuit from the Design Prototype, except it makes use of the UV-C light. The interrupts will allow the state of the MOSFET transistor to be toggled which, when combined with the bidirectional level shifter, can provide 24V to the UV-C light with only a single 3.3V power source connected to the majority of the system.
+
+The software section improves the UI and functionality of the web application. In particular, the web application can successfully read and display data from a MongoDB database. Eventually, the microcontroller will be able to send a ping to an AWS server, which will then be sent to the MongoDB database, allowing the website to track the number of times a microcontroller is used (i.e. an interrupt is sent to turn on the UV-C light).
 
 #### Persistent State
+The persistent state of the ACHS will be both the MongoDB database and the AWS web server. The web server will connect to the microcontroller’s WiFi backpack, allowing data from the microcontroller to be sent to this web server. This data will then be sent to the MongoDB database and subsequently be displayed on the web application. Data from the microcontroller will only be sent to the server and database if a user interacts with the motion sensor and turns on the UV-C light.
 
 #### Internal Systems
+The data processing comes from the microcontroller’s interaction with the AWS web server. The data that will be displayed on the web application will be the number of times the user interacts with the hardware; this count comes in the form of a ping from the microcontroller to the WiFi backpack. The number of pings the microcontroller sends out is subsequently stored in an AWS server.
 
+For future builds, the AWS server should be able to handle pings from multiple microcontrollers simultaneously, which would allow multiple ACHS products to connect to the web application concurrently. Each product should send out a different ping, allowing the web application to track the use of each device individually.
 
 ## Links
 - Repo: https://github.com/davidhutchins/Automatic-Sanitizing-System

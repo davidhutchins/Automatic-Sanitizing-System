@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import './stats.css'
-import {Data} from '../../common';
+import { Data } from '../../common';
 import { ldata } from "../data/linechart";
 
 const d = new Date();
@@ -20,7 +20,7 @@ const Device = (props) => {
 //attempt to GET data from the mongodb server
 export default function Statistics() 
 {
-    const [stat, setstat] = useState([]);
+    const [loadedStatistics, getData] = useState([]);
 
     useEffect(() => {
           async function getStats() 
@@ -37,11 +37,10 @@ export default function Statistics()
 
               //stat = the fetched data in json format
               const stat = await resp.json();
-              setstat(stat);
-
+              getData(stat);
             }
             getStats();
-    }, [stat]);
+    }, [loadedStatistics]);
 
   return (
     <section className="content">

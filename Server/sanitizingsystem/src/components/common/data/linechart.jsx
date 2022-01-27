@@ -2,13 +2,6 @@ import React, { useEffect, useState } from "react";
 import {  Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import './data.css'
 
-// //!! To fix the issue of having to read several collections, lets make one jsx file dedicated to the line chart
-// //!! It has all the code needed to read it in the JSON format then we can call it in the html portion below
-// let totalSanitizations = 0;
-
-// //https://www.psu.edu/news/campus-life/story/think-twice-grabbing-door-knob/
-// let germsKilled = 0;
-
 export let ldata = [
     {
         day: "Sun",
@@ -40,10 +33,8 @@ export let ldata = [
     }
 ];
 
-
 export const LineCharts = (props) => { 
 
-  // console.log(data)
   ldata[0].sanitizations  = props.dayoWeek.Sunday;
   ldata[1].sanitizations  = props.dayoWeek.Monday;
   ldata[2].sanitizations  = props.dayoWeek.Tuesday;
@@ -51,13 +42,6 @@ export const LineCharts = (props) => {
   ldata[4].sanitizations  = props.dayoWeek.Thursday;
   ldata[5].sanitizations  = props.dayoWeek.Friday;
   ldata[6].sanitizations  = props.dayoWeek.Saturday;
-
-
-  // for (const day of ldata)
-  // {
-  // totalSanitizations += day.sanitizations;
-  // }
-  // germsKilled = totalSanitizations * ((1 * 10)**6); //10^6 power
 
   return true;
 };
@@ -107,10 +91,6 @@ export function LineChartData() {
               <Legend />
               <Line type="monotone" dataKey="sanitizations" stroke="#5E9A50" activeDot={{ r: 10 }}/>
               </LineChart>
-              {/* <div id="fontss">
-                <h1>Weekly Sanitizations: &ensp; {totalSanitizations} </h1>
-                <h1> Weekly Germs Killed: &ensp; {germsKilled}</h1>
-              </div> */}
             </div>
         </section>
       </section>

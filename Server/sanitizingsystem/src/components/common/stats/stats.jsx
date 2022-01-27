@@ -41,12 +41,8 @@ export default function Statistics()
 
             }
             getStats();
-    }, [stat.length]);
+    }, [stat]);
 
-        console.log("BF");
-        console.log(stat.length);
-        //stat[0] only exists
-        // console.log(stat.doorsSanid); undefined
   return (
     <section className="content">
         <section>

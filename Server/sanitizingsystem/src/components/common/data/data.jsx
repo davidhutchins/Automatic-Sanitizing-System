@@ -3,7 +3,7 @@ import { PieChart, Pie, Tooltip } from 'recharts';
 import './data.css'
 import {LineChartData} from './linechart';
 
-let data = [{name: "Device 1", value: 10}];
+export let data = [{name: "Device 1", value: 10}];
 
 
 export default function Data() {  

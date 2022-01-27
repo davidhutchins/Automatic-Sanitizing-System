@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import {  Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import './data.css'
 
-
 // //!! To fix the issue of having to read several collections, lets make one jsx file dedicated to the line chart
 // //!! It has all the code needed to read it in the JSON format then we can call it in the html portion below
 // let totalSanitizations = 0;
@@ -44,6 +43,7 @@ export let ldata = [
 
 export const LineCharts = (props) => { 
 
+  // console.log(data)
   ldata[0].sanitizations  = props.dayoWeek.Sunday;
   ldata[1].sanitizations  = props.dayoWeek.Monday;
   ldata[2].sanitizations  = props.dayoWeek.Tuesday;
@@ -61,8 +61,6 @@ export const LineCharts = (props) => {
 
   return true;
 };
-
-
 
 export function LineChartData() {  
 
@@ -85,11 +83,10 @@ export function LineChartData() {
   
               //stat = the fetched data in json format
               const wk = await weekDater.json();
-
               setwk(wk);              
             }
             getLineData();
-    }, [wk.length, ]);
+    }, []);
   
     function getter () {
       return wk.map( (dater) => {

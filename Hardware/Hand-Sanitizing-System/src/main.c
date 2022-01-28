@@ -12,7 +12,10 @@ void timer_init();
 void timer_start();
 void timer_stop();
 
-int count = 0;
+uint8_t count = 0;
+uint8_t activationFlag = 0;
+uint8_t safetyFlag = 0;
+uint8_t timerFlag = 0;
 
 int main(void)
 {
@@ -21,13 +24,49 @@ int main(void)
 	BSP_InitBoard();
 	timer_init();
 
-	while(wifi_init() != 0);
+	while(wifi_init() != 1);
 
-	NVIC_EnableIRQ(PORT4_IRQn);
-	NVIC_EnableIRQ(TA1_0_IRQn);
 	gpio_init();
+	NVIC_EnableIRQ(PORT3_IRQn);
+	NVIC_EnableIRQ(TA1_0_IRQn);
 
-	while(1);
+	while(1) {
+	    if (activationFlag) {
+	        activationFlag = 0;
+	        count = 0;
+            P6OUT |= BIT0;
+
+            uint8_t attempts = 0;
+//            while(incrementInteractionCounter(HANDLE_ID) == 0) { // Update handle interaction counter, quit after 3 tries
+            while(test() == 0) {
+                attempts++;
+                if (attempts == 3)
+                    break;
+            }
+
+            timer_start();
+	    }
+
+	    if (safetyFlag) {
+	        safetyFlag = 0;
+            count = 0;
+            P6OUT &= ~BIT0;
+	    }
+
+	    if (timerFlag) {
+	        timerFlag = 0;
+            if (count < 16)      // With a clock time of .25 seconds. This will count for 4 seconds.
+            {
+                count++;
+            }
+            else
+            {
+                count = 0;
+                P6OUT &= ~BIT0; // Turn off light after time has passed
+                timer_stop();    // Stop the timer
+            }
+	    }
+	}
 }
 
 
@@ -35,14 +74,14 @@ void gpio_init(void) {
     P6DIR   = 0xFF;             // Set P1.0 as Output
     P6OUT   &= ~BIT0;            // Set BIT1 as high to start.
 
-    P4DIR   &= ~(BIT5 | BIT4);
-    P4IFG   &= ~(BIT5 | BIT4);  // Setting up main mechanism and safety
-    P4IES   |= BIT4;            // Bit 4 is high-to-low, so main mechanism
-    P4IES   &= ~BIT5;           // Bit 2 is low-to-high, so safety mechanism
-    P4IE    |= BIT5 | BIT4;     // Enabling both interrupts
-    P4REN   |= BIT4;            // Enabling pull up for main mechanism
-    P4OUT   |= BIT4;            // Setting it to pull up as opposed to pull down
-    P4OUT   &= BIT5;
+    P3DIR   &= ~(BIT5 | BIT7);
+    P3IFG   &= ~(BIT5 | BIT7);  // Setting up main mechanism and safety
+    P3IES   |= BIT7;            // Bit 4 is high-to-low, so main mechanism
+    P3IES   &= ~BIT5;           // Bit 2 is low-to-high, so safety mechanism
+    P3IE    |= BIT5 | BIT7;     // Enabling both interrupts
+    P3REN   |= BIT7;            // Enabling pull up for main mechanism
+    P3OUT   |= BIT7;            // Setting it to pull up as opposed to pull down
+    P3OUT   &= BIT5;
 }
 
 void timer_init(void)
@@ -68,45 +107,23 @@ void timer_stop(void)
     TA1CTL &= ~(BIT4 | BIT5);
 }
 
-void PORT4_IRQHandler(){
+void PORT3_IRQHandler(){
     // Disable UV if light is currently on
-    if (P4IFG & BIT5)       // Bit 5 is safety (low-to-high)
+    if (P3IFG & BIT5)       // Bit 5 is safety (low-to-high)
     {
-        count = 0;
-        P4IFG &= ~BIT5;     // clearing the interrupt flag
-        P6OUT &= ~BIT0;
-
+       P3IFG &= ~BIT5;     // clearing the interrupt flag
+       safetyFlag = 1;
     }
 
     // Enable UV
-    else if (P4IFG & BIT4)  // Bit 4 is main mechanism (high-to-low)
+    else if (P3IFG & BIT7)  // Bit 7 is main mechanism (high-to-low)
     {
-        count = 0;
-        P4IFG &= ~BIT4;         // clearing the interrupt flag
-        P6OUT |= BIT0;
-
-        //TODO: Move this out of the IRQ
-        uint8_t attempts = 0;
-        while(incrementInteractionCounter(HANDLE_ID) == 0) { // Update handle interaction counter, quit after 3 tries
-            attempts++;
-            if (attempts == 3)
-                break;
-        }
-
-        timer_start();
+        P3IFG &= ~BIT7;         // clearing the interrupt flag
+        activationFlag = 1;
     }
 }
 /****** Timer Interrupt ******/
 void TA1_0_IRQHandler() {
     TA1CCTL0 &= ~CCIFG;
-    if (count < 16)      // With a clock time of .25 seconds. This will count for 4 seconds.
-    {
-        count++;
-    }
-    else
-    {
-        count = 0;
-        P6OUT &= ~BIT0; // Turn off light after time has passed
-        timer_stop();    // Stop the timer
-    }
+    timerFlag = 1;
 }

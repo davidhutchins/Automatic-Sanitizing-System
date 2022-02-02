@@ -26,6 +26,9 @@ let lineGraphTest = [
 ];
 
 
+
+export let totalPings = 0;
+
 const Device = (props) => { 
 
   let x = props.doorsSanid.doorsSanid;
@@ -94,6 +97,11 @@ export default function Data() {
     }
     console.log(test)
     console.log(lineGraphTest[d.getDay()].sanitizations)
+    totalPings = lineGraphTest[d.getDay()].sanitizations;
+  }
+
+  function refresher() {
+    window.location.reload(false);
   }
 
   function getter() {
@@ -114,21 +122,21 @@ export default function Data() {
       {setter()}
   
 
-      <section>
-        <div id="toplvlhead">
-          <h1>   & Data</h1>
-        </div>
-      </section> */}
 
       <section>
         <div id = "desc1">
           <h1>Sanitizings Per Device</h1>
         </div>
           <div id="pie">
-            <PieChart width={440} height={340}>
+            {/* {refresher()} DONT THIS WILL RESULT IN INFINITE REFRESH */}
+            <div style={{ width: '100%', height: 300 }}>
+        <ResponsiveContainer>
+            <PieChart>
               <Pie dataKey="value" isAnimationActive={true} data={test} cx={200} cy={200} outerRadius={80} fill="#5E9A50" label/>
               <Tooltip />
             </PieChart>
+            </ResponsiveContainer>
+            </div>
           </div>
       </section>
 

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, LabelList} from 'recharts';
 import './data.css'
+import totalPings, { data } from './data';
+//import database from  '../../../server/database/connector'
 
 
 //!! To fix the issue of having to read several collections, lets make one jsx file dedicated to the line chart
@@ -10,56 +12,77 @@ let totalSanitizations = 0;
 //https://www.psu.edu/news/campus-life/story/think-twice-grabbing-door-knob/
 let germsKilled = 0;
 
+
 let ldata = [
     {
+      day: "Sun",
+      sanitizations: 0
+    },
+    {
         day: "Mon",
-        sanitizations: null
+        sanitizations: 0
     },
     {
         day: "Tues",
-        sanitizations: null
+        sanitizations: 0
     },
     {
         day: "Wed",
-        sanitizations: null
+        sanitizations: 0
     },
     {
         day: "Thurs",
-        sanitizations: null
+        sanitizations: 0
     },
     {
         day: "Fri",
-        sanitizations: null
+        sanitizations: 0
     },
     {
         day: "Sat",
-        sanitizations: null
-    },
-    {
-        day: "Sun",
-        sanitizations: null
+        sanitizations: 0
     }
 ];
 
 
 const LineCharts = (props) => { 
-    let x = props.dayoWeek.Monday;
-    let y = props.dayoWeek.Tuesday;
-    let z = props.dayoWeek.Wednesday;
-    let a = props.dayoWeek.Thursday;
-    let b = props.dayoWeek.Friday;
-    let c = props.dayoWeek.Saturday;
-    let d = props.dayoWeek.Sunday;
-    totalSanitizations = x + y + z + a + b + c + d;
-    germsKilled = totalSanitizations * ((1 * 10)**6); //10^6 power
-    ldata[0].sanitizations  = x
-    ldata[1].sanitizations  = y
-    ldata[2].sanitizations  = z
-    ldata[3].sanitizations  = a
-    ldata[4].sanitizations  = b
-    ldata[5].sanitizations  = c
-    ldata[6].sanitizations  = d
+
+  const d = new Date();
+
+  //query the database
+  //const weekdata =   database.collection('weekdata'); 
+  
+    ldata[0].sanitizations  = props.dayoWeek.Sunday;
+    ldata[1].sanitizations  = props.dayoWeek.Monday;
+    ldata[2].sanitizations  = props.dayoWeek.Tuesday;
+    ldata[3].sanitizations  = props.dayoWeek.Wednesday;
+    ldata[4].sanitizations  = props.dayoWeek.Thursday;
+    ldata[5].sanitizations  = props.dayoWeek.Friday;
+    ldata[6].sanitizations  = props.dayoWeek.Saturday;  
+    ldata[d.getDay()] = totalPings;
+
+    // database.weekdata.updateMany(
+    //   {},
+    //   { $set: {
+    //     Sunday: ldata[0].sanitizations,
+    //     Monday: ldata[1].sanitizations,
+    //     Tuesday: ldata[2].sanitizations,
+    //     Wednesday: ldata[3].sanitizations,
+    //     Thursday: ldata[4].sanitizations,
+    //     Friday: ldata[5].sanitizations,
+    //     Saturday: ldata[6].sanitizations
+    //   }
+    // }
+
+    // );
     
+    for(var i = 0; i < ldata.length; i++)
+    {
+      totalSanitizations += ldata[i].sanitizations;
+    }
+    
+    germsKilled = totalSanitizations * ((1 * 10)**6); //10^6 power
+   
     return true;
 };
 
@@ -98,9 +121,6 @@ export function LineChartData() {
         })}
   
     
-        // function retvals (){
-        //     return totalSanitizations, germsKilled;
-        // }
     
     return (
       <section>

@@ -1,7 +1,6 @@
 import unittest
 import requests
 import json
-import copy
 
 url = "http://localhost:2000/"
 
@@ -18,17 +17,21 @@ class AppTest(unittest.TestCase):
         print("Testing that GET request to weekdata endpoint returns with a 200 code...")
         response = requests.get(url + "weekdata")
         self.assertEqual(response.status_code, 200)
+
+    def test_weekdata_post_failure(self):
+        print("Testing that POST request to weekdata endpoint returns with a 404 code...")
+        response = requests.post(url + "weekdata")
+        self.assertEqual(response.status_code, 404)
+    
     def test_weekdata_get_content_size(self):
         print("Testing that the weekdata JSON is not an empty collection...")
         response = requests.get(url + "weekdata")
-        #convert response into a list
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         self.assertEqual(len(respJSON), 1)
 
     def test_weekdata_get_content_fields(self):
         print("Checking types of the specific fields in weekdata response...")
         response = requests.get(url + "weekdata")
-        #convert response into a list
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         self.assertEqual(type(respJSON[0]['_id']), str)
         self.assertEqual(type(respJSON[0]['Sunday']), int)
@@ -50,7 +53,6 @@ class AppTest(unittest.TestCase):
                 templateObject = {'day': key, 'sanitizations': respJSON[0][key]}
                 dataArray.append(templateObject)
     
-        #Now loop through new data array
         for i in range(len(dataArray)):
             self.assertEqual(type(dataArray[i]['day']), str)
             self.assertEqual(type(dataArray[i]['sanitizations']), int)
@@ -60,6 +62,11 @@ class AppTest(unittest.TestCase):
         print("Testing that GET request to data endpoint returns with a 200 code...")
         response = requests.get(url + "data")
         self.assertEqual(response.status_code, 200)
+
+    def test_data_post_failure(self):
+        print("Testing that POST request to data endpoint returns with a 404 code...")
+        response = requests.post(url + "data")
+        self.assertEqual(response.status_code, 404)
     
     def test_data_get_content_size(self):
         print("Testing that data JSON exists (i.e. has a size >= 0)...")
@@ -92,7 +99,6 @@ class AppTest(unittest.TestCase):
         else:
             self.assertEqual(True, True)
         
-        #Now loop through new data array
         for i in range(len(dataArray)):
             self.assertEqual(type(dataArray[i]['name']), str)
             self.assertEqual(type(dataArray[i]['value']), int)

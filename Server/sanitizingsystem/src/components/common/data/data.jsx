@@ -46,6 +46,7 @@ export default function Data() {
       }
       setData(data);
     }
+
     getStats();
   }, []);
 
@@ -55,6 +56,7 @@ export default function Data() {
         <div id = "desc1">
           <h1>Sanitizings Per Device</h1>
         </div>
+
         <div id="pie">
           <PieChart width={440} height={340}>
             <Pie dataKey="value" isAnimationActive={true} data={fetchedData} cx={200} cy={200} outerRadius={80} fill="#5E9A50" label/>

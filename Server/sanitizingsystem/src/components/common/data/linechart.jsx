@@ -1,55 +1,44 @@
 import React, { useEffect, useState } from "react";
 import {  Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import './data.css'
+//import database from  '../../../server/database/connector'
+
 
 export let ldata = [
     {
-        day: "Sun",
-        sanitizations: null
+      day: "Sun",
+      Sanitizations: 0
     },
     {
         day: "Mon",
-        sanitizations: null
+        Sanitizations: 0
     },
     {
         day: "Tues",
-        sanitizations: null
+        Sanitizations: 0
     },
     {
         day: "Wed",
-        sanitizations: null
+        Sanitizations: 0
     },
     {
         day: "Thurs",
-        sanitizations: null
+        Sanitizations: 0
     },
     {
         day: "Fri",
-        sanitizations: null
+        Sanitizations: 0
     },
     {
         day: "Sat",
-        sanitizations: null
+        Sanitizations: 0
     }
 ];
 
-export const LineCharts = (props) => { 
-
-  ldata[0].sanitizations  = props.dayoWeek.Sunday;
-  ldata[1].sanitizations  = props.dayoWeek.Monday;
-  ldata[2].sanitizations  = props.dayoWeek.Tuesday;
-  ldata[3].sanitizations  = props.dayoWeek.Wednesday;
-  ldata[4].sanitizations  = props.dayoWeek.Thursday;
-  ldata[5].sanitizations  = props.dayoWeek.Friday;
-  ldata[6].sanitizations  = props.dayoWeek.Saturday;
-
-  return true;
-};
-
 export function LineChartData() {  
 
-    //get data from the database
-    const [wk, setwk] = useState([]);
+    // //get data from the database
+    // const [wk, setwk] = useState([]);
   
     useEffect(() => {
           async function getLineData() 
@@ -66,27 +55,35 @@ export function LineChartData() {
               }
   
               //stat = the fetched data in json format
-              let wk = await weekDater.json();
-              delete wk.doorsSanid;
-              setwk(wk);              
+              const getWeekData = await weekDater.json();
+              console.log(getWeekData);
+
+              //Load the data from JSON into array to display on line chart
+              ldata[0].Sanitizations = getWeekData[0].Sunday;
+              ldata[1].Sanitizations = getWeekData[0].Monday;
+              ldata[2].Sanitizations = getWeekData[0].Tuesday;
+              ldata[3].Sanitizations = getWeekData[0].Wednesday;
+              ldata[4].Sanitizations = getWeekData[0].Thursday;
+              ldata[5].Sanitizations = getWeekData[0].Friday;
+              ldata[6].Sanitizations = getWeekData[0].Saturday;
+
+              console.log(ldata);
+
+              // setwk(ldata);              
             }
             getLineData();
+            // console.log(wk)
     }, []);
   
-    function getter () {
-      return wk.map( (dater) => {
-              return (<LineCharts key={wk._id} dayoWeek={dater}/>);   
-        })}
   
     return (
       <section>
-        {getter()}
         
         <section>
             <div id="line">
               <LineChart width={440} height={340} data={ldata} margin={{top: 40, right: 0, left: 0, bottom: 0}}>
               <CartesianGrid stroke="#ccc" strokeDasharray="1 1"  />
-              <XAxis dataKey="Day" />
+              <XAxis dataKey="day" />
               <YAxis />
               <Tooltip />
               <Legend />
@@ -97,4 +94,3 @@ export function LineChartData() {
       </section>
     );
   }
-  

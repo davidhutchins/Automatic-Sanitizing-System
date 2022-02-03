@@ -22,6 +22,17 @@ stats.route("/data").get(function (req, res) {
 });
 
 
+stats.route("/weekdata").get(function (req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  db_connect
+    .collection("weekdata")
+    .find({})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
 
 
 

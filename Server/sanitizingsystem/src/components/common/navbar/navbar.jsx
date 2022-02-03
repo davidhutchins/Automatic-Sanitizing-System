@@ -25,9 +25,9 @@ function Navbar() {
             <li>
               <Link to="/levels"className="link">Power Levels</Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/data"className="link">Data</Link>
-            </li>
+            </li> */}
             <li>
               <Link to={GUIDE} target="_blank"className="link">Setup Guide</Link>
             </li>

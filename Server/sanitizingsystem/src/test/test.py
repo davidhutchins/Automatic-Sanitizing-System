@@ -3,6 +3,7 @@ import requests
 import json
 
 url = "http://localhost:2000/"
+expressUrl = "http://localhost:5000/"
 
 # Run this file while the web server hosting the API is running
 class AppTest(unittest.TestCase):
@@ -27,7 +28,7 @@ class AppTest(unittest.TestCase):
         print("Testing that the weekdata JSON is not an empty collection...")
         response = requests.get(url + "weekdata")
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
-        self.assertEqual(len(respJSON), 1)
+        self.assertNotEqual(len(respJSON), 0)
 
     def test_weekdata_get_content_fields(self):
         print("Checking types of the specific fields in weekdata response...")
@@ -102,6 +103,11 @@ class AppTest(unittest.TestCase):
         for i in range(len(dataArray)):
             self.assertEqual(type(dataArray[i]['name']), str)
             self.assertEqual(type(dataArray[i]['value']), int)
+        
+    def test_get_express_success(self):
+        print("Testing that we can connect to an endpoint using Express and it returns a success code...")
+        response = requests.get(expressUrl + 'express_backend')
+        self.assertEqual(response.status_code, 200)
 
 if __name__ == '__main__':
     unittest.main()

@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import {  Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import './data.css'
-import totalPings, { data } from './data';
 //import database from  '../../../server/database/connector'
 
 
@@ -36,28 +35,16 @@ export let ldata = [
     }
 ];
 
-export const LineCharts = (props) => { 
-  ldata[0].sanitizations  = props.dayoWeek.Sunday;
-  ldata[1].sanitizations  = props.dayoWeek.Monday;
-  ldata[2].sanitizations  = props.dayoWeek.Tuesday;
-  ldata[3].sanitizations  = props.dayoWeek.Wednesday;
-  ldata[4].sanitizations  = props.dayoWeek.Thursday;
-  ldata[5].sanitizations  = props.dayoWeek.Friday;
-  ldata[6].sanitizations  = props.dayoWeek.Saturday;
-
-  return true;
-};
-
 export function LineChartData() {  
 
-    //get data from the database
-    const [wk, setwk] = useState([]);
+    // //get data from the database
+    // const [wk, setwk] = useState([]);
   
     useEffect(() => {
           async function getLineData() 
           {
             //gets the data from the database at the localhost specified
-            const weekDater = await fetch(`http://localhost:2000/weekdata/`);
+            const weekDater = await fetch(`http://localhost:2000/weekdata?handleId=30`);
   
               //if there is no response then give this message
               if (!weekDater.ok) 
@@ -68,20 +55,29 @@ export function LineChartData() {
               }
   
               //stat = the fetched data in json format
-              const wk = await weekDater.json();
-              setwk(wk);              
+              const getWeekData = await weekDater.json();
+              console.log(getWeekData);
+
+              //Load the data from JSON into array to display on line chart
+              ldata[0].sanitizations = getWeekData[0].Sunday;
+              ldata[1].sanitizations = getWeekData[0].Monday;
+              ldata[2].sanitizations = getWeekData[0].Tuesday;
+              ldata[3].sanitizations = getWeekData[0].Wednesday;
+              ldata[4].sanitizations = getWeekData[0].Thursday;
+              ldata[5].sanitizations = getWeekData[0].Friday;
+              ldata[6].sanitizations = getWeekData[0].Saturday;
+
+              console.log(ldata);
+
+              // setwk(ldata);              
             }
             getLineData();
+            // console.log(wk)
     }, []);
   
-    function getter () {
-      return wk.map( (dater) => {
-              return (<LineCharts key={wk._id} dayoWeek={dater}/>);   
-        })}
   
     return (
       <section>
-        {getter()}
         
         <section>
             <div id="line">
@@ -98,4 +94,3 @@ export function LineChartData() {
       </section>
     );
   }
-  

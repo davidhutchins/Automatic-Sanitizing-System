@@ -10,7 +10,7 @@ const Device = (props) => {
         <tbody>
           <tr>
             <td>
-              <h3>{ldata[d.getDay()].sanitizations}</h3>
+              <h3>{ldata[d.getDay()].Sanitizations}</h3>
             </td>
           </tr>
         </tbody>

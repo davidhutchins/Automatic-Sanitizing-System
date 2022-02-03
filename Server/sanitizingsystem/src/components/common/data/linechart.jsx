@@ -7,31 +7,31 @@ import './data.css'
 export let ldata = [
     {
       day: "Sun",
-      sanitizations: 0
+      Sanitizations: 0
     },
     {
         day: "Mon",
-        sanitizations: 0
+        Sanitizations: 0
     },
     {
         day: "Tues",
-        sanitizations: 0
+        Sanitizations: 0
     },
     {
         day: "Wed",
-        sanitizations: 0
+        Sanitizations: 0
     },
     {
         day: "Thurs",
-        sanitizations: 0
+        Sanitizations: 0
     },
     {
         day: "Fri",
-        sanitizations: 0
+        Sanitizations: 0
     },
     {
         day: "Sat",
-        sanitizations: 0
+        Sanitizations: 0
     }
 ];
 
@@ -59,13 +59,13 @@ export function LineChartData() {
               console.log(getWeekData);
 
               //Load the data from JSON into array to display on line chart
-              ldata[0].sanitizations = getWeekData[0].Sunday;
-              ldata[1].sanitizations = getWeekData[0].Monday;
-              ldata[2].sanitizations = getWeekData[0].Tuesday;
-              ldata[3].sanitizations = getWeekData[0].Wednesday;
-              ldata[4].sanitizations = getWeekData[0].Thursday;
-              ldata[5].sanitizations = getWeekData[0].Friday;
-              ldata[6].sanitizations = getWeekData[0].Saturday;
+              ldata[0].Sanitizations = getWeekData[0].Sunday;
+              ldata[1].Sanitizations = getWeekData[0].Monday;
+              ldata[2].Sanitizations = getWeekData[0].Tuesday;
+              ldata[3].Sanitizations = getWeekData[0].Wednesday;
+              ldata[4].Sanitizations = getWeekData[0].Thursday;
+              ldata[5].Sanitizations = getWeekData[0].Friday;
+              ldata[6].Sanitizations = getWeekData[0].Saturday;
 
               console.log(ldata);
 
@@ -87,7 +87,7 @@ export function LineChartData() {
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="sanitizations" stroke="#5E9A50" activeDot={{ r: 10 }}/>
+              <Line type="monotone" dataKey="Sanitizations" stroke="#5E9A50" activeDot={{ r: 10 }}/>
               </LineChart>
             </div>
         </section>

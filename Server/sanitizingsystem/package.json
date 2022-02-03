@@ -46,13 +46,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-
-  }, 
-  
-
-"devDependencies": {
-  "jest": "^27.4.7",
-  "supertest": "^6.2.2"
-},
-"proxy": "http://localhost:5000"
+  },
+  "devDependencies": {
+    "jest": "^27.4.7",
+    "supertest": "^6.2.2"
+  },
+  "proxy": "http://localhost:5000"
 }

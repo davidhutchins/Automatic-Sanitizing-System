@@ -29,3 +29,6 @@ By David Hutchins, Austin Welch, Branden Evangelista, and Brontë Cadogan
 6. In another terminal, navigate to this folder:
    `cd Automatic-Sanitizing-System/Server/sanitizingsystem/src`
 and run the application with `npm start`
+7. In another terminal, navigate to this folder:
+   `cd Automatic-Sanitizing-System/Server/sanitizingsystem/src`
+and enter the command `node exserver.js` to connect to the Express backend

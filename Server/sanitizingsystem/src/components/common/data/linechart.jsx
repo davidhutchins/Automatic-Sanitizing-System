@@ -1,19 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { PieChart, Pie, Legend, Tooltip, ResponsiveContainer, LineChart, Line, XAxis, YAxis, CartesianGrid, LabelList} from 'recharts';
+import {  Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import './data.css'
 import totalPings, { data } from './data';
 //import database from  '../../../server/database/connector'
 
 
-//!! To fix the issue of having to read several collections, lets make one jsx file dedicated to the line chart
-//!! It has all the code needed to read it in the JSON format then we can call it in the html portion below
-let totalSanitizations = 0;
-
-//https://www.psu.edu/news/campus-life/story/think-twice-grabbing-door-knob/
-let germsKilled = 0;
-
-
-let ldata = [
+export let ldata = [
     {
       day: "Sun",
       sanitizations: 0
@@ -44,49 +36,17 @@ let ldata = [
     }
 ];
 
+export const LineCharts = (props) => { 
+  ldata[0].sanitizations  = props.dayoWeek.Sunday;
+  ldata[1].sanitizations  = props.dayoWeek.Monday;
+  ldata[2].sanitizations  = props.dayoWeek.Tuesday;
+  ldata[3].sanitizations  = props.dayoWeek.Wednesday;
+  ldata[4].sanitizations  = props.dayoWeek.Thursday;
+  ldata[5].sanitizations  = props.dayoWeek.Friday;
+  ldata[6].sanitizations  = props.dayoWeek.Saturday;
 
-const LineCharts = (props) => { 
-
-  const d = new Date();
-
-  //query the database
-  //const weekdata =   database.collection('weekdata'); 
-  
-    ldata[0].sanitizations  = props.dayoWeek.Sunday;
-    ldata[1].sanitizations  = props.dayoWeek.Monday;
-    ldata[2].sanitizations  = props.dayoWeek.Tuesday;
-    ldata[3].sanitizations  = props.dayoWeek.Wednesday;
-    ldata[4].sanitizations  = props.dayoWeek.Thursday;
-    ldata[5].sanitizations  = props.dayoWeek.Friday;
-    ldata[6].sanitizations  = props.dayoWeek.Saturday;  
-    ldata[d.getDay()] = totalPings;
-
-    // database.weekdata.updateMany(
-    //   {},
-    //   { $set: {
-    //     Sunday: ldata[0].sanitizations,
-    //     Monday: ldata[1].sanitizations,
-    //     Tuesday: ldata[2].sanitizations,
-    //     Wednesday: ldata[3].sanitizations,
-    //     Thursday: ldata[4].sanitizations,
-    //     Friday: ldata[5].sanitizations,
-    //     Saturday: ldata[6].sanitizations
-    //   }
-    // }
-
-    // );
-    
-    for(var i = 0; i < ldata.length; i++)
-    {
-      totalSanitizations += ldata[i].sanitizations;
-    }
-    
-    germsKilled = totalSanitizations * ((1 * 10)**6); //10^6 power
-   
-    return true;
+  return true;
 };
-
-
 
 export function LineChartData() {  
 
@@ -109,19 +69,16 @@ export function LineChartData() {
   
               //stat = the fetched data in json format
               const wk = await weekDater.json();
-
               setwk(wk);              
             }
             getLineData();
-    }, [wk.length, ]);
+    }, []);
   
     function getter () {
       return wk.map( (dater) => {
               return (<LineCharts key={wk._id} dayoWeek={dater}/>);   
         })}
   
-    
-    
     return (
       <section>
         {getter()}
@@ -136,25 +93,8 @@ export function LineChartData() {
               <Legend />
               <Line type="monotone" dataKey="sanitizations" stroke="#5E9A50" activeDot={{ r: 10 }}/>
               </LineChart>
-              <div id="fontss">
-                <h1>Weekly Sanitizations: &ensp; {totalSanitizations} </h1>
-                <h1> Weekly Germs Killed: &ensp; {germsKilled}</h1>
-              </div>
             </div>
         </section>
-        
-        <section>
-        {/* <div id= "weekStats">
-
-        <h1>
-            Weekly Sanitizations 
-            </h1>
-        <h1>{totalSanitizations}</h1>
-        <h1> Weekly Germs Killed </h1>
-        <h1>{germsKilled}</h1>
-        </div> */}
-        </section>
-  
       </section>
     );
   }

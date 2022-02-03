@@ -8,6 +8,9 @@
     "@testing-library/user-event": "^13.5.0",
     "bootstrap": "^5.1.3",
     "history": "^5.2.0",
+    "mocha": "^9.2.0",
+    "mock-req": "^0.2.0",
+    "mock-res": "^0.6.0",
     "react": "^17.0.2",
     "react-bootstrap": "^2.0.4",
     "react-dom": "^17.0.2",
@@ -16,6 +19,8 @@
     "react-scripts": "5.0.0",
     "react-tsparticles": "^1.37.6",
     "recharts": "^2.1.8",
+    "sinon": "^13.0.0",
+    "unit.js": "^2.1.1",
     "web-vitals": "^2.1.2"
   },
   "scripts": {
@@ -41,6 +46,14 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+
   }, 
   "proxy": "http://localhost:5000"
+
+  },
+  "devDependencies": {
+    "jest": "^27.4.7",
+    "supertest": "^6.2.2"
+  }
+
 }

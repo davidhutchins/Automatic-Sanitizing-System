@@ -19,10 +19,7 @@ _u32 g_Status;
 #define SUCCESS 0
 #define PORT 80
 
-#define WEBPAGE "54.196.144.98"
-
-#define KEEP_CONNECTION 0xABC1
-#define CLOSE_CONNECTION 0xABC2
+#define WEBPAGE "54.221.50.20"
 
 char request[1024];
 char requestTemplate[512];
@@ -33,7 +30,6 @@ extern char SendBuff[MAX_SEND_BUFF_SIZE];
 unsigned long DestinationIP;
 int SockID;
 static volatile uint32_t localIP;
-int connectionType;
 
 uint8_t wifi_init();
 extern int32_t establishConnectionWithAP(void);

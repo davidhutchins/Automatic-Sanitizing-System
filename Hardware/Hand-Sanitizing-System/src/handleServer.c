@@ -21,3 +21,13 @@ uint8_t updateBatteryLevel(int16_t handleID, int16_t powerLevel) {
 
     return 0;
 }
+
+uint8_t test() {
+   sendRequestToServer("/ping");
+   if (strstr(serverResponse, "pong"))
+   {
+       printf("Pinged Server!\n");
+       return 1;
+   }
+   return 0;
+}

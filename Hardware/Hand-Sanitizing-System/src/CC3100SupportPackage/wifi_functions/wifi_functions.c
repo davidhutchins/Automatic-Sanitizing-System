@@ -13,7 +13,7 @@ char PASSKEY[100]            =    "cloudyjungle778";
 char Recvbuff[MAX_RECV_BUFF_SIZE];
 char SendBuff[MAX_SEND_BUFF_SIZE];
 
-uint8_t wifi_init(uint32_t conntype)
+uint8_t wifi_init()
 {
     int32_t retVal;
 
@@ -31,12 +31,6 @@ uint8_t wifi_init(uint32_t conntype)
 
     sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
 
-    connectionType = conntype;
-    if (connectionType == CLOSE_CONNECTION)
-    {
-        disconnectFromAP();
-        sl_Stop(0xFF);
-    }
 
     sendRequestToServer("/ping");
     if (strstr(serverResponse, "pong"))
@@ -57,11 +51,6 @@ int32_t sendRequestToServer(char* requestParams){
     int32_t ASize = 0;
     SlSockAddrIn_t Addr;
     memset(Recvbuff, 0, MAX_RECV_BUFF_SIZE);
-
-    if (connectionType == CLOSE_CONNECTION){
-        sl_Start(0, 0, 0);
-        establishConnectionWithAP();
-    }
 
     Addr.sin_family = SL_AF_INET;
     Addr.sin_port = sl_Htons(PORT);
@@ -89,11 +78,6 @@ int32_t sendRequestToServer(char* requestParams){
     }
 
     parseServerResponse(serverResponse, "pre-wrap\">");
-
-    if(connectionType == CLOSE_CONNECTION){
-        disconnectFromAP();
-        sl_Stop(SL_STOP_TIMEOUT);
-    }
 
     return 1;
 }
@@ -126,10 +110,9 @@ void parseServerResponse(char* parsedResponse, char* keyword){
 void restartWIFI(){
     disconnectFromAP();
     sl_Stop(SL_STOP_TIMEOUT);
-    if(connectionType == KEEP_CONNECTION){
-        sl_Start(0, 0, 0);
-        establishConnectionWithAP();
-    }
+
+    sl_Start(0, 0, 0);
+    establishConnectionWithAP();
 }
 
 

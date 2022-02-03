@@ -31,23 +31,19 @@ export default function Data() {
       const stat = await resp.json();
 
       //Push read data to dynamic data array (pie chart and line graph)
+      data.pop(); //Get rid of default data
       for (let i = 0; i < stat.length; i++)
       {
         if (typeof data[i] == 'undefined')
         {
-          data.push({name: 'Device ' + (i+1).toString(), value: stat[i].doorsSanid});
+          data.push({name: 'Device ' + (stat[i].doorsSanid).toString(), value: stat[i].grmsKild});
         }
 
-        if (data[i].name === 'Device ' + (i+1).toString() && data[i].value !== stat[i].doorsSanid)
+        if (data[i].name === 'Device ' + (stat[i].doorsSanid).toString() && data[i].value !== stat[i].grmsKild)
         {
-          data[i].value = stat[i].doorsSanid;
-        }
-        else if (data[i].name === 'Device ' + (i+1).toString() && data[i].value === stat[i].doorsSanid)
-        {
-          continue;
+          data[i].value = stat[i].grmsKild;
         }
       }
-      
       setData(data);
     }
     getStats();

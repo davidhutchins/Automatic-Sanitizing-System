@@ -55,7 +55,7 @@ export function LineChartData() {
           async function getLineData() 
           {
             //gets the data from the database at the localhost specified
-            const weekDater = await fetch(`http://localhost:2000/weekdata/`);
+            const weekDater = await fetch(`http://localhost:2000/weekdata?handleId=30`);
   
               //if there is no response then give this message
               if (!weekDater.ok) 
@@ -66,7 +66,8 @@ export function LineChartData() {
               }
   
               //stat = the fetched data in json format
-              const wk = await weekDater.json();
+              let wk = await weekDater.json();
+              delete wk.doorsSanid;
               setwk(wk);              
             }
             getLineData();
@@ -85,11 +86,11 @@ export function LineChartData() {
             <div id="line">
               <LineChart width={440} height={340} data={ldata} margin={{top: 40, right: 0, left: 0, bottom: 0}}>
               <CartesianGrid stroke="#ccc" strokeDasharray="1 1"  />
-              <XAxis dataKey="day" />
+              <XAxis dataKey="Day" />
               <YAxis />
               <Tooltip />
               <Legend />
-              <Line type="monotone" dataKey="sanitizations" stroke="#5E9A50" activeDot={{ r: 10 }}/>
+              <Line type="monotone" dataKey="Sanitizations" stroke="#5E9A50" activeDot={{ r: 10 }}/>
               </LineChart>
             </div>
         </section>

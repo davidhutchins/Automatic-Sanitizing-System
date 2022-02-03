@@ -4,7 +4,7 @@
 }
 
 #toplvlhead{
-    position: fixed;
+    position: absolute;
     text-align: center;
     top : 7%;
     left: 43%;

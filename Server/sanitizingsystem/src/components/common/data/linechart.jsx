@@ -1,40 +1,42 @@
 import React, { useEffect, useState } from "react";
 import {  Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import './data.css'
+import totalPings, { data } from './data';
+//import database from  '../../../server/database/connector'
+
 
 export let ldata = [
     {
-        day: "Sun",
-        sanitizations: null
+      day: "Sun",
+      sanitizations: 0
     },
     {
         day: "Mon",
-        sanitizations: null
+        sanitizations: 0
     },
     {
         day: "Tues",
-        sanitizations: null
+        sanitizations: 0
     },
     {
         day: "Wed",
-        sanitizations: null
+        sanitizations: 0
     },
     {
         day: "Thurs",
-        sanitizations: null
+        sanitizations: 0
     },
     {
         day: "Fri",
-        sanitizations: null
+        sanitizations: 0
     },
     {
         day: "Sat",
-        sanitizations: null
+        sanitizations: 0
     }
 ];
 
 export const LineCharts = (props) => { 
-
   ldata[0].sanitizations  = props.dayoWeek.Sunday;
   ldata[1].sanitizations  = props.dayoWeek.Monday;
   ldata[2].sanitizations  = props.dayoWeek.Tuesday;

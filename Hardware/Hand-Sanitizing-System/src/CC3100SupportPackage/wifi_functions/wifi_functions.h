@@ -19,7 +19,7 @@ _u32 g_Status;
 #define SUCCESS 0
 #define PORT 80
 
-#define WEBPAGE "54.242.85.61"
+#define WEBPAGE "54.174.75.180"
 
 char request[1024];
 char requestTemplate[512];

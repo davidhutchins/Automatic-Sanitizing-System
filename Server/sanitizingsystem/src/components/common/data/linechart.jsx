@@ -44,7 +44,7 @@ export function LineChartData() {
           async function getLineData() 
           {
             //gets the data from the database at the localhost specified
-            const weekDater = await fetch(`http://localhost:2000/weekdata?handleId=30`);
+            const weekDater = await fetch(`http://54.174.75.180/api/weekdata?handleId=30`);
   
               //if there is no response then give this message
               if (!weekDater.ok) 

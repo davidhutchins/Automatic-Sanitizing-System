@@ -16,7 +16,7 @@ export default function Data() {
   async function getStats() 
   {
       //gets the data from the database at the localhost specified
-      const resp = await fetch(`http://localhost:2000/data/`);
+      const resp = await fetch(`http://54.242.85.61/api/data/`);
 
 
       //if there is no response then give this message

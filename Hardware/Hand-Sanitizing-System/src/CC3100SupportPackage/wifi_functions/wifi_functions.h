@@ -19,7 +19,7 @@ _u32 g_Status;
 #define SUCCESS 0
 #define PORT 80
 
-#define WEBPAGE "54.221.50.20"
+#define WEBPAGE "54.242.85.61"
 
 char request[1024];
 char requestTemplate[512];
@@ -37,4 +37,5 @@ extern int32_t disconnectFromAP(void);
 extern int32_t configureSimpleLinkToDefaultState(void);
 extern int32_t sendRequestToServer(char* request);
 extern void parseServerResponse(char* parsedResponse, char* keyword);
+extern uint8_t searchResponse(char* keyword);
 void restartWIFI();

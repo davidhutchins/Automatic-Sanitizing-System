@@ -3,7 +3,7 @@
 #include "handleServer.h"
 #include "BSP.h"
 
-#define HANDLE_ID 123
+#define HANDLE_ID 30
 
 #define QUARTER_SECOND 46875
  
@@ -14,7 +14,6 @@ void timer_stop();
 
 uint8_t count = 0;
 uint8_t activationFlag = 0;
-uint8_t safetyFlag = 0;
 uint8_t timerFlag = 0;
 
 int main(void)
@@ -37,20 +36,13 @@ int main(void)
             P6OUT |= BIT0;
 
             uint8_t attempts = 0;
-//            while(incrementInteractionCounter(HANDLE_ID) == 0) { // Update handle interaction counter, quit after 3 tries
-            while(test() == 0) {
+            while(incrementInteractionCounter(HANDLE_ID) == 0) { // Update handle interaction counter, quit after 3 tries
                 attempts++;
                 if (attempts == 3)
                     break;
             }
 
             timer_start();
-	    }
-
-	    if (safetyFlag) {
-	        safetyFlag = 0;
-            count = 0;
-            P6OUT &= ~BIT0;
 	    }
 
 	    if (timerFlag) {
@@ -72,16 +64,14 @@ int main(void)
 
 void gpio_init(void) {
     P6DIR   = 0xFF;             // Set P1.0 as Output
-    P6OUT   &= ~BIT0;            // Set BIT1 as high to start.
+    P6OUT   &= ~BIT0;            // Set BIT0 as low to start.
 
     P3DIR   &= ~(BIT5 | BIT7);
     P3IFG   &= ~(BIT5 | BIT7);  // Setting up main mechanism and safety
-    P3IES   |= BIT7;            // Bit 4 is high-to-low, so main mechanism
-    P3IES   &= ~BIT5;           // Bit 2 is low-to-high, so safety mechanism
+    P3IES   |= BIT7;            // Bit 7 is high-to-low, so main mechanism
+    P3IES   &= ~BIT5;           // Bit 5 is low-to-high, so safety mechanism
     P3IE    |= BIT5 | BIT7;     // Enabling both interrupts
-    P3REN   |= BIT7;            // Enabling pull up for main mechanism
-    P3OUT   |= BIT7;            // Setting it to pull up as opposed to pull down
-    P3OUT   &= BIT5;
+    P3OUT   &= BIT5 | BIT7;
 }
 
 void timer_init(void)
@@ -112,7 +102,9 @@ void PORT3_IRQHandler(){
     if (P3IFG & BIT5)       // Bit 5 is safety (low-to-high)
     {
        P3IFG &= ~BIT5;     // clearing the interrupt flag
-       safetyFlag = 1;
+       count = 0;
+       printf("Safety Triggered!\n");
+       P6OUT &= ~BIT0;
     }
 
     // Enable UV
@@ -120,6 +112,7 @@ void PORT3_IRQHandler(){
     {
         P3IFG &= ~BIT7;         // clearing the interrupt flag
         activationFlag = 1;
+        printf("Main Triggered!\n");
     }
 }
 /****** Timer Interrupt ******/

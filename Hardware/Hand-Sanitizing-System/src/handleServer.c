@@ -6,7 +6,6 @@ uint8_t incrementInteractionCounter(int16_t handleID) {
     sprintf(requestParams, "/api/updateInteractions?handleId=%u", handleID);
     sendRequestToServer(requestParams);
     if (searchResponse("success")) {
-        printf("Incremented Counter!\n");
         return 1;
     }
 

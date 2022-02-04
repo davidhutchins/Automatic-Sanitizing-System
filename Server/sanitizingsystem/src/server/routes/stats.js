@@ -103,5 +103,8 @@ stats.route("/updateInteractions").get(function (req, res) {
     });
 });
 
+stats.route("/ping").get(function (req, res) {
+  res.send('pong');
+});
 
 module.exports = stats;

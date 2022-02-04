@@ -1,8 +1,10 @@
 import './App.css';
+import React, { Component } from 'react';
 import particle from "./configs/particle";
 import Particles from 'react-tsparticles';
 import {Header} from './components/common';
-document.title = "A.C.H.S.";
+document.title = "A.H.S.S.";
+
 
 function App() {
   return (
@@ -12,7 +14,5 @@ function App() {
     </div>
   );
 }
-
-
-
+ 
 export default App;

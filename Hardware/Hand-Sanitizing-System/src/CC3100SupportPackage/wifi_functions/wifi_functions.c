@@ -32,8 +32,8 @@ uint8_t wifi_init()
     sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
 
 
-    sendRequestToServer("/ping");
-    if (strstr(serverResponse, "pong"))
+    sendRequestToServer("/api/ping");
+    if (searchResponse("pong"))
     {
         printf("Connected to Server!\n");
         return 1;
@@ -54,7 +54,7 @@ int32_t sendRequestToServer(char* requestParams){
 
     Addr.sin_family = SL_AF_INET;
     Addr.sin_port = sl_Htons(PORT);
-    Addr.sin_addr.s_addr = sl_Htonl(DestinationIP); // IP to big endian
+    Addr.sin_addr.s_addr = sl_Htonl(DestinationIP);
     ASize = sizeof(SlSockAddrIn_t);
     SockID = sl_Socket(SL_AF_INET, SL_SOCK_STREAM, 0);
 
@@ -63,8 +63,8 @@ int32_t sendRequestToServer(char* requestParams){
 
         if ((SockID >= 0) && (retVal >= 0)) {
             strcpy(SendBuff, request);
-            sl_Send(SockID, SendBuff, strlen(SendBuff), 0);   // Send the HTTP GET/POST
-            sl_Recv(SockID, Recvbuff, MAX_RECV_BUFF_SIZE, 0); // Receive response
+            sl_Send(SockID, SendBuff, strlen(SendBuff), 0);
+            sl_Recv(SockID, Recvbuff, MAX_RECV_BUFF_SIZE, 0);
             sl_Close(SockID);
         }
         else{
@@ -77,9 +77,15 @@ int32_t sendRequestToServer(char* requestParams){
         return 0;
     }
 
-    parseServerResponse(serverResponse, "pre-wrap\">");
-
     return 1;
+}
+
+uint8_t searchResponse(char* keyword) {
+    char *pt = strstr(Recvbuff, keyword);
+    if (pt != 0)
+        return 1;
+    else
+        return 0;
 }
 
 void parseServerResponse(char* parsedResponse, char* keyword){

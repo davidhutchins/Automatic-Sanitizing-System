@@ -10,7 +10,7 @@ const Device = (props) => {
         <tbody>
           <tr>
             <td>
-              <h3>{ldata[d.getDay()].sanitizations}</h3>
+              <h3>{ldata[d.getDay()].Sanitizations}</h3>
             </td>
           </tr>
         </tbody>
@@ -26,7 +26,7 @@ export default function Statistics()
           async function getStats() 
           {
             //gets the data from the database at the localhost specified
-            const resp = await fetch(`http://localhost:2000/data/`);
+            const resp = await fetch(`http://http://54.242.85.61/api/data/`);
               //if there is no response then give this message
               if (!resp.ok) 
               {
@@ -49,7 +49,7 @@ export default function Statistics()
         <div id="pageTitle">
             <h1>Sanitizing Statistics & Data</h1>  
             <div id="subheader">
-            <h2 id="title">Total Number Of Doors Sanitized</h2>
+            <h2 id="title">Total Number Of Doors Sanitized (Daily)</h2>
               <div id="stats">
                   {Device()}
               </div>

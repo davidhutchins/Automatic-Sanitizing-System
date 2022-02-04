@@ -4,7 +4,7 @@
 }
 
 #toplvlhead{
-    position: fixed;
+    position: absolute;
     text-align: center;
     top : 7%;
     left: 43%;
@@ -12,7 +12,7 @@
     height: 100px;
     text-shadow: -5px 4px 4px black;
     font-size:xx-large;
-    border: 3px solid #a4ad21;
+    /* border: 3px solid #a4ad21; */
 
     }
 
@@ -24,7 +24,7 @@
         top : 20%;
         left: 9%;
         width: 440px;
-        border: 3px solid #00c451;
+        /* border: 3px solid #00c451; */
     }
 
     
@@ -35,7 +35,7 @@
         top : 20%;
         left: 60%;
         width: 440px;
-        border: 3px solid #00c451;
+        /* border: 3px solid #00c451; */
     }
 
     #desc
@@ -47,7 +47,7 @@
         left: 65%;
         width: 340px;
         height: 100px;
-        border: 1px solid #00c451;
+        /* border: 1px solid #00c451; */
     }
 
     #desc1
@@ -59,7 +59,7 @@
         left: 15%;
         width: 340px;
         height: 100px;
-        border: 1px solid #00c451;
+        /* border: 1px solid #00c451; */
     }
 
     #tooltip

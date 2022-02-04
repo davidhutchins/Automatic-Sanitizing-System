@@ -54,7 +54,7 @@ export default function Data() {
     <section id="containment-field">
       <section>
         <div id = "desc1">
-          <h1>Sanitizings Per Device</h1>
+          <h1>Sanitizings Per Device (Lifetime)</h1>
         </div>
 
         <div id="pie">

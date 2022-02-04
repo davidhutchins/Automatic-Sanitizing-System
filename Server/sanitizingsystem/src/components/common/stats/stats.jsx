@@ -49,7 +49,7 @@ export default function Statistics()
         <div id="pageTitle">
             <h1>Sanitizing Statistics & Data</h1>  
             <div id="subheader">
-            <h2 id="title">Total Number Of Doors Sanitized</h2>
+            <h2 id="title">Total Number Of Doors Sanitized (Daily)</h2>
               <div id="stats">
                   {Device()}
               </div>

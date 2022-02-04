@@ -4,7 +4,7 @@
     left: 32%;
     width: 460px;
     height: 485px;
-    border: 3px solid #a4ad21;
+    /* border: 3px solid #a4ad21; */
     text-shadow: -6px 4px 4px #000000;
     }
 
@@ -15,14 +15,14 @@
             left: 34%;
             width: 440px;
             height: 100px;
-            border: 3px solid #855454;
+            /* border: 3px solid #855454; */
             font-size:xx-large;
         
     }
 
     #subheader{
         width: 440px;
-        border: 3px solid #e6e3e3;
+        /* border: 3px solid #e6e3e3; */
     }
    
 
@@ -31,23 +31,23 @@
         margin-top: 0;
         width: max-content;
         margin-left: 150%;
-        border: 3px solid #73AD21;
+        /* border: 3px solid #73AD21; */
     }
 
     #title{
-        margin-top: 0;
         text-align: center;
         width: 440 px;
         font-size: x-large;
-        border: 3px solid #2321ad;
+        /* border: 3px solid #2321ad; */
     }
 
     #stats{
        
-        margin-left: 40%;
+        margin-left: 44%;
+        text-align: center;
         width: 440 px;
         font-size: x-large;
-        border: 3px solid #ad21ad;
+        /* border: 3px solid #ad21ad; */
     }
 
     #below

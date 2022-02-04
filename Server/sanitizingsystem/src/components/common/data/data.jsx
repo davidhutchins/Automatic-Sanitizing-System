@@ -16,7 +16,7 @@ export default function Data() {
   async function getStats() 
   {
       //gets the data from the database at the localhost specified
-      const resp = await fetch(`http://localhost:2000/data/`);
+      const resp = await fetch(`http://54.174.75.180/api/data/`);
 
 
       //if there is no response then give this message
@@ -31,25 +31,22 @@ export default function Data() {
       const stat = await resp.json();
 
       //Push read data to dynamic data array (pie chart and line graph)
+      data.pop(); //Get rid of default data
       for (let i = 0; i < stat.length; i++)
       {
         if (typeof data[i] == 'undefined')
         {
-          data.push({name: 'Device ' + (i+1).toString(), value: stat[i].doorsSanid});
+          data.push({name: 'Device ' + (stat[i].doorsSanid).toString(), value: stat[i].grmsKild});
         }
 
-        if (data[i].name === 'Device ' + (i+1).toString() && data[i].value !== stat[i].doorsSanid)
+        if (data[i].name === 'Device ' + (stat[i].doorsSanid).toString() && data[i].value !== stat[i].grmsKild)
         {
-          data[i].value = stat[i].doorsSanid;
-        }
-        else if (data[i].name === 'Device ' + (i+1).toString() && data[i].value === stat[i].doorsSanid)
-        {
-          continue;
+          data[i].value = stat[i].grmsKild;
         }
       }
-      
       setData(data);
     }
+
     getStats();
   }, []);
 
@@ -57,8 +54,9 @@ export default function Data() {
     <section id="containment-field">
       <section>
         <div id = "desc1">
-          <h1>Sanitizings Per Device</h1>
+          <h1>Sanitizings Per Device (Lifetime)</h1>
         </div>
+
         <div id="pie">
           <PieChart width={440} height={340}>
             <Pie dataKey="value" isAnimationActive={true} data={fetchedData} cx={200} cy={200} outerRadius={80} fill="#5E9A50" label/>

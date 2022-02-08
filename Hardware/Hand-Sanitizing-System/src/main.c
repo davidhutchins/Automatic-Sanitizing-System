@@ -33,7 +33,7 @@ int main(void)
 	    if (activationFlag) {
 	        activationFlag = 0;
 	        count = 0;
-            P6OUT |= BIT0;
+            P6OUT &= ~BIT0;
 
             uint8_t attempts = 0;
             while(incrementInteractionCounter(HANDLE_ID) == 0) { // Update handle interaction counter, quit after 3 tries
@@ -54,7 +54,7 @@ int main(void)
             else
             {
                 count = 0;
-                P6OUT &= ~BIT0; // Turn off light after time has passed
+                P6OUT |= BIT0; // Turn off light after time has passed
                 timer_stop();    // Stop the timer
             }
 	    }
@@ -64,7 +64,7 @@ int main(void)
 
 void gpio_init(void) {
     P6DIR   = 0xFF;             // Set P1.0 as Output
-    P6OUT   &= ~BIT0;            // Set BIT0 as low to start.
+    P6OUT   |= BIT0;            // Set BIT0 as high to start.
 
     P3DIR   &= ~(BIT5 | BIT7);
     P3IFG   &= ~(BIT5 | BIT7);  // Setting up main mechanism and safety
@@ -103,8 +103,7 @@ void PORT3_IRQHandler(){
     {
        P3IFG &= ~BIT5;     // clearing the interrupt flag
        count = 0;
-       printf("Safety Triggered!\n");
-       P6OUT &= ~BIT0;
+       P6OUT |= BIT0;
     }
 
     // Enable UV
@@ -112,7 +111,6 @@ void PORT3_IRQHandler(){
     {
         P3IFG &= ~BIT7;         // clearing the interrupt flag
         activationFlag = 1;
-        printf("Main Triggered!\n");
     }
 }
 /****** Timer Interrupt ******/

@@ -3,7 +3,8 @@ import requests
 import json
 from datetime import datetime
 
-url = "http://localhost:2000/"
+websites = ["http://localhost:2000/", "http://54.174.75.180/"]
+url = websites[0]
 
 # Run this file while the web server hosting the API is running
 class AppTest(unittest.TestCase):

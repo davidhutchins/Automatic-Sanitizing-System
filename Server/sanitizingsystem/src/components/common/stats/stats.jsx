@@ -3,8 +3,18 @@ import './stats.css'
 import { Data } from '../../common';
 import { ldata } from "../data/linechart";
 
-const d = new Date();
 
+
+const d = new Date();
+let dataSelect = ["Daily", "Weekly", "Lifetime"];
+
+// function clickOption()
+// {
+//   document.getElementById("demo").innerHTML = "YOU CLICKED ME!";
+//   // <div id="stats">
+//   //   {Device()}
+//   // </div>
+// }
 const Device = (props) => { 
   return (
         <tbody>
@@ -16,6 +26,22 @@ const Device = (props) => {
         </tbody>
   );
 };
+
+function DropDownMenu() {
+  return (
+    <div>
+      <p id="demo" onclick="clickOption">Click me.</p>
+      <div class="dropdown">
+        <button class="dropbtn">Data Select</button>
+          <div class="dropdown-content">
+            <p> {dataSelect[0]} </p>
+            <p> {dataSelect[1]} </p>
+            <p> {dataSelect[2]} </p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 //attempt to GET data from the mongodb server
 export default function Statistics() 
@@ -49,7 +75,8 @@ export default function Statistics()
         <div id="pageTitle">
             <h1>Sanitizing Statistics & Data</h1>  
             <div id="subheader">
-            <h2 id="title">Total Number Of Doors Sanitized (Daily)</h2>
+            <h2 id="title">Total Number Of Doors Sanitized</h2>
+              {DropDownMenu()}
               <div id="stats">
                   {Device()}
               </div>

@@ -6,7 +6,7 @@ function Home() {
     return (
         <section id="Homepage">
                 <section id="Titletxt">
-                    <h1 id="headerText">Automatic Handle Sanitizing System </h1>    
+                    <h1 id="headerText">Automatic Handle Cleaning System </h1>    
                 </section>
       
 

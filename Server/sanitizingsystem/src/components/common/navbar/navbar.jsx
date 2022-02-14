@@ -22,9 +22,9 @@ function Navbar() {
             <li>
               <Link to="/stats" className="link">Sanitizing Statistics</Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/levels"className="link">Power Levels</Link>
-            </li>
+            </li> */}
             {/* <li>
               <Link to="/data"className="link">Data</Link>
             </li> */}

@@ -4,6 +4,7 @@ import './data.css'
 import {LineChartData} from './linechart';
 
 export let data = [{name: "Device 1", value: 10}];
+export let overallTotal = 0;
 
 
 export default function Data() {  
@@ -43,6 +44,7 @@ export default function Data() {
         {
           data[i].value = stat[i].grmsKild;
         }
+        overallTotal += stat[i].grmsKild;
       }
       setData(data);
     }

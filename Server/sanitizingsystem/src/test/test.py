@@ -3,7 +3,7 @@ import requests
 import json
 from datetime import datetime
 
-websites = ["http://localhost:2000/", "http://54.174.75.180/api"]
+websites = ["http://localhost:2000/", "http://54.174.75.180/api/"]
 url = websites[0]
 deployedUrl = websites[1]
 
@@ -85,7 +85,7 @@ class AppTest(unittest.TestCase):
         #Fetch data again
         response = requests.get(url + 'weekdata?handleId=30')
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
-        self.assertEqual(respJSON[0][datetime.today().strftime('%A')], currentNumOfSanitizations)
+        self.assertGreaterEqual(respJSON[0][datetime.today().strftime('%A')], currentNumOfSanitizations)
 
     # data endpoint (/data)
     def test_data_get_success_local(self):
@@ -138,40 +138,40 @@ class AppTest(unittest.TestCase):
     # root endpoint (/)
     def test_default_api_call_error_deployed(self):
         print("Testing that GET request on root endpoint returns error code DEPLOYED...")
-        response = requests.get(url)
+        response = requests.get(deployedUrl)
         self.assertEqual(response.status_code, 404)
     
     # week data endpoint (/weekdata)
     def test_weekdata_get_success_deployed(self):
         print("Testing that GET request to weekdata endpoint returns with a 200 code DEPLOYED...")
-        response = requests.get(url + "weekdata")
+        response = requests.get(deployedUrl + "weekdata")
         self.assertEqual(response.status_code, 200)
 
     def test_weekdata_get_query_success_deployed(self):
         print("Testing that GET request to weekdata endpoint after querying an ID returns with a 200 code DEPLOYED...")
-        response = requests.get(url + "weekdata?handleId=30")
+        response = requests.get(deployedUrl + "weekdata?handleId=30")
         self.assertEqual(response.status_code, 200)
 
     def test_weekdata_post_failure_deployed(self):
         print("Testing that POST request to weekdata endpoint returns with a 404 code DEPLOYED...")
-        response = requests.post(url + "weekdata")
+        response = requests.post(deployedUrl + "weekdata")
         self.assertEqual(response.status_code, 404)
     
     def test_weekdata_get_content_size_deployed(self):
         print("Testing that the weekdata JSON is an empty collection (since we access data by querying) DEPLOYED...")
-        response = requests.get(url + "weekdata")
+        response = requests.get(deployedUrl + "weekdata")
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         self.assertEqual(len(respJSON), 0)
     
     def test_weekdata_get_content_query_size_deployed(self):
         print("Testing that the weekdata JSON is not an empty collection after querying DEPLOYED...")
-        response = requests.get(url + "weekdata?handleId=30")
+        response = requests.get(deployedUrl + "weekdata?handleId=30")
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         self.assertNotEqual(len(respJSON), 0)
 
     def test_weekdata_get_content_fields_deployed(self):
         print("Checking types of the specific fields in weekdata response DEPLOYED...")
-        response = requests.get(url + "weekdata?handleId=30")
+        response = requests.get(deployedUrl + "weekdata?handleId=30")
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         self.assertEqual(type(respJSON[0]['_id']), str)
         self.assertEqual(type(respJSON[0]['doorsSanid']), int)
@@ -186,7 +186,7 @@ class AppTest(unittest.TestCase):
     def test_weekdata_get_content_read_deployed(self):
         print("Testing/mocking that we can extract values from JSON (weekdata endpoint) onto a data array DEPLOYED...")
         dataArray = []
-        response = requests.get(url + 'weekdata?handleId=30')
+        response = requests.get(deployedUrl + 'weekdata?handleId=30')
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         
         for key in respJSON[0]:
@@ -200,38 +200,38 @@ class AppTest(unittest.TestCase):
     
     def test_weekdata_update_sanitizations_deployed(self):
         print("Testing that number of sanitizations updates DEPLOYED...")
-        response = requests.get(url + 'weekdata?handleId=30')
+        response = requests.get(deployedUrl + 'weekdata?handleId=30')
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         currentNumOfSanitizations = respJSON[0][datetime.today().strftime('%A')]
 
-        updatedResponse = requests.get(url + 'updateInteractions?handleId=30')
+        updatedResponse = requests.get(deployedUrl + 'updateInteractions?handleId=30')
         self.assertEqual(updatedResponse.status_code, 200)
 
         #Fetch data again
-        response = requests.get(url + 'weekdata?handleId=30')
+        response = requests.get(deployedUrl + 'weekdata?handleId=30')
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
-        self.assertEqual(respJSON[0][datetime.today().strftime('%A')], currentNumOfSanitizations)
+        self.assertGreaterEqual(respJSON[0][datetime.today().strftime('%A')], currentNumOfSanitizations)
 
     # data endpoint (/data)
     def test_data_get_success_deployed(self):
         print("Testing that GET request to data endpoint returns with a 200 code DEPLOYED...")
-        response = requests.get(url + "data")
+        response = requests.get(deployedUrl + "data")
         self.assertEqual(response.status_code, 200)
 
     def test_data_post_failure_deployed(self):
         print("Testing that POST request to data endpoint returns with a 404 code DEPLOYED...")
-        response = requests.post(url + "data")
+        response = requests.post(deployedUrl + "data")
         self.assertEqual(response.status_code, 404)
     
     def test_data_get_content_size_deployed(self):
         print("Testing that data JSON exists (i.e. has a size >= 0) DEPLOYED...")
-        response = requests.get(url + 'data')
+        response = requests.get(deployedUrl + 'data')
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         self.assertGreaterEqual(len(respJSON), 0)
 
     def test_data_get_content_fields_deployed(self):
         print("Checking types of the specific fields in data response DEPLOYED...")
-        response = requests.get(url + 'data')
+        response = requests.get(deployedUrl + 'data')
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         if (len(respJSON) > 0):
             for i in range(len(respJSON)):
@@ -244,7 +244,7 @@ class AppTest(unittest.TestCase):
     def test_data_get_content_read_deployed(self):
         print("Testing/mocking that we can extract values from JSON (data endpoint) onto a data array DEPLOYED...")
         dataArray = []
-        response = requests.get(url + 'data')
+        response = requests.get(deployedUrl + 'data')
         respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         
         if (len(respJSON) > 0):

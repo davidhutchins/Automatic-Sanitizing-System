@@ -3,7 +3,7 @@ import requests
 import json
 from datetime import datetime
 
-websites = ["http://localhost:2000/", "http://54.174.75.180/"]
+websites = ["http://localhost:2000/", "http://54.174.75.180/api"]
 url = websites[0]
 deployedUrl = websites[1]
 

@@ -21,8 +21,8 @@ const port = process.env.PORT || 2000;
 const userData = {
   userId: "789789",
   password: "123456",
-  name: "Clue Mediator",
-  username: "cluemediator",
+  name: "Admin",
+  username: "testaccount",
   isAdmin: true
 };
 
@@ -50,7 +50,7 @@ app.use(function (req, res, next) {
 // request handlers
 app.get('/', (req, res) => {
   if (!req.user) return res.status(401).json({ success: false, message: 'Invalid user to access it.' });
-  res.send('Logged in! ' + req.user.name);
+  res.send('Logged in as: ' + req.user.name);
 });
 
 // validate the user credentials

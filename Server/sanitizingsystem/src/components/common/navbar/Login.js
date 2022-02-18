@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { setUserSession } from './Common';
+import './login.css';
 
 function Login(props) {
   const [loading, setLoading] = useState(false);
@@ -25,17 +26,18 @@ function Login(props) {
 
   return (
     <div>
-      Login<br /><br />
-      <div>
+      <section id='page'>
+      <div id='glow'>
         Username<br />
         <input type="text" {...username} autoComplete="new-password" />
       </div>
-      <div style={{ marginTop: 10 }}>
+      <div style={{ marginTop: 10 }} id='glow'>
         Password<br />
         <input type="password" {...password} autoComplete="new-password" />
       </div>
       {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
       <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br />
+      </section>
     </div>
   );
 }

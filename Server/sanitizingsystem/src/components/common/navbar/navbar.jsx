@@ -45,9 +45,9 @@ function Navbar() {
             <li>
               <Link to="/" className="link">Home</Link>
             </li>
-            <li>
+            {/* <li>
               <Link to="/login" className="link" id="login">Login</Link>
-            </li>
+            </li> */}
             <li>
               <Link to="/stats" className="link">Sanitizing Statistics</Link>
             </li>

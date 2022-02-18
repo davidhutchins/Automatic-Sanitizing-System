@@ -1,7 +1,7 @@
 #Titletxt{
 position: absolute;
 text-align: center;
-top : 250%;
+top : 100%;
 left: 35%;
 width: 440px;
 text-shadow: -5px 4px 4px black;
@@ -9,6 +9,10 @@ font-size:xx-large;
 animation: title 2.5s ease-in-out infinite alternate;
 }
 
+#subtext{
+  font-size: large;
+  text-align: center;
+}
 
 /*Note to self, try and get a flickering light anumation to work */
 @keyframes title {

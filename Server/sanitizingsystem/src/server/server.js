@@ -68,6 +68,7 @@ app.post('/users/signin', function (req, res) {
  
   // return 401 status if the credential is not match.
   if (user !== userData.username || pwd !== userData.password) {
+    console.log("I am not working");
     return res.status(401).json({
       error: true,
       message: "Username or Password is Wrong."

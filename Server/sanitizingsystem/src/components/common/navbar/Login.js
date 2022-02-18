@@ -16,11 +16,18 @@ function Login(props) {
     axios.post('http://localhost:2000/users/signin', { username: username.value, password: password.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
-      props.history.push('/dashboard');
+      props.history.push('/stats');
+      console.log('why');
     }).catch(error => {
       setLoading(false);
-      if (error.response.status === 401) setError(error.response.data.message);
+      if (error.response.status === 401)
+      {
+        console.log("wtf"); 
+        setError(error.response.data.message) ;
+      } 
       else setError("Something went wrong. Please try again later.");
+      console.log('why');
+
     });
   }
 

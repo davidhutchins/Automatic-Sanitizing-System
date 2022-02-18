@@ -1,4 +1,5 @@
 import unittest
+from wsgiref import headers
 import requests
 import json
 from datetime import datetime
@@ -7,7 +8,7 @@ websites = ["http://localhost:2000/", "http://54.174.75.180/api/"]
 url = websites[0]
 deployedUrl = websites[1]
 #Token for log in use
-token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI3ODk3ODkiLCJuYW1lIjoiQWRtaW4iLCJ1c2VybmFtZSI6InRlc3RhY2NvdW50IiwiaXNBZG1pbiI6dHJ1ZSwiaWF0IjoxNjQ1MTI1ODMzLCJleHAiOjE2NDUyMTIyMzN9.WjlaqA7jsQjxUJfV4NejN_uNkDsWUiYh5ULAJA1tgco'
+admin = {"username": "testaccount", "password": "123456"}
 
 # Run this file while the web server hosting the API is running
 class AppTest(unittest.TestCase):
@@ -20,10 +21,11 @@ class AppTest(unittest.TestCase):
 
     def test_default_api_call_login_success(self):
         print("Testing that GET request on root endpoint returns code 200 after entering valid token LOCAL...")
+        logInResponse = requests.post(url + 'users/signin', json=admin)
+        logInJSON = json.loads(logInResponse.content.decode("utf").replace("'", '"'))
+        token = logInJSON['token']
         response = requests.get(url, headers={"Authorization": "Bearer " + token})
         self.assertEqual(response.status_code, 200)
-
-    # sign in endpoint (/users/signin)
     
     # week data endpoint (/weekdata)
     def test_weekdata_get_success_local(self):

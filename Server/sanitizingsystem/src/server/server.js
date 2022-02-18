@@ -68,7 +68,7 @@ app.post('/users/signin', function (req, res) {
  
   // return 401 status if the credential is not match.
   if (user !== userData.username || pwd !== userData.password) {
-    console.log("I am not working");
+    console.log("Username or Password is Wrong.");
     return res.status(401).json({
       error: true,
       message: "Username or Password is Wrong."
@@ -76,6 +76,7 @@ app.post('/users/signin', function (req, res) {
   }
  
   // generate token
+  console.log('Correct username/password. Generating token...')
   const token = utils.generateToken(userData);
   // get basic user details
   const userObj = utils.getCleanUser(userData);
@@ -89,6 +90,7 @@ app.get('/verifyToken', function (req, res) {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token;
   if (!token) {
+    console.log('Token is required')
     return res.status(400).json({
       error: true,
       message: "Token is required."
@@ -96,13 +98,17 @@ app.get('/verifyToken', function (req, res) {
   }
   // check token that was passed by decoding token using secret
   jwt.verify(token, process.env.JWT_SECRET, function (err, user) {
-    if (err) return res.status(401).json({
-      error: true,
-      message: "Invalid token."
-    });
+    if (err) {
+      console.log('Invalid token')
+      return res.status(401).json({
+        error: true,
+        message: "Invalid token."
+      });
+    }
  
     // return 401 status if the userId does not match.
     if (user.userId !== userData.userId) {
+      console.log("Invalid user");
       return res.status(401).json({
         error: true,
         message: "Invalid user."

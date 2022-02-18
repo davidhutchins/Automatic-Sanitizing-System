@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+
+<!--[if lte IE 9 ]> <html class="ie"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html> <!--<![endif]-->
+
+<head>
+<title>A.H.C.S Configuration</title>
+<!-- <link rel="shortcut icon" href="http://smalltimer.net/dlormand//ti_logo1.jpg">
+<link rel="icon" type="image/ico" href="http://smalltimer.net/dlormand//ti_logo1.jpg"> -->
+<link rel="stylesheet" type="text/css" href="simple_link.css" >
+</head>
+
+<script type="text/javascript">
+	var HTTPrequest = new XMLHttpRequest();
+	function GetCurrentProfile()
+	{
+		var currentSSID = "__SL_G_PN7";
+		document.getElementById("cur_ssid").innerHTML=currentSSID;
+		
+		var currentSecurity = "__SL_G_PS7";
+		document.getElementById("cur_sec").innerHTML=currentSecurity;
+	}
+	
+	function UpdateProfile()
+	{
+		var params = "__SL_P_ULD=SSID_";
+		params = params + document.getElementById("name").value
+		params = params + "$PASSKEY_";
+		params = params + document.getElementById("pass").value
+		
+	
+		HTTPrequest.open("POST","No_content", true);
+		HTTPrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		HTTPrequest.setRequestHeader("Content-length", params.length);
+		HTTPrequest.setRequestHeader("Connection", "close");
+		HTTPrequest.onreadystatechange = function()
+		{
+			if (HTTPrequest.readyState==4 && HTTPrequest.status==200)
+			{
+			}
+		}
+		HTTPrequest.send(params);
+	}
+</script>
+
+
+<body class="in-frame" onload="GetCurrentProfile()">
+
+	<form method="POST" name="SimpleLink Configuration action" action="ip_config.html">
+		<table border="0"  width="100%" cellpadding="3" cellspacing="0">
+
+			<tr>  
+				<td class="page-title" colspan=2 >
+					WIFI Configuration</td>
+			</tr>
+
+			<tr>
+				<td class = "empty-line" colspan=2></td>
+			</tr>
+			
+			<tr>
+				<td class="frame-title" colspan=2 > 
+					Current SSID:  </td>
+				<td  class="label" dir=LTR align=left><span id="cur_ssid"></span></td>
+			</tr>
+
+			<tr>
+				<td class="frame-title" colspan=2 > 
+					Security:  </td>
+				<td  class="label" dir=LTR align=left><span id="cur_sec"></span></td>
+			</tr>
+
+			<tr>
+				<td class = "empty-line-in-box" colspan=2></td>
+			</tr>
+			<tr>
+				<td class = "empty-line" colspan=2></td>
+			</tr>
+
+			
+			<tr>
+				<td  class="label" dir=LTR align=center><span id="ssid_label"> SSID: </span></td>
+				<td  class="user-input" dir=LTR align=center><input type="text" id="name"></input></td>
+			</tr>
+			<tr>
+				<td class = "empty-line-in-box" colspan=2></td>
+			</tr>
+			<tr>
+				<td  class="label" dir=LTR align=center><span id="pass_label"> PASSKEY: </span></td>
+				<td class="user-input" dir=LTR align=center><input type="text" id="pass"></input></td>
+			</tr>
+			<tr>
+				<td class="user-input" dir=LTR align=center><input type="button" value="Submit" id="pass" onclick="UpdateProfile()"></input></td>
+			</tr>
+			<tr>
+				<td class = "empty-line-in-box" colspan=2></td>
+			</tr>
+
+			<tr>
+				<td class = "empty-line-in-box" colspan=2></td>
+			</tr>
+			
+			<tr >
+				<td class = "border-line-top" colspan=2 >
+				</td>
+			</tr>
+		</table>
+	</form>
+</body>
+
+</html>
+

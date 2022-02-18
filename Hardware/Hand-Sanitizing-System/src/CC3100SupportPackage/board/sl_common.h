@@ -81,7 +81,7 @@ extern char PASSKEY[100];                 /* Password in case of secure AP */
 #define PASSKEY_LEN     strlen(PASSKEY)  /* Password length in case of secure AP */
 
 /* Configuration of the device when it comes up in AP mode */
-#define SSID_AP_MODE       "<ap_mode_ssid>"       /* SSID of the CC3100 in AP mode */
+extern char SSID_AP_MODE[100];       /* SSID of the CC3100 in AP mode */
 #define PASSWORD_AP_MODE   ""                  /* Password of CC3100 AP */
 #define SEC_TYPE_AP_MODE   SL_SEC_TYPE_OPEN    /* Can take SL_SEC_TYPE_WEP or
                                                 * SL_SEC_TYPE_WPA as well */

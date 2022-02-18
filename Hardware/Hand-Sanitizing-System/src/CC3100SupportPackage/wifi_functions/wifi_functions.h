@@ -24,6 +24,7 @@ _u32 g_Status;
 char request[1024];
 char requestTemplate[512];
 char serverResponse[1024];
+extern int8_t disconnectFlag;
 
 extern char Recvbuff[MAX_RECV_BUFF_SIZE];
 extern char SendBuff[MAX_SEND_BUFF_SIZE];
@@ -38,4 +39,5 @@ extern int32_t configureSimpleLinkToDefaultState(void);
 extern int32_t sendRequestToServer(char* request);
 extern void parseServerResponse(char* parsedResponse, char* keyword);
 extern uint8_t searchResponse(char* keyword);
+extern uint8_t configureProfile(char* SEC_SSID_NAME, char* SEC_SSID_KEY);
 void restartWIFI();

@@ -7,11 +7,14 @@
 #include "wifi_functions.h"
 
 // AP Name and Password
-signed char SSID_NAME[100]   =    "The GAT";
-char PASSKEY[100]            =    "cloudyjungle778";
+//signed char SSID_NAME[100]   =    "The GAT";
+//char PASSKEY[100]            =    "cloudyjungle778";
+char SSID_AP_MODE[100]       =    "AHCS-30";
 
 char Recvbuff[MAX_RECV_BUFF_SIZE];
 char SendBuff[MAX_SEND_BUFF_SIZE];
+
+int8_t disconnectFlag = 0;
 
 uint8_t wifi_init()
 {
@@ -25,9 +28,10 @@ uint8_t wifi_init()
 
     sl_Start(0, 0, 0);
 
-    retVal = establishConnectionWithAP();
-    if (retVal < 0)
-        printf("Could not connect to AP!");
+    while ((!IS_CONNECTED(g_Status)) || (!IS_IP_ACQUIRED(g_Status)))
+    {
+       _SlNonOsMainLoopTask();
+    }
 
     sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
 
@@ -40,6 +44,7 @@ uint8_t wifi_init()
     }
 
     printf("Could not connect to server. Retrying.\n");
+    sl_Stop(SL_STOP_TIMEOUT);
     return 0;
 }
 
@@ -195,14 +200,8 @@ int32_t configureSimpleLinkToDefaultState(void)
     retVal = sl_DevGet(SL_DEVICE_GENERAL_CONFIGURATION, &configOpt, &configLen, (_u8 *)(&ver));
     ASSERT_ON_ERROR(retVal);
 
-    /* Set connection policy to Auto + SmartConfig (Device's default connection policy) */
-    retVal = sl_WlanPolicySet(SL_POLICY_CONNECTION, SL_CONNECTION_POLICY(1, 0, 0, 0, 1), NULL, 0);
-    ASSERT_ON_ERROR(retVal);
-
-    /* Remove all profiles */
-    retVal = sl_WlanProfileDel(0xFF);
-    ASSERT_ON_ERROR(retVal);
-
+    retVal = sl_WlanPolicySet(SL_POLICY_CONNECTION ,
+                         SL_CONNECTION_POLICY(1,0,0,0,0), 0, 0);
     /*
      * Device in station-mode. Disconnect previous connection if any
      * The function returns 0 if 'Disconnected done', negative number if already disconnected
@@ -250,9 +249,6 @@ int32_t configureSimpleLinkToDefaultState(void)
     retVal = sl_Stop(SL_STOP_TIMEOUT);
     ASSERT_ON_ERROR(retVal);
 
-    //  retVal = initializeAppVariables();
-    //  ASSERT_ON_ERROR(retVal);
-
     return retVal; /* Success */
 }
 
@@ -277,11 +273,12 @@ int32_t establishConnectionWithAP(void)
     SlSecParams_t secParams = {0};
     uint32_t retVal = 0;
 
-    secParams.Key = PASSKEY;
-    secParams.KeyLen = PASSKEY_LEN;
-    secParams.Type = SEC_TYPE;
+//    secParams.Key = PASSKEY;
+//    secParams.KeyLen = PASSKEY_LEN;
+//    secParams.Type = SEC_TYPE;
+//
+//    retVal = sl_WlanConnect(SSID_NAME, pal_Strlen(SSID_NAME), 0, &secParams, 0);
 
-    retVal = sl_WlanConnect(SSID_NAME, pal_Strlen(SSID_NAME), 0, &secParams, 0);
     ASSERT_ON_ERROR(retVal);
 
     /* Wait */
@@ -324,6 +321,22 @@ int32_t disconnectFromAP(void)
             _SlNonOsMainLoopTask();
         }
     }
+
+    return SUCCESS;
+}
+
+uint8_t configureProfile(char* SEC_SSID_NAME, char* SEC_SSID_KEY) {
+    int8_t retVal = sl_WlanProfileDel(0xFF);
+
+    _u8   g_BSSID[SL_BSSID_LENGTH];
+    pal_Memset(g_BSSID, 0, sizeof(g_BSSID));
+
+    SlSecParams_t secParams = {0};
+    secParams.Type = SL_SEC_TYPE_WPA;
+    secParams.Key = SEC_SSID_KEY;
+    secParams.KeyLen = pal_Strlen(SEC_SSID_KEY);
+    retVal = sl_WlanProfileAdd((_i8 *)SEC_SSID_NAME,
+    pal_Strlen(SEC_SSID_NAME), g_BSSID, &secParams, 0, 7, 0);
 
     return SUCCESS;
 }
@@ -383,6 +396,8 @@ void SimpleLinkWlanEventHandler(SlWlanEvent_t *pWlanEvent)
         {
             /* Device disconnected from the AP on an ERROR..!! */
         }
+
+        disconnectFlag = 1;
     }
     break;
 
@@ -415,11 +430,10 @@ void SimpleLinkNetAppEventHandler(SlNetAppEvent_t *pNetAppEvent)
     case SL_NETAPP_IPV4_IPACQUIRED_EVENT:
     {
         SET_STATUS_BIT(g_Status, STATUS_BIT_IP_ACQUIRED);
-        // TODO: THIS IS WHERE I GET THE MF IP ADDRRESS
 
-        SlIpV4AcquiredAsync_t *pEventData = NULL;
-        pEventData = &pNetAppEvent->EventData.ipAcquiredV4;
-        localIP =  pEventData->ip;
+//        SlIpV4AcquiredAsync_t *pEventData = NULL;
+//        pEventData = &pNetAppEvent->EventData.ipAcquiredV4;
+//        localIP =  pEventData->ip;
 
         /*
          * Information about the connection (like IP, gateway address etc)
@@ -433,6 +447,12 @@ void SimpleLinkNetAppEventHandler(SlNetAppEvent_t *pNetAppEvent)
     }
     break;
 
+    case SL_NETAPP_IP_LEASED_EVENT:
+    {
+        SET_STATUS_BIT(g_Status, STATUS_BIT_IP_LEASED);
+    }
+    break;
+
     default:
     {
         /* [NETAPP EVENT] Unexpected event */
@@ -440,6 +460,10 @@ void SimpleLinkNetAppEventHandler(SlNetAppEvent_t *pNetAppEvent)
     break;
     }
 }
+
+
+_u8 POST_token[] = "__SL_P_ULD";
+_u8 GET_token[]  = "__SL_G_ULD";
 
 /*!
     \brief This function handles callback for the HTTP server events
@@ -450,11 +474,68 @@ void SimpleLinkNetAppEventHandler(SlNetAppEvent_t *pNetAppEvent)
     \note
     \warning
  */
-void SimpleLinkHttpServerCallback(SlHttpServerEvent_t *pHttpEvent,
-                                  SlHttpServerResponse_t *pHttpResponse)
+void SimpleLinkHttpServerCallback(SlHttpServerEvent_t *pEvent,
+                                  SlHttpServerResponse_t *pResponse)
 {
-    /* Unused in this application */
-    /* [HTTP EVENT] Unexpected event */
+    if(pEvent == NULL || pResponse == NULL)
+        {
+            printf(" [HTTP EVENT] NULL Pointer Error \n\r");
+            return;
+        }
+
+        switch (pEvent->Event)
+        {
+            case SL_NETAPP_HTTPGETTOKENVALUE_EVENT:
+            {
+//                _u8 status = 0;
+//                _u8 *ptr = 0;
+//
+//                ptr = pResponse->ResponseData.token_value.data;
+//                pResponse->ResponseData.token_value.len = 0;
+//                if(pal_Memcmp(pEvent->EventData.httpTokenName.data, GET_token,
+//                                             pal_Strlen(GET_token)) == 0)
+//                {
+//                    pal_Memcpy(ptr, "SomeData", pal_Strlen("SomeData"));
+//                    ptr += 8;
+//                    pResponse->ResponseData.token_value.len += 8;
+//
+//                    *ptr = '\0';
+//                }
+            }
+            break;
+
+            case SL_NETAPP_HTTPPOSTTOKENVALUE_EVENT:
+            {
+                _u8 led = 0;
+                _u8 *ptr = pEvent->EventData.httpPostData.token_name.data;
+
+                if(pal_Memcmp(ptr, POST_token, pal_Strlen(POST_token)) == 0)
+                {
+                    const char data[] = pEvent->EventData.httpPostData.token_value.data;
+                    ptr = data;
+                    ptr += 5;
+
+                    _u8 *passkeyptr = strstr(data, "$PASSKEY_");
+                    _u8 SSID_len = passkeyptr - ptr;
+                    char SSID[SSID_len + 1];
+                    pal_Memcpy(SSID, ptr, SSID_len);
+                    SSID[SSID_len] = '\0';
+
+                    ptr += SSID_len + 9;
+
+                    _u8 PASS_len = pEvent->EventData.httpPostData.token_value.len - (data - ptr);
+                    char PASS[PASS_len + 1];
+                    pal_Memcpy(PASS, ptr, PASS_len);
+                    PASS[PASS_len] = '\0';
+
+                    configureProfile(SSID, PASS);
+                }
+            }
+            break;
+
+            default:
+                break;
+        }
 }
 
 /*!

@@ -160,7 +160,7 @@ void initClk()
     MAP_CS_initClockSignal(CS_SMCLK, CS_DCOCLK_SELECT, CS_CLOCK_DIVIDER_1 );
 
     /* Globally enable interrupts */
-    __enable_interrupt();
+    __enable_interrupt(); // @suppress("Function cannot be resolved")
 }
 
 void stopWDT()
@@ -313,7 +313,7 @@ void Delay(unsigned long interval)
 {
     while(interval > 0)
     {
-        __delay_cycles(48000);
+        __delay_cycles(48000); // @suppress("Function cannot be resolved")
         interval--;
     }
 }

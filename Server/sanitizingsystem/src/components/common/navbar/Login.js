@@ -18,6 +18,7 @@ function Login(props) {
     axios.post('http://localhost:2000/users/signin', { username: username.value, password: password.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
+      console.log("Logged in!")
       navigate('/stats')
     }).catch(error => {
       setLoading(false);
@@ -25,23 +26,25 @@ function Login(props) {
       console.log('Something went wrong')
     });
   }
-
-  return (
-    <div>
-      <section id='page'>
-      <div id='glow'>
-        Username<br />
-        <input type="text" {...username} autoComplete="new-password" />
+  if (sessionStorage.getItem('token') === null)
+  {
+    return (
+      <div>
+        <section id='page'>
+        <div id='glow'>
+          Username<br />
+          <input type="text" {...username} autoComplete="new-password" />
+        </div>
+        <div style={{ marginTop: 10 }} id='glow'>
+          Password<br />
+          <input type="password" {...password} autoComplete="new-password" />
+        </div>
+        {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
+        <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br />
+        </section>
       </div>
-      <div style={{ marginTop: 10 }} id='glow'>
-        Password<br />
-        <input type="password" {...password} autoComplete="new-password" />
-      </div>
-      {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-      <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br />
-      </section>
-    </div>
-  );
+    );
+  }
 }
 
 const useFormInput = initialValue => {

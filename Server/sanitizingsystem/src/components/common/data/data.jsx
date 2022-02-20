@@ -4,6 +4,7 @@ import './data.css'
 import {LineChartData} from './linechart';
 
 export let data = [{name: "Device 1", value: 10}];
+export let overallTotal = 0;
 
 
 export default function Data() {  
@@ -16,7 +17,7 @@ export default function Data() {
   async function getStats() 
   {
       //gets the data from the database at the localhost specified
-      const resp = await fetch(`http://localhost:2000/data/`);
+      const resp = await fetch(`http://54.174.75.180/api/data/`);
 
 
       //if there is no response then give this message
@@ -31,23 +32,20 @@ export default function Data() {
       const stat = await resp.json();
 
       //Push read data to dynamic data array (pie chart and line graph)
+      data.pop(); //Get rid of default data
       for (let i = 0; i < stat.length; i++)
       {
         if (typeof data[i] == 'undefined')
         {
-          data.push({name: 'Device ' + (i+1).toString(), value: stat[i].doorsSanid});
+          data.push({name: 'Device ' + (stat[i].doorsSanid).toString(), value: stat[i].grmsKild});
         }
 
-        if (data[i].name === 'Device ' + (i+1).toString() && data[i].value !== stat[i].doorsSanid)
+        if (data[i].name === 'Device ' + (stat[i].doorsSanid).toString() && data[i].value !== stat[i].grmsKild)
         {
-          data[i].value = stat[i].doorsSanid;
+          data[i].value = stat[i].grmsKild;
         }
-        else if (data[i].name === 'Device ' + (i+1).toString() && data[i].value === stat[i].doorsSanid)
-        {
-          continue;
-        }
+        overallTotal += stat[i].grmsKild;
       }
-      
       setData(data);
     }
 

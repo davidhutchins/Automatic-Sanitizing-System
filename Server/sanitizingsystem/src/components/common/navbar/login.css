@@ -1,0 +1,14 @@
+#page
+{
+    position: absolute;
+    top: 400%;
+    left: 30%;
+    color : eggshell;
+}
+
+#glow
+{
+    text-shadow: -5px 4px 4px black;
+    font-size:large;
+animation: title 2.5s ease-in-out infinite alternate;
+}

@@ -4,7 +4,7 @@
  top : 8%;
  left: 34%;
  width: 440px;
- border: 3px solid #21a4ad;
+ /* border: 3px solid #21a4ad; */
  font-size:x-large;   
  text-shadow: -5px 4px 4px #000000;
  }
@@ -12,10 +12,10 @@
     .device-list{
         position: fixed;
         top : 20%;
-        left: 34%;
+        left: 36%;
         width: 530px;
         font-size: large;
-        border: 3px solid #73AD21;
+        /* border: 3px solid #73AD21; */
         text-shadow: -6px 4px 4px #000000;
     }
 
@@ -23,7 +23,7 @@
         margin-top: 0;
         width: 200px;
         font-size: x-large;
-        border: 3px solid #ad3621;
+        /* border: 3px solid #ad3621; */
     }
 
     #prcnt-container
@@ -31,7 +31,7 @@
         margin-top: 0;
         width: 200px;
         font-size: x-large;
-        border: 3px solid #2f21ad;
+        /* border: 3px solid #2f21ad; */
     }
    
     #percent
@@ -40,12 +40,12 @@
         margin-left: 100px;;
         width: 200px;
         font-size: x-large;
-        border: 3px solid #ad217e;
+        /* border: 3px solid #ad217e; */
 
     }
    
     #containment
     {
-        border: 3px solid #2198ad;
+        /* border: 3px solid #2198ad; */
 
     }

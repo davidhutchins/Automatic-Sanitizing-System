@@ -4,7 +4,7 @@ import './stats.css'
 import { Data } from '../../common';
 import { ldata, weeklyTotal } from "../data/linechart";
 import { overallTotal } from "../data/data";
-
+import { getUser } from "../navbar/Common"
 import Dropdown from 'react-bootstrap/Dropdown'
 
 
@@ -99,7 +99,7 @@ export default function Statistics()
   return (
     <section className="content">
         <section>
-
+        {console.log("Logged in as: " + getUser().name)}
         <div id="pageTitle">
             <h1>Sanitizing Statistics & Data</h1>  
             <div id="subheader">

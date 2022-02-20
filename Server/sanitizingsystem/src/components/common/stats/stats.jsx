@@ -4,7 +4,7 @@ import './stats.css'
 import { Data } from '../../common';
 import { ldata, weeklyTotal } from "../data/linechart";
 import { overallTotal } from "../data/data";
-import { getUser, setUserSession } from "../navbar/Common"
+import { getUser } from "../navbar/Common"
 import Dropdown from 'react-bootstrap/Dropdown'
 
 

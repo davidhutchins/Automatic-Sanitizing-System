@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { PieChart, Pie, Tooltip } from 'recharts';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis ,Radar, Legend } from 'recharts'
+import { BarChart, CartesianGrid, XAxis, YAxis, Bar } from 'recharts'
 import './data.css'
 import {LineChartData} from './linechart';
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -49,16 +50,31 @@ function displayData(fetchedData) {
       </div>
     );
   }
+  else if (window.location.href.includes("/bar"))
+  {
+    return (
+      <div id="bar">
+        <BarChart width={440} height={340} data={fetchedData}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis dataKey="name" data={fetchedData} />
+          <YAxis />
+          <Tooltip />
+          <Legend />
+          <Bar dataKey="value" data={fetchedData} fill="#5E9A50" />
+        </BarChart>
+      </div>
+    );
+  }
   else if (window.location.href.includes("/radar"))
   {
     return (
-      <div id="pie">
-        <RadarChart outerRadius={90} width={730} height={250} data={data}>
+      <div id="radar">
+        <RadarChart outerRadius={90} width={440} height={340} data={fetchedData}>
           <PolarGrid />
-          <PolarAngleAxis dataKey="name" />
+          <PolarAngleAxis dataKey="name"/>
           <PolarRadiusAxis angle={30} domain={[0, 4000]} />
           {/* TODO: Figure out how to make chart dynamic */}
-          <Radar dataKey="value" data={fetchedData} stroke="#8884d8" fill="#8884d8" fillOpacity={0.6} />
+          <Radar dataKey="value" data={fetchedData} stroke="#5E9A50" fill="#5E9A50" fillOpacity={0.6} />
           <Legend />
         </RadarChart>
       </div>
@@ -124,15 +140,12 @@ export default function Data() {
 
   return (
     <section id="containment-field">
-      <br></br>
-        {DropDownMenu()}
-      <br></br>
       <section>
         <div id = "desc1">
           <h1>Sanitizings Per Device</h1>
-
         </div>
         {displayData(fetchedData)}
+        <div id="dropdown">{DropDownMenu()}</div>
       </section>
 
       <section>

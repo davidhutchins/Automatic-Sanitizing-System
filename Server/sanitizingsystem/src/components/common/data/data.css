@@ -21,7 +21,29 @@
         text-shadow: 0px 0px 0px black;
         font-size: x-large;
         position: fixed;
-        top : 20%;
+        top : 25%;
+        left: 9%;
+        width: 440px;
+        /* border: 3px solid #00c451; */
+    }
+
+    #bar 
+    {
+        text-shadow: 0px 0px 0px black;
+        font-size: x-large;
+        position: fixed;
+        top : 30%;
+        left: 9%;
+        width: 440px;
+        /* border: 3px solid #00c451; */
+    }
+
+    #radar 
+    {
+        text-shadow: 0px 0px 0px black;
+        font-size: x-large;
+        position: fixed;
+        top : 25%;
         left: 9%;
         width: 440px;
         /* border: 3px solid #00c451; */
@@ -32,7 +54,7 @@
     {
         text-shadow: 0px 0px 0px black;
         position: fixed;
-        top : 20%;
+        top : 25%;
         left: 60%;
         width: 440px;
         /* border: 3px solid #00c451; */
@@ -62,11 +84,6 @@
         /* border: 1px solid #00c451; */
     }
 
-    #tooltip
-    {
-        
-    }
-
     #weekStats
     {
         top: 80%;
@@ -82,4 +99,15 @@
         line-height: 0px;
         text-align: center;
 
+    }
+
+    #dropdown
+    {
+        text-shadow: 0px 0px 0px black;
+        font-size: large;
+        position: fixed;
+        top : 75%;
+        left: 15%;
+        width: 440px;
+        /* border: 3px solid #00c451; */
     }

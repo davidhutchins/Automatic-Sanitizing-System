@@ -20,7 +20,7 @@ function LogOut() {
 }
 
 function Home() {
-   const loginText = (sessionStorage.getItem('token') === null) ? "Login to access your devices" : "Logged in as: " + getUser().name;
+   const loginText = (sessionStorage.getItem('token') === null) ? "Login to access your devices" : "Logged in as: " + getUser().username;
    const renderLoginOrLogout = (sessionStorage.getItem('token') === null) ? Login() : LogOut();
     return (
         <section id="Homepage">

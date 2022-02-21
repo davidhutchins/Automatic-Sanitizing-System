@@ -18,13 +18,7 @@ app.use(require("./routes/stats"));
 const port = process.env.PORT || 2000;
 
 // static user details
-const userData = {
-  userId: "789789",
-  password: "123456",
-  name: "Admin",
-  username: "testaccount",
-  isAdmin: true
-};
+const userData = [{userId: "789789", password: "123456", username: "testaccount"}];
 
 //middleware that checks if JWT token exists and verifies it if it does exist.
 //In all future routes, this helps to know if the request is authenticated or not.
@@ -50,7 +44,7 @@ app.use(function (req, res, next) {
 // request handlers
 app.get('/', (req, res) => {
   if (!req.user) return res.status(401).json({ success: false, message: 'Invalid user to access it.' });
-  res.send('Logged in as: ' + req.user.name);
+  res.send('Logged in as: ' + req.user.username);
 });
 
 // validate the user credentials

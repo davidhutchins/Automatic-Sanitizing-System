@@ -99,12 +99,12 @@ export default function Statistics()
   return (
     <section className="content">
         <section>
-        {console.log("Logged in as: " + getUser().name)}
+        {console.log("Logged in as: " + getUser().username)}
         <div id="pageTitle">
             <h1>Sanitizing Statistics & Data</h1>  
+            <h2 id="saniz">Total Number Of Doors Sanitized</h2>
             <div id="subheader">
               <br></br>
-            <h2 id="title">Total Number Of Doors Sanitized</h2>
             <br></br>
               {DropDownMenu()}
               <br></br>

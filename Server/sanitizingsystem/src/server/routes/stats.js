@@ -110,20 +110,6 @@ stats.route("/updateInteractions").get(function (req, res) {
             Friday:    weekdays["Friday"], 
             Saturday:  weekdays["Saturday"]
         }});
-
-      // db_connect
-      //  .collection("weekdata")
-      //  .insertOne({
-      //       doorsSanid : handleId,
-      //       Sunday:    10, 
-      //       Monday:    80, 
-      //       Tuesday:   40, 
-      //       Wednesday: 60, 
-      //       Thursday:  40, 
-      //       Friday:    90, 
-      //       Saturday:  30
-      //   });
-      
       });
 
       res.send('Interactions updated successfully');

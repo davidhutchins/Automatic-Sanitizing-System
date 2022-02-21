@@ -59,8 +59,7 @@ function DropDownMenu() {
         <Dropdown.Toggle id="dark" variant="secondary">  Data Select </Dropdown.Toggle>
 
         <Dropdown.Menu variant="dark">
-          {/* must do a window href location refresh followed by a page refresh in order to change the text when you click the button
-          this is utterly stupid and i dont understand why it works */}
+          {/* must do a window href location refresh followed by a page refresh in order to change the text when you click the button */}
           <Dropdown.Item href="#/daily" onClick={() => {window.location.href="/stats#/daily"; window.location.reload(true);}}> Daily </Dropdown.Item>
           <Dropdown.Item href="#/weekly" onClick={() => {window.location.href="/stats#/weekly"; window.location.reload(true);}}> Weekly </Dropdown.Item>
           <Dropdown.Item href="#/overall" onClick={() => {window.location.href="/stats#/overall"; window.location.reload(true);}}> Overall </Dropdown.Item>

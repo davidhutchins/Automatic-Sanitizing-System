@@ -2,6 +2,7 @@ import React from 'react';
 import './homepage.css'
 import Login from '../navbar/Login'
 import { getUser, removeUserSession } from "../navbar/Common"
+import Create from './createacct';
 
 function LogOut() {
     
@@ -25,9 +26,10 @@ function Home() {
         <section id="Homepage">
                 <section id="Titletxt">
                     <h1 id="headerText">Automatic Handle Cleaning System </h1>   
-                    <h2 id='subtext'>{loginText}</h2> 
                 </section>
+                    <h2 id='subtext'>{loginText}</h2> 
                 {renderLoginOrLogout}
+                {Create()}
 
         </section>
 

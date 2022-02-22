@@ -3,12 +3,15 @@ import React, { useEffect, useState } from "react";
 import './stats.css'
 import { Data } from '../../common';
 import { ldata, weeklyTotal } from "../data/linechart";
-import { overallTotal } from "../data/data";
+import { overallTotal, url, graphQuery } from "../data/data";
 import { getUser } from "../navbar/Common"
 import Dropdown from 'react-bootstrap/Dropdown'
 
 
+
 const d = new Date();
+console.log(url)
+export let dataQuery = "&sanitizations="
 
 function displayDropDownData(data) {
   return (
@@ -23,25 +26,30 @@ function displayDropDownData(data) {
 }
 
 // This function takes the data of sanitized objects and passes them into a function that returns html
-// ngl I thought this would fail when I thought of it
-const Device = (props) => {
+function displayDevice() 
+{
   console.log(window.location.href);
-  if (window.location.href.includes("/daily")) {
+  if (window.location.href.includes("daily")) 
+  {
+    dataQuery="&sanitizations=daily";
     return displayDropDownData(ldata[d.getDay()].Sanitizations);
   }
-  else if (window.location.href.includes("/weekly"))
+  else if (window.location.href.includes("weekly"))
   {
+    dataQuery="&sanitizations=weekly";
     return displayDropDownData(weeklyTotal);
   }
-  else if (window.location.href.includes("/overall"))
+  else if (window.location.href.includes("overall"))
   {
+    dataQuery+="&sanitizations=overall";
     return displayDropDownData(overallTotal);
   }
-  else {
+  else 
+  {
+    dataQuery="&sanitizations=daily";
     return displayDropDownData(ldata[d.getDay()].Sanitizations);
   }
 };
-
 
 function DropDownMenu() {
   return (
@@ -57,12 +65,11 @@ function DropDownMenu() {
       <Dropdown>
 
         <Dropdown.Toggle id="dark" variant="secondary">  Data Select </Dropdown.Toggle>
-
         <Dropdown.Menu variant="dark">
           {/* must do a window href location refresh followed by a page refresh in order to change the text when you click the button */}
-          <Dropdown.Item href="#/daily" onClick={() => {window.location.href="/stats#/daily"; window.location.reload(true);}}> Daily </Dropdown.Item>
-          <Dropdown.Item href="#/weekly" onClick={() => {window.location.href="/stats#/weekly"; window.location.reload(true);}}> Weekly </Dropdown.Item>
-          <Dropdown.Item href="#/overall" onClick={() => {window.location.href="/stats#/overall"; window.location.reload(true);}}> Overall </Dropdown.Item>
+          <Dropdown.Item href={"?sanitizations=daily" + graphQuery} onClick={() => {window.location.href = url.searchParams.set('sanitizations', 'daily'); window.location.reload(true);}}> Daily </Dropdown.Item>
+          <Dropdown.Item href={"?sanitizations=weekly" + graphQuery} onClick={() => {window.location.href = url.searchParams.set('sanitizations', 'weekly'); window.location.reload(true);}}> Weekly </Dropdown.Item>
+          <Dropdown.Item href={"?sanitizations=overall" + graphQuery} onClick={() => {window.location.href = url.searchParams.set('sanitizations', 'overall'); window.location.reload(true);}}> Overall </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
@@ -108,7 +115,7 @@ export default function Statistics()
               {DropDownMenu()}
               <br></br>
               <div id="stats">
-                  {Device()}
+                  {displayDevice()}
               </div>
             </div>
         </div>       

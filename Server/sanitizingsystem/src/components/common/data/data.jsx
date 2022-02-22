@@ -5,10 +5,13 @@ import { BarChart, CartesianGrid, XAxis, YAxis, Bar } from 'recharts'
 import './data.css'
 import {LineChartData} from './linechart';
 import Dropdown from 'react-bootstrap/Dropdown'
+import { dataQuery } from '../stats/stats'
 
 
 export let data = [{name: "Device 1", value: 10}];
 export let overallTotal = 0;
+export let url = new URL(window.location.href);
+export let graphQuery = "&graph=";
 
 function DropDownMenu() {
   return (
@@ -27,9 +30,9 @@ function DropDownMenu() {
 
         <Dropdown.Menu variant="dark">
           {/* must do a window href location refresh followed by a page refresh in order to change the text when you click the button*/}
-          <Dropdown.Item href="#/pie" onClick={() => {window.location.href="/stats#/pie"; window.location.reload(true);}}> Pie Chart </Dropdown.Item>
-          <Dropdown.Item href="#/bar" onClick={() => {window.location.href="/stats#/bar"; window.location.reload(true);}}> Bar Chart </Dropdown.Item>
-          <Dropdown.Item href="#/radar" onClick={() => {window.location.href="/stats#/radar"; window.location.reload(true);}}> Radar Chart </Dropdown.Item>
+          <Dropdown.Item href= {"?graph=pie" + dataQuery} onClick={() => {window.location.href = url.searchParams.set('graph', 'pie'); window.location.reload(true);}}> Pie Chart </Dropdown.Item>
+          <Dropdown.Item href={"?graph=bar"+ dataQuery}  onClick={() => {window.location.href = url.searchParams.set('graph', 'bar'); window.location.reload(true);}}> Bar Chart </Dropdown.Item>
+          <Dropdown.Item href={"?graph=radar" + dataQuery}  onClick={() => {window.location.href = url.searchParams.set('graph', 'radar'); window.location.reload(true);}}> Radar Chart </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
@@ -40,7 +43,9 @@ function DropDownMenu() {
 function displayData(fetchedData) {
   console.log(fetchedData);
 
-  if (window.location.href.includes("/pie")) {
+  if (window.location.href.includes("pie"))
+  {
+    graphQuery += "pie" 
     return (
       <div id="pie">
         <PieChart width={440} height={340}>
@@ -50,8 +55,9 @@ function displayData(fetchedData) {
       </div>
     );
   }
-  else if (window.location.href.includes("/bar"))
+  else if (window.location.href.includes("bar"))
   {
+    graphQuery+="bar"
     return (
       <div id="bar">
         <BarChart width={440} height={340} data={fetchedData}>
@@ -65,8 +71,9 @@ function displayData(fetchedData) {
       </div>
     );
   }
-  else if (window.location.href.includes("/radar"))
+  else if (window.location.href.includes("radar"))
   {
+    graphQuery+="radar";
     return (
       <div id="radar">
         <RadarChart outerRadius={90} width={440} height={340} data={fetchedData}>
@@ -82,6 +89,7 @@ function displayData(fetchedData) {
   }
   else 
   {
+    graphQuery="pie";
     return (
       <div id="pie">
         <PieChart width={440} height={340}>

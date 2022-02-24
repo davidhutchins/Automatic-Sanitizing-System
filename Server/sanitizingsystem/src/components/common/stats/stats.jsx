@@ -4,8 +4,9 @@ import './stats.css'
 import { Data } from '../../common';
 import { ldata, weeklyTotal } from "../data/linechart";
 import { overallTotal } from "../data/data";
-import { getUser } from "../navbar/Common"
+import { getUser} from "../navbar/Common"
 import Dropdown from 'react-bootstrap/Dropdown'
+
 
 
 const d = new Date();
@@ -52,7 +53,7 @@ function DropDownMenu() {
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
           crossorigin="anonymous"
-        />
+          />
       </style>
       <Dropdown>
 

@@ -58,7 +58,7 @@ function DropDownMenu() {
           href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
           integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3"
           crossorigin="anonymous"
-        />
+          />
       </style>
       <Dropdown>
 
@@ -103,12 +103,12 @@ export default function Statistics()
   return (
     <section className="content">
         <section>
-        {console.log("Logged in as: " + getUser().name)}
+        {console.log("Logged in as: " + getUser().username)}
         <div id="pageTitle">
             <h1>Sanitizing Statistics & Data</h1>  
+            <h2 id="saniz">Total Number Of Doors Sanitized</h2>
             <div id="subheader">
               <br></br>
-            <h2 id="title">Total Number Of Doors Sanitized</h2>
             <br></br>
               {DropDownMenu()}
               <br></br>

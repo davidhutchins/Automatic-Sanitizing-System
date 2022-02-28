@@ -1,3 +1,5 @@
+const allAccts = require('../components/common/homepage/getacct.js').getAccounts();
+
 require("dotenv").config({ path: "./config.env" });
 
 const express = require("express");
@@ -16,15 +18,6 @@ app.use(require("./routes/stats"));
 
 //sets the server port
 const port = process.env.PORT || 2000;
-
-// static user details
-const userData = {
-  userId: "789789",
-  password: "123456",
-  name: "Admin",
-  username: "testaccount",
-  isAdmin: true
-};
 
 //middleware that checks if JWT token exists and verifies it if it does exist.
 //In all future routes, this helps to know if the request is authenticated or not.
@@ -50,21 +43,25 @@ app.use(function (req, res, next) {
 // request handlers
 app.get('/', (req, res) => {
   if (!req.user) return res.status(401).json({ success: false, message: 'Invalid user to access it.' });
-  res.send('Logged in as: ' + req.user.name);
+  res.send('Logged in as: ' + req.user.username);
 });
 
 // validate the user credentials
 app.post('/users/signin', function (req, res) {
   const user = req.body.username;
   const pwd = req.body.password;
+  
  
-  // return 400 status if username/password is not exist
+  // return 400 status if username/password does not exist
   if (!user || !pwd) {
     return res.status(400).json({
       error: true,
       message: "Username or Password required."
     });
   }
+
+  //find the user in the allAccts array
+  const userData = allAccts.find(u => u.username === user);
  
   // return 401 status if the credential is not match.
   if (user !== userData.username || pwd !== userData.password) {
@@ -96,6 +93,7 @@ app.get('/verifyToken', function (req, res) {
       message: "Token is required."
     });
   }
+
   // check token that was passed by decoding token using secret
   jwt.verify(token, process.env.JWT_SECRET, function (err, user) {
     if (err) {
@@ -106,16 +104,16 @@ app.get('/verifyToken', function (req, res) {
       });
     }
  
-    // return 401 status if the userId does not match.
-    if (user.userId !== userData.userId) {
-      console.log("Invalid user");
-      return res.status(401).json({
-        error: true,
-        message: "Invalid user."
-      });
-    }
+    // // return 401 status if the userId does not match.
+    // if (user.userId !== userData.userId) {
+    //   console.log("Invalid user");
+    //   return res.status(401).json({
+    //     error: true,
+    //     message: "Invalid user."
+    //   });
+    // }
     // get basic user details
-    var userObj = utils.getCleanUser(userData);
+    var userObj = utils.getCleanUser(user);
     return res.json({ user: userObj, token });
   });
 });

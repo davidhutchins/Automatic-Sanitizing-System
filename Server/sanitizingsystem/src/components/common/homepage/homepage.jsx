@@ -2,6 +2,7 @@ import React from 'react';
 import './homepage.css'
 import Login from '../navbar/Login'
 import { getUser, removeUserSession } from "../navbar/Common"
+import Create from './createacct';
 
 function LogOut() {
     
@@ -19,15 +20,16 @@ function LogOut() {
 }
 
 function Home() {
-   const loginText = (sessionStorage.getItem('token') === null) ? "Login to access your devices" : "Logged in as: " + getUser().name;
+   const loginText = (sessionStorage.getItem('token') === null) ? "Login to access your devices" : "Logged in as: " + getUser().username;
    const renderLoginOrLogout = (sessionStorage.getItem('token') === null) ? Login() : LogOut();
     return (
         <section id="Homepage">
                 <section id="Titletxt">
                     <h1 id="headerText">Automatic Handle Cleaning System </h1>   
-                    <h2 id='subtext'>{loginText}</h2> 
                 </section>
+                    <h2 id='subtext'>{loginText}</h2> 
                 {renderLoginOrLogout}
+                {Create()}
 
         </section>
 

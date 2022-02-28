@@ -12,6 +12,23 @@ animation: title 2.5s ease-in-out infinite alternate;
 #subtext{
   font-size: large;
   text-align: center;
+  position: absolute;
+  top: 300%;
+  left: 30%;
+  color : eggshell;
+  text-shadow: -5px 4px 4px black;
+  animation: title 2.5s ease-in-out infinite alternate;
+}
+
+#title
+{
+  position: absolute;
+  font-size: large;
+  text-align: center;
+  top: 300%;
+  left: 50%;
+  color : eggshell;
+  animation: title 2.5s ease-in-out infinite alternate;
 }
 
 /*Note to self, try and get a flickering light anumation to work */
@@ -38,3 +55,17 @@ animation: title 2.5s ease-in-out infinite alternate;
     border: solid black 4px; */
 } 
 
+
+#move
+{
+  position: absolute;
+  top: 400%;
+  left: 50%;
+  color : eggshell;
+}
+#glow
+{
+    text-shadow: -5px 4px 4px black;
+    font-size:large;
+    animation: title 2.5s ease-in-out infinite alternate;
+}

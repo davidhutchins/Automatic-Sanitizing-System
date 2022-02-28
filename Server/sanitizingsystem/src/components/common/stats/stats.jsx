@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-// import 'bootstrap/dist/css/bootstrap.min.css';
 import './stats.css'
 import { Data } from '../../common';
 import { ldata, weeklyTotal } from "../data/linechart";
@@ -10,7 +9,6 @@ import Dropdown from 'react-bootstrap/Dropdown'
 
 
 const d = new Date();
-console.log(url)
 export let dataQuery = "&sanitizations="
 
 function displayDropDownData(data) {

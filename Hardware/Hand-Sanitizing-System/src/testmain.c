@@ -78,21 +78,26 @@ int main(void)
         }
         else
         {
-            printf(" Device couldn't come in AP mode \n\r");
+            printf("Device couldn't come in AP mode \n\r");
             LOOP_FOREVER();
         }
 
-        printf(" \r\n Device is configured in AP mode \n\r");
+        printf("\r\nDevice is configured in AP mode");
 
-        printf(" Waiting for client to connect\n\r");
+        printf("\r\nWaiting for client to connect\n\r");
         /* wait for client to connect */
-        while((!IS_IP_LEASED(g_Status)) || (!IS_STA_CONNECTED(g_Status))) { _SlNonOsMainLoopTask(); }
+        while((!IS_IP_LEASED(g_Status))) { _SlNonOsMainLoopTask(); }
+
+        printf("Client Connected!\n\r");
 
         while(disconnectFlag == 0)
         {
             _SlNonOsMainLoopTask();
         }
+
+        printf("Client Disconnected, Restarting in Station Mode!\n\r");
         retVal = sl_Stop(SL_STOP_TIMEOUT);
+        Delay(2000);
     }
 
     while(wifi_init() != 1);

@@ -11,10 +11,22 @@
 //char PASSKEY[100]            =    "cloudyjungle778";
 char SSID_AP_MODE[100]       =    "AHCS-30";
 
+char DEVICE_ID[] = "30";
+
 char Recvbuff[MAX_RECV_BUFF_SIZE];
 char SendBuff[MAX_SEND_BUFF_SIZE];
 
+
+typedef struct updateConnectionConfig {
+     signed char SSID[32];
+     uint8_t sec;
+     signed char pass[128];
+} updateConnectionConfig_t;
+
+updateConnectionConfig_t connConf;
+int8_t updateFlag = 0;
 int8_t disconnectFlag = 0;
+
 
 uint8_t wifi_init()
 {
@@ -28,10 +40,7 @@ uint8_t wifi_init()
 
     sl_Start(0, 0, 0);
 
-    while ((!IS_CONNECTED(g_Status)) || (!IS_IP_ACQUIRED(g_Status)))
-    {
-       _SlNonOsMainLoopTask();
-    }
+    establishConnectionWithAP();
 
     sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
 
@@ -271,15 +280,18 @@ int32_t configureSimpleLinkToDefaultState(void)
 int32_t establishConnectionWithAP(void)
 {
     SlSecParams_t secParams = {0};
-    uint32_t retVal = 0;
+    int16_t retVal = 0;
 
-//    secParams.Key = PASSKEY;
-//    secParams.KeyLen = PASSKEY_LEN;
-//    secParams.Type = SEC_TYPE;
-//
-//    retVal = sl_WlanConnect(SSID_NAME, pal_Strlen(SSID_NAME), 0, &secParams, 0);
+//    Make watch dog watch this for 10 seconds
+    if (updateFlag) {
+        secParams.Key = connConf.pass;
+        secParams.KeyLen = pal_Strlen(connConf.pass);
+        secParams.Type = connConf.sec;
 
-    ASSERT_ON_ERROR(retVal);
+        retVal = sl_WlanConnect(connConf.SSID, pal_Strlen(connConf.SSID), 0, &secParams, 0);
+
+        ASSERT_ON_ERROR(retVal);
+    }
 
     /* Wait */
     while ((!IS_CONNECTED(g_Status)) || (!IS_IP_ACQUIRED(g_Status)))
@@ -326,6 +338,7 @@ int32_t disconnectFromAP(void)
 }
 
 uint8_t configureProfile(char* SEC_SSID_NAME, char* SEC_SSID_KEY) {
+
     int8_t retVal = sl_WlanProfileDel(0xFF);
 
     _u8   g_BSSID[SL_BSSID_LENGTH];
@@ -397,7 +410,6 @@ void SimpleLinkWlanEventHandler(SlWlanEvent_t *pWlanEvent)
             /* Device disconnected from the AP on an ERROR..!! */
         }
 
-        disconnectFlag = 1;
     }
     break;
 
@@ -453,6 +465,7 @@ void SimpleLinkNetAppEventHandler(SlNetAppEvent_t *pNetAppEvent)
     }
     break;
 
+
     default:
     {
         /* [NETAPP EVENT] Unexpected event */
@@ -462,8 +475,9 @@ void SimpleLinkNetAppEventHandler(SlNetAppEvent_t *pNetAppEvent)
 }
 
 
-_u8 POST_token[] = "__SL_P_ULD";
-_u8 GET_token[]  = "__SL_G_ULD";
+_u8 POST_token_DC[] = "__SL_P_UDC";
+_u8 POST_token_UP[] = "__SL_P_UUP";
+_u8 GET_token[]  = "__SL_G_UID";
 
 /*!
     \brief This function handles callback for the HTTP server events
@@ -487,48 +501,53 @@ void SimpleLinkHttpServerCallback(SlHttpServerEvent_t *pEvent,
         {
             case SL_NETAPP_HTTPGETTOKENVALUE_EVENT:
             {
-//                _u8 status = 0;
-//                _u8 *ptr = 0;
-//
-//                ptr = pResponse->ResponseData.token_value.data;
-//                pResponse->ResponseData.token_value.len = 0;
-//                if(pal_Memcmp(pEvent->EventData.httpTokenName.data, GET_token,
-//                                             pal_Strlen(GET_token)) == 0)
-//                {
-//                    pal_Memcpy(ptr, "SomeData", pal_Strlen("SomeData"));
-//                    ptr += 8;
-//                    pResponse->ResponseData.token_value.len += 8;
-//
-//                    *ptr = '\0';
-//                }
+               _u8 *ptr = 0;
+
+               ptr = pResponse->ResponseData.token_value.data;
+               pResponse->ResponseData.token_value.len = 0;
+               if(pal_Memcmp(pEvent->EventData.httpTokenName.data, GET_token,
+                                            pal_Strlen(GET_token)) == 0)
+               {
+                   memcpy(ptr, DEVICE_ID, sizeof(DEVICE_ID));
+                   ptr += sizeof(DEVICE_ID) - 1;
+                   pResponse->ResponseData.token_value.len += sizeof(DEVICE_ID) - 1;
+
+                   *ptr = '\0';
+               }
             }
             break;
 
             case SL_NETAPP_HTTPPOSTTOKENVALUE_EVENT:
             {
-                _u8 led = 0;
-                _u8 *ptr = pEvent->EventData.httpPostData.token_name.data;
+                unsigned char *ptr = pEvent->EventData.httpPostData.token_name.data;
 
-                if(pal_Memcmp(ptr, POST_token, pal_Strlen(POST_token)) == 0)
+                if(pal_Memcmp(ptr, POST_token_DC, pal_Strlen(POST_token_DC)) == 0)
                 {
-                    const char data[] = pEvent->EventData.httpPostData.token_value.data;
+                    disconnectFlag = 1;
+                }
+                else if (pal_Memcmp(ptr, POST_token_UP, pal_Strlen(POST_token_UP)) == 0)
+                {
+                    char* data = pEvent->EventData.httpPostData.token_value.data;
                     ptr = data;
-                    ptr += 5;
 
-                    _u8 *passkeyptr = strstr(data, "$PASSKEY_");
-                    _u8 SSID_len = passkeyptr - ptr;
-                    char SSID[SSID_len + 1];
-                    pal_Memcpy(SSID, ptr, SSID_len);
-                    SSID[SSID_len] = '\0';
+                    char *passkeyptr = strstr(data, "$SEC=");
+                    char SSID_len = passkeyptr - ptr;
 
-                    ptr += SSID_len + 9;
+                    memcpy(connConf.SSID, ptr, SSID_len);
+                    connConf.SSID[SSID_len] = '\0';
 
-                    _u8 PASS_len = pEvent->EventData.httpPostData.token_value.len - (data - ptr);
-                    char PASS[PASS_len + 1];
-                    pal_Memcpy(PASS, ptr, PASS_len);
-                    PASS[PASS_len] = '\0';
+                    ptr += SSID_len + 5;
 
-                    configureProfile(SSID, PASS);
+                    connConf.sec = (*ptr == '3') ? 2 : *ptr;
+
+                    if (*ptr != 0) {
+                       ptr += 10;
+                       int8_t PASS_len = pEvent->EventData.httpPostData.token_value.len - (ptr - data);
+                       memcpy(connConf.pass, ptr, PASS_len);
+                       connConf.pass[PASS_len] = '\0';
+                    }
+
+                    updateFlag = 1;
                 }
             }
             break;

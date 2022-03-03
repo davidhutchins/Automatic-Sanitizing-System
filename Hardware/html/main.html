@@ -5,7 +5,6 @@
 
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<script src="js/jquery-1.8.3.min.js"></script>
 
 <head>
 <title>A.H.C.S Configuration</title>
@@ -29,7 +28,7 @@
 	{
 		var params = "__SL_P_UDC=1";
 		
-		HTTPrequest.open("POST","profiles_add.html", true);
+		HTTPrequest.open("POST","No_content", true);
 		HTTPrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		HTTPrequest.setRequestHeader("Content-length", params.length);
 		HTTPrequest.setRequestHeader("Connection", "close");
@@ -44,18 +43,23 @@
 	{
 		var params = "__SL_P_UUP=";
 		
-		params += document.getElementsByName("__SL_P_P.A")[0].value;
-		var ele = document.getElementsByName("__SL_P_P.B");
+		var newSSID = document.getElementsByName("ssid")[0].value;
+		params += newSSID;
+		document.getElementById("cur_ssid").innerHTML=newSSID;
+
+		var ele = document.getElementsByName("sec");
 		for (var i = 0; i < ele.length; i++)
 		{
 			if (ele[i].checked)
 			{
 				params += "$SEC=" + ele[i].value;
+				document.getElementById("cur_sec").innerHTML= (ele[i].value == 0) ? "Open" : (ele[i].value == 1) ? "WEP" : "WPA/WPA2";
 			}
 		}
-		params += "$PASSKEY=" + document.getElementsByName("__SL_P_P.C")[0].value;
 
-		HTTPrequest.open("POST","No-content", true);
+		params += "$PASSKEY=" + document.getElementsByName("passkey")[0].value;
+
+		HTTPrequest.open("POST","No_content", true);
 		HTTPrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		HTTPrequest.setRequestHeader("Content-length", params.length);
 		HTTPrequest.setRequestHeader("Connection", "close");
@@ -65,33 +69,6 @@
 		}
 		HTTPrequest.send(params);
 	}
-
-	$('form').on('submit', function(event){
-        event.preventDefault();
-        // do the post to 'action' defined by form html
-        // serialize the form data for submission
-        $.post($form.attr('action'), $form.serialize())
-            // define callback function for when the submission completes
-            .done(function(data, textStatus, jqXHR) {
-                // textStatus returns 'success' if http status 200 or similar
-                if (textStatus == 'success') {
-                    statusMessage.html('Changes applied.').delay( 3000 ).fadeOut( 400 );
-                    if (bClearForm) {
-                        $form.each(function(){
-                            this.reset();                            
-                        });
-                    }
-                    location.reload();
-                } else {
-                    statusMessage.html('Failed to apply changes.').delay( 3000 ).fadeOut( 400 );
-                }
-            })
-            // define callback function for if the form fails
-            .fail(function(jqxhr, settings, exception) {
-                statusMessage.html('Failed to apply changes.').delay( 3000 ).fadeOut( 400 );
-            });
-    });
-
 
 </script>
 
@@ -107,13 +84,12 @@
 	font-weight: bold;"
 >
 
-	<div style="background-color: #080404; position: relative; bottom: 10px; right: 10px; padding: 10px 100%; width: 100%;" >
+	<div style="background-color: #080404; position: relative; bottom: 10px; right: 600px; padding: 10px 1080px; width: 1080px;" >
 		<h1 style="font-size: x-large; position: relative; left: -450px">A.H.C.S. WIFI Configuration</h1>
 	</div>
 
-	<form method="POST" name="SimpleLink Configuration" action="profiles_add.html">
-		<input type="hidden" name="__SL_P_S.R" value="Index.html">
-		<input type="hidden" name="__SL_P_PRR" value="1">
+	<form>
+		<!-- <input type="hidden" name="__SL_P_S.R" value="Index.html"> -->
 		<table border="0"  width="540px" cellpadding="3" cellspacing="0" style="align-items: left; text-align: left; padding: 13px 16px;" >
 			<tr>
 				<td class="frame-title"  align=left colspan=1 > 
@@ -133,31 +109,28 @@
 				<td  class="label" dir=LTR align=left><span id="cur_sec"></span></td>
 			</tr>
 
-	
 			<tr>
-				<td  class="label" dir=LTR align=center colspan=1 style="padding-bottom: 15px;padding-top: 30px;"><span id="ssid_label"> Edit WIFI Configuration </span></td>
+				<td  class="label" dir=LTR align=left colspan=1 style="padding-bottom: 15px;padding-top: 30px;"><span id="ssid_label"> Edit WIFI Configuration </span></td>
 
 			</tr>
 			<tr>
 				<td  class="label" dir=LTR align=left ><span id="ssid_label"> SSID </span></td>
-				<td  class="user-input" dir=LTR align=left><input type="text" name="__SL_P_P.A"></td>
+				<td  class="user-input" dir=LTR align=left><input type="text" name="ssid"></td>
 			</tr>
 			<tr>
 				<td class="label" dir=LTR align=left style="padding-top: 15px;"> Security Type:</td>
 				<td style="padding-top: 15px;">
-					<input type="radio" name="__SL_P_P.B" value="0" checked="">Open
-					<input type="radio" name="__SL_P_P.B" value="1">WEP
-					<input type="radio" name="__SL_P_P.B" value="2">WPA1
-					<input type="radio" name="__SL_P_P.B" value="3">WPA2
+					<input type="radio" name="sec" value="0" checked="">Open
+					<input type="radio" name="sec" value="1">WEP
+					<input type="radio" name="sec" value="2">WPA/WPA2
 				</td>
 			</tr>
 				<td  class="label" dir=LTR align=left style="padding-top: 15px;"><span id="pass_label"> PASSKEY </span></td>
-				<td class="user-input" dir=LTR align=left style="padding-top: 15px;"><input type="text" name="__SL_P_P.C"></td>
+				<td class="user-input" dir=LTR align=left style="padding-top: 15px;"><input type="text" name="passkey"></td>
 			</tr>
 			<tr>
-				<input type="hidden" name="__SL_P_P.D" value="7">
 				<td class = "empty-line-in-box" colspan=1></td>
-				<td class="user-input" dir=LTR align=left style="padding-top: 15px;"><input type="submit" value="Apply" onclick="Apply()"></input></td>
+				<td class="user-input" dir=LTR align=left style="padding-top: 15px;"><input type="button" value="Apply" onclick="Apply()"></input></td>
 			</tr>
 						
 			<tr>

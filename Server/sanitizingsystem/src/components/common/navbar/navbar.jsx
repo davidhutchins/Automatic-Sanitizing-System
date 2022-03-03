@@ -24,7 +24,7 @@ function Navbar() {
       return;
     }
  
-    axios.get(`http://54.174.75.180/verifyToken?token=${token}`).then(response => {
+    axios.get(`http://54.90.139.97/api/verifyToken?token=${token}`).then(response => {
       setUserSession(response.data.token, response.data.user);
       setAuthLoading(false);
     }).catch(error => {

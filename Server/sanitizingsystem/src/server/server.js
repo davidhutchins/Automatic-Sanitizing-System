@@ -53,7 +53,7 @@ app.get('/', (req, res) => {
 // validate the user credentials
 app.post('/users/signin', async function (req, res) {
 
-  const response = await axios.get('http://localhost:2000/users/')
+  const response = await axios.get('http://54.174.75.180/users/')
   const allAccounts = response.data;
 
   const user = req.body.username;

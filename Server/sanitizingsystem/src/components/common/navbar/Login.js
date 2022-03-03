@@ -15,7 +15,7 @@ function Login(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post('http://localhost:2000/users/signin', { username: username.value, password: password.value }).then(response => {
+    axios.post('http://54.174.75.180/users/signin', { username: username.value, password: password.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
       console.log("Logged in!")

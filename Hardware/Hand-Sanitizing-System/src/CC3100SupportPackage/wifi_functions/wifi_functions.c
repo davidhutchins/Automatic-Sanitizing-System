@@ -40,6 +40,8 @@ uint8_t wifi_init()
 
     sl_Start(0, 0, 0);
 
+    Delay(750); // Delay as wifi module needs a second switching from AP to Station mode
+
     establishConnectionWithAP();
 
     sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
@@ -55,6 +57,96 @@ uint8_t wifi_init()
     printf("Could not connect to server. Retrying.\n");
     sl_Stop(SL_STOP_TIMEOUT);
     return 0;
+}
+
+void AP_init() {
+    int16_t retVal = configureSimpleLinkToDefaultState();
+    if (retVal < 0)
+        printf("Error with SL configuration!");
+
+    int32_t mode = 0;
+    uint8_t SecType = 0;
+
+    mode = sl_Start(0, 0, 0);
+    if(mode < 0){
+        LOOP_FOREVER();
+    }
+
+    else {
+        if (ROLE_AP == mode) {
+            /* If the device is in AP mode, we need to wait for this
+             * event before doing anything */
+            while(!IS_IP_ACQUIRED(g_Status)) { _SlNonOsMainLoopTask(); }
+        }
+        else
+        {
+            /* Configure CC3100 to start in AP mode */
+            retVal = sl_WlanSetMode(ROLE_AP);
+            if(retVal < 0)
+                LOOP_FOREVER();
+        }
+    }
+
+    /* Configure AP mode without security */
+    retVal = sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_SSID,
+               pal_Strlen(SSID_AP_MODE), (_u8 *)SSID_AP_MODE);
+    if(retVal < 0)
+        LOOP_FOREVER();
+
+    SecType = SEC_TYPE_AP_MODE;
+    /* Configure the Security parameter in the AP mode */
+    retVal = sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_SECURITY_TYPE, 1,
+            (_u8 *)&SecType);
+    if(retVal < 0)
+        LOOP_FOREVER();
+
+    retVal = sl_WlanSet(SL_WLAN_CFG_AP_ID, WLAN_AP_OPT_PASSWORD, pal_Strlen(PASSWORD_AP_MODE),
+            (_u8 *)PASSWORD_AP_MODE);
+    if(retVal < 0)
+        LOOP_FOREVER();
+    /* Restart the CC3100 */
+    retVal = sl_Stop(SL_STOP_TIMEOUT);
+    if(retVal < 0)
+        LOOP_FOREVER();
+
+    g_Status = 0;
+
+    mode = sl_Start(0, 0, 0);
+    if (ROLE_AP == mode)
+    {
+        /* If the device is in AP mode, we need to wait for this event before doing anything */
+        while(!IS_IP_ACQUIRED(g_Status)) { _SlNonOsMainLoopTask(); }
+    }
+    else
+    {
+        printf("Device couldn't come in AP mode \n\r");
+        LOOP_FOREVER();
+    }
+
+    printf("\r\nDevice is configured in AP mode");
+
+    printf("\r\nWaiting for client to connect\n\r");
+    /* wait for client to connect */
+    while((!IS_IP_LEASED(g_Status))) { _SlNonOsMainLoopTask(); }
+
+    printf("Client Connected!\n\r");
+
+    while(disconnectFlag == 0)
+    {
+        _SlNonOsMainLoopTask();
+    }
+
+    printf("Client Disconnected, Restarting in Station Mode!\n\r");
+    retVal = sl_Stop(SL_STOP_TIMEOUT);
+
+    retVal = configureSimpleLinkToDefaultState();
+    if (updateFlag) {
+        sl_Start(0, 0, 0);
+
+        configureProfile(connConf.SSID, connConf.pass, connConf.sec);
+
+        sl_Stop(SL_STOP_TIMEOUT);
+    }
 }
 
 int32_t sendRequestToServer(char* requestParams){
@@ -171,6 +263,7 @@ int32_t configureSimpleLinkToDefaultState(void)
     int32_t mode = -1;
 
     mode = sl_Start(0, 0, 0);
+    Delay(750);
     ASSERT_ON_ERROR(mode);
 
     /* If the device is not in station-mode, try configuring it in station-mode */
@@ -279,19 +372,7 @@ int32_t configureSimpleLinkToDefaultState(void)
 //*/
 int32_t establishConnectionWithAP(void)
 {
-    SlSecParams_t secParams = {0};
-    int16_t retVal = 0;
-
 //    Make watch dog watch this for 10 seconds
-    if (updateFlag) {
-        secParams.Key = connConf.pass;
-        secParams.KeyLen = pal_Strlen(connConf.pass);
-        secParams.Type = connConf.sec;
-
-        retVal = sl_WlanConnect(connConf.SSID, pal_Strlen(connConf.SSID), 0, &secParams, 0);
-
-        ASSERT_ON_ERROR(retVal);
-    }
 
     /* Wait */
     while ((!IS_CONNECTED(g_Status)) || (!IS_IP_ACQUIRED(g_Status)))
@@ -337,7 +418,8 @@ int32_t disconnectFromAP(void)
     return SUCCESS;
 }
 
-uint8_t configureProfile(char* SEC_SSID_NAME, char* SEC_SSID_KEY) {
+uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, uint8_t SEC) {
+//    sl_WlanPolicySet(SL_POLICY_CONNECTION, SL_CONNECTION_POLICY(0,0,0,0,0), 0, 0);
 
     int8_t retVal = sl_WlanProfileDel(0xFF);
 
@@ -345,11 +427,14 @@ uint8_t configureProfile(char* SEC_SSID_NAME, char* SEC_SSID_KEY) {
     pal_Memset(g_BSSID, 0, sizeof(g_BSSID));
 
     SlSecParams_t secParams = {0};
-    secParams.Type = SL_SEC_TYPE_WPA;
+    secParams.Type = SEC;
     secParams.Key = SEC_SSID_KEY;
     secParams.KeyLen = pal_Strlen(SEC_SSID_KEY);
     retVal = sl_WlanProfileAdd((_i8 *)SEC_SSID_NAME,
     pal_Strlen(SEC_SSID_NAME), g_BSSID, &secParams, 0, 7, 0);
+    ASSERT_ON_ERROR(retVal);
+
+//    sl_WlanPolicySet(SL_POLICY_CONNECTION, SL_CONNECTION_POLICY(1,0,0,0,0), 0, 0);
 
     return SUCCESS;
 }
@@ -538,7 +623,7 @@ void SimpleLinkHttpServerCallback(SlHttpServerEvent_t *pEvent,
 
                     ptr += SSID_len + 5;
 
-                    connConf.sec = (*ptr == '3') ? 2 : *ptr;
+                    connConf.sec = *ptr - 48;
 
                     if (*ptr != 0) {
                        ptr += 10;

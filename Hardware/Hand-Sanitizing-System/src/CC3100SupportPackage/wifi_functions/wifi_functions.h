@@ -34,11 +34,12 @@ int SockID;
 static volatile uint32_t localIP;
 
 uint8_t wifi_init();
+void AP_init();
 extern int32_t establishConnectionWithAP(void);
 extern int32_t disconnectFromAP(void);
 extern int32_t configureSimpleLinkToDefaultState(void);
 extern int32_t sendRequestToServer(char* request);
 extern void parseServerResponse(char* parsedResponse, char* keyword);
 extern uint8_t searchResponse(char* keyword);
-extern uint8_t configureProfile(char* SEC_SSID_NAME, char* SEC_SSID_KEY);
+extern uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, uint8_t SEC);
 void restartWIFI();

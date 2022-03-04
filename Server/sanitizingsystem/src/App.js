@@ -3,7 +3,7 @@ import React, { Component } from 'react';
 import particle from "./configs/particle";
 import Particles from 'react-tsparticles';
 import {Header} from './components/common';
-document.title = "A.H.S.S.";
+document.title = "A.H.C.S.";
 
 
 function App() {

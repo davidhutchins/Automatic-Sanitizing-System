@@ -2,8 +2,7 @@ import React, { useEffect, useState } from "react";
 import {  Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
 import './data.css'
 //import database from  '../../../server/database/connector'
-
-
+export let weeklyTotal;
 export let ldata = [
     {
       day: "Sun",
@@ -44,7 +43,7 @@ export function LineChartData() {
           async function getLineData() 
           {
             //gets the data from the database at the localhost specified
-            const weekDater = await fetch(`http://54.174.75.180/api/weekdata?handleId=30`);
+            const weekDater = await fetch(`http://54.90.139.97/api/weekdata?handleId=30`);
   
               //if there is no response then give this message
               if (!weekDater.ok) 
@@ -66,16 +65,21 @@ export function LineChartData() {
               ldata[4].Sanitizations = getWeekData[0].Thursday;
               ldata[5].Sanitizations = getWeekData[0].Friday;
               ldata[6].Sanitizations = getWeekData[0].Saturday;
-
-              console.log(ldata);
+                
+              weeklyTotal = getWeekData[0].Sunday + 
+                  getWeekData[0].Monday + 
+                  getWeekData[0].Tuesday + 
+                  getWeekData[0].Wednesday + 
+                  getWeekData[0].Thursday + 
+                  getWeekData[0].Friday + 
+                  getWeekData[0].Saturday;
 
               // setwk(ldata);              
             }
             getLineData();
             // console.log(wk)
     }, []);
-  
-  
+    
     return (
       <section>
         

@@ -3,103 +3,140 @@
 <!--[if lte IE 9 ]> <html class="ie"> <![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--> <html> <!--<![endif]-->
 
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
 <head>
 <title>A.H.C.S Configuration</title>
-<!-- <link rel="shortcut icon" href="http://smalltimer.net/dlormand//ti_logo1.jpg">
-<link rel="icon" type="image/ico" href="http://smalltimer.net/dlormand//ti_logo1.jpg"> -->
-<link rel="stylesheet" type="text/css" href="simple_link.css" >
 </head>
 
 <script type="text/javascript">
 	var HTTPrequest = new XMLHttpRequest();
 	function GetCurrentProfile()
 	{
-		var currentSSID = "__SL_G_PN7";
+		var deviceID = "__SL_G_UID";
+		document.getElementById("dev_id").innerHTML=deviceID;
+
+		var currentSSID = "__SL_G_PN1";
 		document.getElementById("cur_ssid").innerHTML=currentSSID;
 		
-		var currentSecurity = "__SL_G_PS7";
+		var currentSecurity = "__SL_G_PS1";
 		document.getElementById("cur_sec").innerHTML=currentSecurity;
 	}
 	
-	function UpdateProfile()
+	function Disconnect()
 	{
-		var params = "__SL_P_ULD=SSID_";
-		params = params + document.getElementById("name").value
-		params = params + "$PASSKEY_";
-		params = params + document.getElementById("pass").value
+		var params = "__SL_P_UDC=1";
 		
-	
 		HTTPrequest.open("POST","No_content", true);
 		HTTPrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 		HTTPrequest.setRequestHeader("Content-length", params.length);
 		HTTPrequest.setRequestHeader("Connection", "close");
 		HTTPrequest.onreadystatechange = function()
 		{
-			if (HTTPrequest.readyState==4 && HTTPrequest.status==200)
-			{
-			}
+			if (HTTPrequest.readyState==4 && HTTPrequest.status==200){}
 		}
 		HTTPrequest.send(params);
 	}
+
+	function Apply()
+	{
+		var params = "__SL_P_UUP=";
+		
+		var newSSID = document.getElementsByName("ssid")[0].value;
+		params += newSSID;
+		document.getElementById("cur_ssid").innerHTML=newSSID;
+
+		var ele = document.getElementsByName("sec");
+		for (var i = 0; i < ele.length; i++)
+		{
+			if (ele[i].checked)
+			{
+				params += "$SEC=" + ele[i].value;
+				document.getElementById("cur_sec").innerHTML= (ele[i].value == 0) ? "Open" : (ele[i].value == 1) ? "WEP" : "WPA/WPA2";
+			}
+		}
+
+		params += "$PASSKEY=" + document.getElementsByName("passkey")[0].value;
+
+		HTTPrequest.open("POST","No_content", true);
+		HTTPrequest.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+		HTTPrequest.setRequestHeader("Content-length", params.length);
+		HTTPrequest.setRequestHeader("Connection", "close");
+		HTTPrequest.onreadystatechange = function()
+		{
+			if (HTTPrequest.readyState==4 && HTTPrequest.status==200){}
+		}
+		HTTPrequest.send(params);
+	}
+
 </script>
 
+<body class="in-frame" onload="GetCurrentProfile()"  style=
+   "background-color: #232741; 
+    font-family:Arial, sans-serif;
+	float: left;
+	display: block;
+	color: white;
+	text-decoration: none;
+	text-shadow: -4px 3px 3.5px #666666;
+	font-size: large;
+	font-weight: bold;"
+>
 
-<body class="in-frame" onload="GetCurrentProfile()">
+	<div style="background-color: #080404; position: relative; bottom: 10px; right: 600px; padding: 10px 1080px; width: 1080px;" >
+		<h1 style="font-size: x-large; position: relative; left: -450px">A.H.C.S. WIFI Configuration</h1>
+	</div>
 
-	<form method="POST" name="SimpleLink Configuration action" action="ip_config.html">
-		<table border="0"  width="100%" cellpadding="3" cellspacing="0">
-
-			<tr>  
-				<td class="page-title" colspan=2 >
-					WIFI Configuration</td>
+	<form>
+		<!-- <input type="hidden" name="__SL_P_S.R" value="Index.html"> -->
+		<table border="0"  width="540px" cellpadding="3" cellspacing="0" style="align-items: left; text-align: left; padding: 13px 16px;" >
+			<tr>
+				<td class="frame-title"  align=left colspan=1 > 
+					Device ID:  </td>
+				<td  class="label" dir=LTR align=left><span id="dev_id"></span></td>
 			</tr>
 
 			<tr>
-				<td class = "empty-line" colspan=2></td>
-			</tr>
-			
-			<tr>
-				<td class="frame-title" colspan=2 > 
+				<td class="frame-title"  align=left colspan=1 > 
 					Current SSID:  </td>
 				<td  class="label" dir=LTR align=left><span id="cur_ssid"></span></td>
 			</tr>
 
 			<tr>
-				<td class="frame-title" colspan=2 > 
+				<td class="frame-title" align=left colspan=1 > 
 					Security:  </td>
 				<td  class="label" dir=LTR align=left><span id="cur_sec"></span></td>
 			</tr>
 
 			<tr>
-				<td class = "empty-line-in-box" colspan=2></td>
+				<td  class="label" dir=LTR align=left colspan=1 style="padding-bottom: 15px;padding-top: 30px;"><span id="ssid_label"> Edit WIFI Configuration </span></td>
+
 			</tr>
 			<tr>
-				<td class = "empty-line" colspan=2></td>
+				<td  class="label" dir=LTR align=left ><span id="ssid_label"> SSID </span></td>
+				<td  class="user-input" dir=LTR align=left><input type="text" name="ssid"></td>
+			</tr>
+			<tr>
+				<td class="label" dir=LTR align=left style="padding-top: 15px;"> Security Type:</td>
+				<td style="padding-top: 15px;">
+					<input type="radio" name="sec" value="0" checked="">Open
+					<input type="radio" name="sec" value="1">WEP
+					<input type="radio" name="sec" value="2">WPA/WPA2
+				</td>
+			</tr>
+				<td  class="label" dir=LTR align=left style="padding-top: 15px;"><span id="pass_label"> PASSKEY </span></td>
+				<td class="user-input" dir=LTR align=left style="padding-top: 15px;"><input type="text" name="passkey"></td>
+			</tr>
+			<tr>
+				<td class = "empty-line-in-box" colspan=1></td>
+				<td class="user-input" dir=LTR align=left style="padding-top: 15px;"><input type="button" value="Apply" onclick="Apply()"></input></td>
+			</tr>
+						
+			<tr>
+				<td class="user-input" dir=LTR align=left colspan=2 style="padding-top: 40px;"><input type="button" value="Exit and Restart Device" onclick="Disconnect()"></input></td>
 			</tr>
 
-			
-			<tr>
-				<td  class="label" dir=LTR align=center><span id="ssid_label"> SSID: </span></td>
-				<td  class="user-input" dir=LTR align=center><input type="text" id="name"></input></td>
-			</tr>
-			<tr>
-				<td class = "empty-line-in-box" colspan=2></td>
-			</tr>
-			<tr>
-				<td  class="label" dir=LTR align=center><span id="pass_label"> PASSKEY: </span></td>
-				<td class="user-input" dir=LTR align=center><input type="text" id="pass"></input></td>
-			</tr>
-			<tr>
-				<td class="user-input" dir=LTR align=center><input type="button" value="Submit" id="pass" onclick="UpdateProfile()"></input></td>
-			</tr>
-			<tr>
-				<td class = "empty-line-in-box" colspan=2></td>
-			</tr>
-
-			<tr>
-				<td class = "empty-line-in-box" colspan=2></td>
-			</tr>
-			
 			<tr >
 				<td class = "border-line-top" colspan=2 >
 				</td>

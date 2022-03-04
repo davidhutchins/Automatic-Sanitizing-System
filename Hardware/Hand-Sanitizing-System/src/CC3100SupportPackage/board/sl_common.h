@@ -56,7 +56,7 @@
 #define ASSERT_ON_ERROR(error_code) \
             {\
                 /* Handling the error-codes is specific to the application */ \
-                if (error_code < 0) return error_code; \
+                if (error_code < 0) printf("Error! Code: %d\n", error_code); \
                 /* else, continue w/ execution */ \
             }
 

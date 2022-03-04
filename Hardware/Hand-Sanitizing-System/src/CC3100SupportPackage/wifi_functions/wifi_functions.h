@@ -9,7 +9,6 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-/* Application specific status/error codes */
 #define SL_STOP_TIMEOUT 0xFF
 
 _u32 g_Status;
@@ -21,10 +20,12 @@ _u32 g_Status;
 
 #define WEBPAGE "54.174.75.180"
 
+extern int8_t updateFlag;
+extern int8_t disconnectFlag;
+
 char request[1024];
 char requestTemplate[512];
 char serverResponse[1024];
-extern int8_t disconnectFlag;
 
 extern char Recvbuff[MAX_RECV_BUFF_SIZE];
 extern char SendBuff[MAX_SEND_BUFF_SIZE];
@@ -33,11 +34,12 @@ int SockID;
 static volatile uint32_t localIP;
 
 uint8_t wifi_init();
+void AP_init();
 extern int32_t establishConnectionWithAP(void);
 extern int32_t disconnectFromAP(void);
 extern int32_t configureSimpleLinkToDefaultState(void);
 extern int32_t sendRequestToServer(char* request);
 extern void parseServerResponse(char* parsedResponse, char* keyword);
 extern uint8_t searchResponse(char* keyword);
-extern uint8_t configureProfile(char* SEC_SSID_NAME, char* SEC_SSID_KEY);
+extern uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, uint8_t SEC);
 void restartWIFI();

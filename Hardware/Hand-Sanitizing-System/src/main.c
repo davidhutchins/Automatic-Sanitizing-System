@@ -1,5 +1,5 @@
 #include <msp432.h>
-#include <wifi_functions.h>
+#include "wifi_functions.h"
 #include "handleServer.h"
 #include "BSP.h"
 
@@ -22,10 +22,13 @@ int main(void)
 	
 	BSP_InitBoard();
 	timer_init();
+	gpio_init();
+
+    if (P5->IN & BIT2)
+        AP_init();
 
 	while(wifi_init() != 1);
 
-	gpio_init();
 	NVIC_EnableIRQ(PORT3_IRQn);
 	NVIC_EnableIRQ(TA1_0_IRQn);
 
@@ -63,8 +66,11 @@ int main(void)
 
 
 void gpio_init(void) {
-    P6DIR   = 0xFF;             // Set P1.0 as Output
+    P6DIR   = 0xFF;             // Set P6 as Output
     P6OUT   |= BIT0;            // Set BIT0 as high to start.
+
+    P5DIR   &= ~BIT2;             // Set P5.2 as input
+    P5OUT   &= ~BIT2;             // Set P5.2 as low to start.
 
     P3DIR   &= ~(BIT5 | BIT7);
     P3IFG   &= ~(BIT5 | BIT7);  // Setting up main mechanism and safety
@@ -97,7 +103,8 @@ void timer_stop(void)
     TA1CTL &= ~(BIT4 | BIT5);
 }
 
-void PORT3_IRQHandler(){
+void PORT3_IRQHandler()
+{
     // Disable UV if light is currently on
     if (P3IFG & BIT5)       // Bit 5 is safety (low-to-high)
     {
@@ -114,7 +121,8 @@ void PORT3_IRQHandler(){
     }
 }
 /****** Timer Interrupt ******/
-void TA1_0_IRQHandler() {
+void TA1_0_IRQHandler()
+{
     TA1CCTL0 &= ~CCIFG;
     timerFlag = 1;
 }

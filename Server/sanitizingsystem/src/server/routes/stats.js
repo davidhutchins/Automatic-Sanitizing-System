@@ -1,5 +1,5 @@
 const express = require("express");
-const { ObjectId } = require("mongodb");
+const { ObjectId } = require("mongodb").ObjectId;
 
 // stats is an instance of the express router.
 // We use it to define our routes.
@@ -8,6 +8,7 @@ const stats = express.Router();
 
 // This will help us connect to the database
 const dbConn = require("../database/connector");
+
 
 
 // Gets a list of everything under the data collection
@@ -20,6 +21,44 @@ stats.route("/data").get(function (req, res) {
       if (err) throw err;
       res.json(result);
     });
+});
+
+
+
+stats.route("/users").get(function (req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  db_connect
+      .collection("users")
+      .find({})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
+// creates new user
+stats.route("/users/add").post(function (req, response) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  let myobj = {
+    username: req.body.username,
+    password: req.body.password,
+  };
+  db_connect.collection("users").insertOne(myobj, function (err, res) {
+    if (err) throw err;
+    response.json(res);
+  });
+});
+
+// This section will help you get a single record by id
+stats.route("/users/:id").get(function (req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  let myquery = { _id: ObjectId( req.params.id )};
+  db_connect
+      .collection("users")
+      .findOne(myquery, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+      });
 });
 
 
@@ -83,20 +122,6 @@ stats.route("/updateInteractions").get(function (req, res) {
             Friday:    weekdays["Friday"], 
             Saturday:  weekdays["Saturday"]
         }});
-
-      // db_connect
-      //  .collection("weekdata")
-      //  .insertOne({
-      //       doorsSanid : handleId,
-      //       Sunday:    10, 
-      //       Monday:    80, 
-      //       Tuesday:   40, 
-      //       Wednesday: 60, 
-      //       Thursday:  40, 
-      //       Friday:    90, 
-      //       Saturday:  30
-      //   });
-      
       });
 
       res.send('Interactions updated successfully');

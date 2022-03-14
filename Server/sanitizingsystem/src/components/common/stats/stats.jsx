@@ -3,10 +3,8 @@ import './stats.css'
 import { Data } from '../../common';
 import { ldata, weeklyTotal } from "../data/linechart";
 import { overallTotal, url, graphQuery } from "../data/data";
-import { getUser } from "../navbar/Common"
+import { getUser, getToken } from "../navbar/Common"
 import Dropdown from 'react-bootstrap/Dropdown'
-
-
 
 const d = new Date();
 export let dataQuery = "&sanitizations="
@@ -104,6 +102,7 @@ export default function Statistics()
     <section className="content">
         <section>
         {console.log("Logged in as: " + getUser().username)}
+        {console.log("Token: " + getToken())}
         <div id="pageTitle">
             <h1>Sanitizing Statistics & Data</h1>  
             <h2 id="saniz">Total Number Of Doors Sanitized</h2>
@@ -122,8 +121,6 @@ export default function Statistics()
         <section>
           {Data()}
         </section>
-    
-    
     </section>
 
   );

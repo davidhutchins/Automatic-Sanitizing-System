@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getToken, removeUserSession, setUserSession } from './Common';
+import { getToken, getUser, removeUserSession, setUserSession } from './Common';
 import './navbar.css'
 import {
     BrowserRouter as Router,
@@ -12,10 +12,11 @@ import {
   import GUIDE from '../../../components/setup.pdf'
 
   import Login from './Login';
-  import Dashboard from './Dashboard';
+  import ErrorPage from './ErrorPage';
 
 
 function Navbar() {
+  // let navigate = useNavigate();
   const [authLoading, setAuthLoading] = useState(true);
  
   useEffect(() => {
@@ -38,6 +39,7 @@ function Navbar() {
   }
   return (
     <section id="router">
+    {console.log(getUser())}
     <Router>
       <div>
         <nav>
@@ -49,7 +51,7 @@ function Navbar() {
               <Link to="/login" className="link" id="login">Login</Link>
             </li> */}
             <li>
-              <Link to="/stats" className="link">Sanitizing Statistics</Link>
+              <Link to={getUser() || getToken() ? "/stats" : "/error"} className="link">Sanitizing Statistics</Link>
             </li>
             <li>
               <Link to={GUIDE} target="_blank"className="link">Setup Guide</Link>
@@ -61,7 +63,7 @@ function Navbar() {
       <Route path="/levels" element={<Levels/>}/>
       <Route path="/data" element={<Data/>}/>
       <Route path="/" element={<Home/>}/>
-      <Route path="/dashboard" element={<Dashboard/>}/>
+      <Route path="/error" element={<ErrorPage/>}/>
       <Route path="/guide" component={() => {window.location.href = {GUIDE} 
           return null;
         }}/>

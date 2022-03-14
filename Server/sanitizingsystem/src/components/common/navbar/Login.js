@@ -26,6 +26,7 @@ function Login(props) {
       console.log('Something went wrong')
     });
   }
+  
   if (sessionStorage.getItem('token') === null)
   {
     return (

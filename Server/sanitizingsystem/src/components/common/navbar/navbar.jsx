@@ -12,7 +12,7 @@ import {
   import GUIDE from '../../../components/setup.pdf'
 
   import Login from './Login';
-  import ErrorPage from './ErrorPage';
+  import ErrorPage from '../errorpage/ErrorPage';
 
 
 function Navbar() {
@@ -38,8 +38,8 @@ function Navbar() {
     return <div className="content">Checking Authentication...</div>
   }
   return (
-    <section id="router">
-    {console.log(getUser())}
+    <section>
+    {/* {console.log(getUser())} */}
     <Router>
       <div>
         <nav>

@@ -18,12 +18,25 @@ function Login(props) {
     axios.post('http://54.90.139.97/api/users/signin', { username: username.value, password: password.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
-      console.log("Logged in!")
+      window.alert("Successfully logged in! Redirecting to the statistics page.")
       navigate('/stats')
-    }).catch(error => {
+    }).catch(function (error) {
       setLoading(false);
-      setError("Something went wrong. Please try again later.");
-      console.log('Something went wrong')
+      if (error.response.status === 401)
+      {
+        setError('Username or Password is incorrect. Please try again.');
+        console.log('Username or Password is incorrect. Please try again.');
+      }
+      else if (error.response.status === 400)
+      {
+        setError('Username and Password is required.');
+        console.log('Username and Password is required.');
+      }
+      else
+      {
+        setError("Something went wrong. Please try again later.");
+        console.log('Something went wrong');
+      }
     });
   }
   

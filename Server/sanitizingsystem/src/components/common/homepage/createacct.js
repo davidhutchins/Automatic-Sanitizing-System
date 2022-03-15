@@ -39,6 +39,7 @@ export default function Create() {
     {
       window.alert("Username already taken. Please enter a different username.")
       errorWithCreation = true;
+      setForm({ username: "", password: ""});
       break;
     }
   }
@@ -59,6 +60,7 @@ export default function Create() {
         window.alert(error);
       });
 
+      window.alert("Account successfully created!");
       setForm({ username: "", password: ""});
       navigate("/");
     }
@@ -103,9 +105,9 @@ export default function Create() {
             value="Create Account"
             className="btn btn-primary"
             />
-        </div>
-      </form>
-    </div>
             </div>
+          </form>
+        </div>
+      </div>
   );
 }

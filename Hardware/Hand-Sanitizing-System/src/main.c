@@ -50,7 +50,7 @@ int main(void)
 
 	    if (timerFlag) {
 	        timerFlag = 0;
-            if (count < 16)      // With a clock time of .25 seconds. This will count for 4 seconds.
+            if (count < 120)      // With a clock time of .25 seconds. This will count for 30 seconds. This was found to be an ideal time to thoroughly disinfect
             {
                 count++;
             }

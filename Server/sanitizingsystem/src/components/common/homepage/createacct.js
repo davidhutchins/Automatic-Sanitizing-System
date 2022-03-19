@@ -27,6 +27,13 @@ export default function Create() {
     //throw an error and tell them to try again
     window.alert("Please enter a valid/nonempty username and password.");
     errorWithCreation = true;
+    setForm({ username: "", password: ""});
+  }
+  if (form.username.includes(" "))
+  {
+    window.alert("Username contains whitespace. Please enter a valid username and password.");
+    errorWithCreation = true;
+    setForm({ username: "", password: ""});
   }
 
   //Grab all existing accounts and if a username already exists, throw an error

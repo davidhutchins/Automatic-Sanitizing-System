@@ -6,20 +6,30 @@
 {
     position: absolute;
     text-align: center;
-    top : 100%;
+    top : 50%;
     left: 35%;
     width: 440px;
     text-shadow: -5px 4px 4px black;
     font-size: xx-large;
+    animation: error 2.5s ease-in-out infinite alternate;
+
 }
+
+@keyframes error {
+
+    from {
+      /*  text-shadow:  0 0 100px #ff1fe9, 0 0 110px #ea00ff; */
+      text-shadow:   0 0 10px #fff, 0 0 20px rgb(241, 191, 191), 0 0 30px #f1a3a3, 0 0 40px #e99696, 0 0 50px #e95353, 0 0 60px #c53d3d, 0 0 70px red;
+        }
+    }
 
 #directionMessage
 {
     position: absolute;
     text-align: center;
     top : 300%;
-    left: 35%;
-    width: 440px;
+    left:33%;
+    width: 540px;
     text-shadow: -5px 4px 4px black;
     font-size: large;
 }

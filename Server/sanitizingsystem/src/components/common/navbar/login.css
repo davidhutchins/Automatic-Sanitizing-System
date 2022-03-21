@@ -10,5 +10,5 @@
 {
     text-shadow: -5px 4px 4px black;
     font-size:large;
-animation: title 2.5s ease-in-out infinite alternate;
+    animation: title 2.5s ease-in-out infinite alternate;
 }

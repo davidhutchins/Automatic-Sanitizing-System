@@ -1,3 +1,6 @@
+const axios = require('axios').default;
+
+
 require("dotenv").config({ path: "./config.env" });
 
 const express = require("express");
@@ -17,8 +20,8 @@ app.use(require("./routes/stats"));
 //sets the server port
 const port = process.env.PORT || 2000;
 
-// static user details
-const userData = [{userId: "789789", password: "123456", username: "testaccount"}];
+//Global variable to store account information
+let userData;
 
 //middleware that checks if JWT token exists and verifies it if it does exist.
 //In all future routes, this helps to know if the request is authenticated or not.
@@ -48,19 +51,37 @@ app.get('/', (req, res) => {
 });
 
 // validate the user credentials
-app.post('/users/signin', function (req, res) {
+app.post('/users/signin', async function (req, res) {
+
+  const response = await axios.get('http://54.90.139.97/api/users/')
+  const allAccounts = response.data;
+
   const user = req.body.username;
   const pwd = req.body.password;
- 
-  // return 400 status if username/password is not exist
+
+  // return 400 status if username/password does not exist
   if (!user || !pwd) {
     return res.status(400).json({
       error: true,
       message: "Username or Password required."
     });
   }
- 
-  // return 401 status if the credential is not match.
+
+  //find the user in the get request array
+  for (let i = 0; i < allAccounts.length; i++)
+  {
+    if (allAccounts[i].username === req.body.username)
+    {
+      userData = {
+        username: allAccounts[i].username,
+        password: allAccounts[i].password,
+        userId: allAccounts[i]._id,
+        isAdmin: false
+      };
+    }
+  }
+
+  // return 401 status if the credentials do not match.
   if (user !== userData.username || pwd !== userData.password) {
     console.log("Username or Password is Wrong.");
     return res.status(401).json({
@@ -80,7 +101,7 @@ app.post('/users/signin', function (req, res) {
  
  
 // verify the token and return it if it's valid
-app.get('/verifyToken', function (req, res) {
+app.get('/verifyToken', async function (req, res) {
   // check header or url parameters or post parameters for token
   var token = req.body.token || req.query.token;
   if (!token) {
@@ -90,16 +111,18 @@ app.get('/verifyToken', function (req, res) {
       message: "Token is required."
     });
   }
+
   // check token that was passed by decoding token using secret
-  jwt.verify(token, process.env.JWT_SECRET, function (err, user) {
+  jwt.verify(token, process.env.JWT_SECRET, async function (err, user) {
     if (err) {
       console.log('Invalid token')
       return res.status(401).json({
         error: true,
         message: "Invalid token."
       });
+
     }
- 
+
     // return 401 status if the userId does not match.
     if (user.userId !== userData.userId) {
       console.log("Invalid user");
@@ -109,7 +132,7 @@ app.get('/verifyToken', function (req, res) {
       });
     }
     // get basic user details
-    var userObj = utils.getCleanUser(userData);
+    var userObj = utils.getCleanUser(user);
     return res.json({ user: userObj, token });
   });
 });

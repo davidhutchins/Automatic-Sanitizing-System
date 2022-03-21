@@ -1,2 +1,4 @@
 .vscode/*
 !.vscode/launch.json
+Hardware/html/funny_session/templates/*
+Hardware/html/funny.usf

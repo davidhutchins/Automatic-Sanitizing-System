@@ -1,10 +1,9 @@
 import unittest
-from wsgiref import headers
 import requests
 import json
 from datetime import datetime
 
-websites = ["http://localhost:2000/", "http://54.174.75.180/api/"]
+websites = ["http://localhost:2000/", "http://54.90.139.97/api/"]
 url = websites[0]
 deployedUrl = websites[1]
 #Token for log in use
@@ -18,14 +17,45 @@ class AppTest(unittest.TestCase):
         print("Testing that GET request on root endpoint returns error code LOCAL...")
         response = requests.get(url)
         self.assertEqual(response.status_code, 401)
+    
+    def test_get_all_stored_accounts_local(self):
+        print("Testing that we can GET all the stored login accounts LOCAL...")
+        response = requests.get(url + 'users')
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+        self.assertNotEqual(len(respJSON), 0)
+        self.assertEqual(response.status_code, 200)
 
-    def test_default_api_call_login_success(self):
+    def test_default_api_call_login_success_local(self):
         print("Testing that GET request on root endpoint returns code 200 after entering valid token LOCAL...")
-        logInResponse = requests.post(url + 'users/signin', json=admin)
+        #First get all accounts
+        allLoginsResp = requests.get(url + 'users')
+        allLogins = json.loads(allLoginsResp.content.decode("utf").replace("'", '"'))
+        
+        login = {"username": allLogins[1]['username'], "password": allLogins[1]['password']}
+        logInResponse = requests.post(url + 'users/signin', json=login)
         logInJSON = json.loads(logInResponse.content.decode("utf").replace("'", '"'))
         token = logInJSON['token']
+        
         response = requests.get(url, headers={"Authorization": "Bearer " + token})
         self.assertEqual(response.status_code, 200)
+    
+    def test_verify_token_local(self):
+        print("Testing that verify token endpoint works properly LOCAL...")
+        #First get all accounts
+        allLoginsResp = requests.get(url + 'users')
+        allLogins = json.loads(allLoginsResp.content.decode("utf").replace("'", '"'))
+        
+        login = {"username": allLogins[1]['username'], "password": allLogins[1]['password']}
+        logInResponse = requests.post(url + 'users/signin', json=login)
+        logInJSON = json.loads(logInResponse.content.decode("utf").replace("'", '"'))
+        token = logInJSON['token']
+        
+        response = requests.get(url + 'verifyToken?token=' + token)
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+        verifyToken = respJSON['token']
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(token, verifyToken)
     
     # week data endpoint (/weekdata)
     def test_weekdata_get_success_local(self):
@@ -150,7 +180,47 @@ class AppTest(unittest.TestCase):
     def test_default_api_call_error_deployed(self):
         print("Testing that GET request on root endpoint returns error code DEPLOYED...")
         response = requests.get(deployedUrl)
-        self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 401)
+
+    def test_get_all_stored_accounts_deployed(self):
+        print("Testing that we can GET all the stored login accounts DEPLOYED...")
+        response = requests.get(deployedUrl + 'users')
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+        self.assertNotEqual(len(respJSON), 0)
+        self.assertEqual(response.status_code, 200)
+
+    def test_default_api_call_login_success_deployed(self):
+        print("Testing that GET request on root endpoint returns code 200 after entering valid token DEPLOYED...")
+        #First get all accounts
+        allLoginsResp = requests.get(deployedUrl + 'users')
+        allLogins = json.loads(allLoginsResp.content.decode("utf").replace("'", '"'))
+        
+        login = {"username": allLogins[1]['username'], "password": allLogins[1]['password']}
+        logInResponse = requests.post(deployedUrl + 'users/signin', json=login)
+        logInJSON = json.loads(logInResponse.content.decode("utf").replace("'", '"'))
+        token = logInJSON['token']
+        
+        response = requests.get(deployedUrl, headers={"Authorization": "Bearer " + token})
+        self.assertEqual(response.status_code, 200)
+    
+    def test_verify_token_deployed(self):
+        print("Testing that verify token endpoint works properly DEPLOYED...")
+        #First get all accounts
+        allLoginsResp = requests.get(deployedUrl + 'users')
+        allLogins = json.loads(allLoginsResp.content.decode("utf").replace("'", '"'))
+        
+        login = {"username": allLogins[1]['username'], "password": allLogins[1]['password']}
+        logInResponse = requests.post(deployedUrl + 'users/signin', json=login)
+        logInJSON = json.loads(logInResponse.content.decode("utf").replace("'", '"'))
+        token = logInJSON['token']
+        
+        response = requests.get(deployedUrl + 'verifyToken?token=' + token)
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+        verifyToken = respJSON['token']
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(token, verifyToken)
+    
     
     # week data endpoint (/weekdata)
     def test_weekdata_get_success_deployed(self):

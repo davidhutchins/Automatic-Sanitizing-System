@@ -36,7 +36,7 @@ stats.route("/users").get(function (req, res) {
     });
 });
 
-// This section will help you create a new record.
+// creates new user
 stats.route("/users/add").post(function (req, response) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
   let myobj = {
@@ -47,6 +47,18 @@ stats.route("/users/add").post(function (req, response) {
     if (err) throw err;
     response.json(res);
   });
+});
+
+// This section will help you get a single record by id
+stats.route("/users/:id").get(function (req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  let myquery = { _id: ObjectId( req.params.id )};
+  db_connect
+      .collection("users")
+      .findOne(myquery, function (err, result) {
+        if (err) throw err;
+        res.json(result);
+      });
 });
 
 

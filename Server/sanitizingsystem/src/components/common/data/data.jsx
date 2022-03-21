@@ -46,7 +46,7 @@ function displayData(fetchedData) {
 
   if (window.location.href.includes("pie"))
   {
-    graphQuery += "pie" 
+    graphQuery = "&graph=pie" 
     return (
       <div id="pie">
         <PieChart width={440} height={340}>
@@ -58,7 +58,7 @@ function displayData(fetchedData) {
   }
   else if (window.location.href.includes("bar"))
   {
-    graphQuery+="bar"
+    graphQuery="&graph=bar"
     return (
       <div id="bar">
         <BarChart width={440} height={340} data={fetchedData}>
@@ -74,7 +74,7 @@ function displayData(fetchedData) {
   }
   else if (window.location.href.includes("radar"))
   {
-    graphQuery+="radar";
+    graphQuery="&graph=radar";
     return (
       <div id="radar">
         <RadarChart outerRadius={90} width={440} height={340} data={fetchedData}>
@@ -90,7 +90,7 @@ function displayData(fetchedData) {
   }
   else 
   {
-    graphQuery="pie";
+    graphQuery="&graph=pie";
     return (
       <div id="pie">
         <PieChart width={440} height={340}>
@@ -112,7 +112,8 @@ export default function Data() {
   async function getStats() 
   {
       //gets the data from the database at the localhost specified
-      const resp = await fetch(`http://54.90.139.97/api/data/`);
+      //const resp = await fetch(`http://54.90.139.97/api/data/`);
+      const resp = await fetch(`http:/localhost:2000/handleData/`);
 
 
       //if there is no response then give this message
@@ -125,6 +126,7 @@ export default function Data() {
 
       //stat = the fetched data in json format
       const stat = await resp.json();
+      console.log(stat);
 
       //Push read data to dynamic data array (pie chart and line graph)
       data.pop(); //Get rid of default data
@@ -132,14 +134,14 @@ export default function Data() {
       {
         if (typeof data[i] == 'undefined')
         {
-          data.push({name: 'Device ' + (stat[i].doorsSanid).toString(), value: stat[i].grmsKild});
+          data.push({name: 'Device ' + (stat[i].deviceId).toString(), value: stat[i].lifetimeInteractions});
         }
 
-        if (data[i].name === 'Device ' + (stat[i].doorsSanid).toString() && data[i].value !== stat[i].grmsKild)
+        if (data[i].name === 'Device ' + (stat[i].deviceId).toString() && data[i].value !== stat[i].lifetimeInteractions)
         {
-          data[i].value = stat[i].grmsKild;
+          data[i].value = stat[i].lifetimeInteractions;
         }
-        overallTotal += stat[i].grmsKild;
+        overallTotal += stat[i].lifetimeInteractions;
       }
       setData(data);
     }

@@ -43,7 +43,9 @@ export function LineChartData() {
           async function getLineData() 
           {
             //gets the data from the database at the localhost specified
-            const weekDater = await fetch(`http://54.90.139.97/api/weekdata?handleId=30`);
+            //const weekDater = await fetch(`http://54.90.139.97/api/weekdata?handleId=30`);
+            //TODO: Make the handleID user specific
+            const weekDater = await fetch(`http://localhost:2000/handleData?deviceId=30`);
   
               //if there is no response then give this message
               if (!weekDater.ok) 
@@ -74,7 +76,7 @@ export function LineChartData() {
                   getWeekData[0].Friday + 
                   getWeekData[0].Saturday;
 
-              // setwk(ldata);              
+              // setwk(ldata);
             }
             getLineData();
             // console.log(wk)

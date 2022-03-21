@@ -69,3 +69,20 @@ animation: title 2.5s ease-in-out infinite alternate;
     font-size:large;
     animation: title 2.5s ease-in-out infinite alternate;
 }
+
+#deviceAdd
+{
+  position: absolute;
+  top: 450%;
+  left: 30%;
+  color : eggshell;
+}
+#moveit
+{
+  position: absolute;
+  top: 540%;
+  left: 30%;
+  color : eggshell;
+}
+
+

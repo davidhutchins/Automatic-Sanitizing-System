@@ -23,6 +23,18 @@ stats.route("/data").get(function (req, res) {
     });
 });
 
+stats.route("/handleData").get(function (req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  let deviceId = parseInt(req.query.deviceId);
+  db_connect
+    .collection("handleData")
+    .find({deviceId: deviceId})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
 
 
 stats.route("/users").get(function (req, res) {
@@ -61,13 +73,13 @@ stats.route("/users/:id").get(function (req, res) {
       });
 });
 
-
+//make sure this isnt broken later
 stats.route("/weekdata").get(function (req, res) {
-  let handleId = parseInt(req.query.handleId);
+  let deviceId = parseInt(req.query.deviceId);
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
   db_connect
     .collection("weekdata")
-    .find({doorsSanid: handleId})
+    .find({deviceId: deviceId})
     .toArray(function (err, result) {
       if (err) throw err;
       res.json(result);

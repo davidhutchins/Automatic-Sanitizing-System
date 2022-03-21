@@ -3,6 +3,7 @@ import './homepage.css'
 import Login from '../navbar/Login'
 import { getUser, removeUserSession } from "../navbar/Common"
 import Create from './createacct';
+import AddDevice from './addDevice';
 
 function LogOut() {
     
@@ -22,6 +23,7 @@ function LogOut() {
 function Home() {
    const loginText = (sessionStorage.getItem('token') === null) ? "Login to access your devices" : "Logged in as: " + getUser().username;
    const renderLoginOrLogout = (sessionStorage.getItem('token') === null) ? Login() : LogOut();
+   const renderAddDevice = ((sessionStorage.getItem('token') === null) ? <div/> : AddDevice());
     return (
         <section id="Homepage">
                 <section id="Titletxt">
@@ -30,6 +32,7 @@ function Home() {
                     <h2 id='subtext'>{loginText}</h2> 
                 {renderLoginOrLogout}
                 {Create()}
+                {renderAddDevice}
 
         </section>
 

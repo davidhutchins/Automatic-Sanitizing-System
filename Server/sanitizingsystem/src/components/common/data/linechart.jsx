@@ -3,6 +3,7 @@ import {  Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from '
 import './data.css'
 //import database from  '../../../server/database/connector'
 export let weeklyTotal;
+export let overallTotal = 0;
 export let ldata = [
     {
       day: "Sun",
@@ -34,6 +35,8 @@ export let ldata = [
     }
 ];
 
+export let data = [{name: "Device 1", value: 10}];
+
 export function LineChartData() {  
 
     // //get data from the database
@@ -45,40 +48,56 @@ export function LineChartData() {
             //gets the data from the database at the localhost specified
             //const weekDater = await fetch(`http://54.90.139.97/api/weekdata?handleId=30`);
             //TODO: Make the handleID user specific
-            const weekDater = await fetch(`http://localhost:2000/handleData?deviceId=30`);
+            const stats = await fetch(`http://localhost:2000/handleData`);
   
               //if there is no response then give this message
-              if (!weekDater.ok) 
+              if (!stats.ok) 
               {
-                  const msg = `An error occurred: ${weekDater.statusText}`;
+                  const msg = `An error occurred: ${stats.statusText}`;
                   window.alert(msg);
                   return;
               }
   
               //stat = the fetched data in json format
-              const getWeekData = await weekDater.json();
-              console.log(getWeekData);
+              const getData = await stats.json();
+              console.log(getData);
 
               //Load the data from JSON into array to display on line chart
-              ldata[0].Sanitizations = getWeekData[0].Sunday;
-              ldata[1].Sanitizations = getWeekData[0].Monday;
-              ldata[2].Sanitizations = getWeekData[0].Tuesday;
-              ldata[3].Sanitizations = getWeekData[0].Wednesday;
-              ldata[4].Sanitizations = getWeekData[0].Thursday;
-              ldata[5].Sanitizations = getWeekData[0].Friday;
-              ldata[6].Sanitizations = getWeekData[0].Saturday;
+              ldata[0].Sanitizations = getData[0].Sunday;
+              ldata[1].Sanitizations = getData[0].Monday;
+              ldata[2].Sanitizations = getData[0].Tuesday;
+              ldata[3].Sanitizations = getData[0].Wednesday;
+              ldata[4].Sanitizations = getData[0].Thursday;
+              ldata[5].Sanitizations = getData[0].Friday;
+              ldata[6].Sanitizations = getData[0].Saturday;
                 
-              weeklyTotal = getWeekData[0].Sunday + 
-                  getWeekData[0].Monday + 
-                  getWeekData[0].Tuesday + 
-                  getWeekData[0].Wednesday + 
-                  getWeekData[0].Thursday + 
-                  getWeekData[0].Friday + 
-                  getWeekData[0].Saturday;
+              weeklyTotal = getData[0].Sunday + 
+                  getData[0].Monday + 
+                  getData[0].Tuesday + 
+                  getData[0].Wednesday + 
+                  getData[0].Thursday + 
+                  getData[0].Friday + 
+                  getData[0].Saturday;
 
-              // setwk(ldata);
+              //Get stats about device itself
+              data.pop();
+              for (let i = 0; i < getData.length; i++)
+              {
+                if (typeof data[i] == 'undefined')
+                {
+                  data.push({name: 'Device ' + (getData[i].deviceId).toString(), value: getData[i].lifetimeInteractions});
+                }
+
+                if (data[i].name === 'Device ' + (getData[i].deviceId).toString() && getData[i].value !== getData[i].lifetimeInteractions)
+                {
+                  data[i].value = getData[i].lifetimeInteractions;
+                }
+                overallTotal += getData[i].lifetimeInteractions; 
+              }
+
             }
             getLineData();
+            console.log(data);
             // console.log(wk)
     }, []);
     

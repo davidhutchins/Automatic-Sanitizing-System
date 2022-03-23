@@ -9,6 +9,7 @@ import { overallTotal } from "../data/data";
 
 const d = new Date();
 export let dataQuery = "&sanitizations="
+export const userToken = getToken();
 
 function displayDropDownData(data) {
   return (
@@ -96,17 +97,7 @@ export default function Statistics()
 
         //stat = the fetched data in json format
         const getData = await stats.json();
-        console.log(getData);
-
-        //Load the data from JSON into array to display on line chart
-        ldata[0].Sanitizations = getData[0].Sunday;
-        ldata[1].Sanitizations = getData[0].Monday;
-        ldata[2].Sanitizations = getData[0].Tuesday;
-        ldata[3].Sanitizations = getData[0].Wednesday;
-        ldata[4].Sanitizations = getData[0].Thursday;
-        ldata[5].Sanitizations = getData[0].Friday;
-        ldata[6].Sanitizations = getData[0].Saturday;
-          
+                  
         const weeklyData = getData[0].Sunday + 
             getData[0].Monday + 
             getData[0].Tuesday + 
@@ -125,8 +116,6 @@ export default function Statistics()
   return (
     <section className="content">
         <section>
-        {console.log("Logged in as: " + getUser().username)}
-        {console.log("Token: " + getToken())}
         <div id="pageTitle">
             <h1>Sanitizing Statistics & Data</h1>  
             <h2 id="saniz">Total Number Of Doors Sanitized</h2>

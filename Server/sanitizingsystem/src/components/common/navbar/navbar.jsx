@@ -13,6 +13,7 @@ import {
 
   import Login from './Login';
   import ErrorPage from '../errorpage/ErrorPage';
+  import { userToken } from '../stats/stats';
 
 
 function Navbar() {
@@ -37,21 +38,22 @@ function Navbar() {
   if (authLoading && getToken()) {
     return <div className="content">Checking Authentication...</div>
   }
+  console.log(userToken);
+  let ifNoAuth = (userToken === null) ? "/error" : "/stats";
   return (
     <section>
-    {/* {console.log(getUser())} */}
     <Router>
       <div>
         <nav>
           <ul>
             <li>
-              <Link to="/" className="link">Home</Link>
+              <Link to="/" className="link" onClick={() => window.href.reload(true)}> Home </Link>
             </li>
             {/* <li>
               <Link to="/login" className="link" id="login">Login</Link>
             </li> */}
             <li>
-              <Link to={getUser() || getToken() ? "/stats" : "/error"} className="link">Sanitizing Statistics</Link>
+              <Link to={ifNoAuth} onClick={() => window.href.reload(true)} className="link">Sanitizing Statistics</Link>
             </li>
             <li>
               <Link to={GUIDE} target="_blank"className="link">Setup Guide</Link>

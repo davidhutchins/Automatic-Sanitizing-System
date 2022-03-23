@@ -43,3 +43,8 @@ extern void parseServerResponse(char* parsedResponse, char* keyword);
 extern uint8_t searchResponse(char* keyword);
 extern uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, uint8_t SEC);
 void restartWIFI();
+
+#define QUARTERSECOND 46875
+void connectionTimer_init();
+void connectionTimer_start();
+void connectionTimer_stop();

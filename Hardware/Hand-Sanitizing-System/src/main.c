@@ -12,6 +12,7 @@ void timer_init();
 void timer_start();
 void timer_stop();
 
+
 uint8_t count = 0;
 uint8_t activationFlag = 0;
 uint8_t timerFlag = 0;
@@ -31,6 +32,7 @@ int main(void)
 
 	NVIC_EnableIRQ(PORT3_IRQn);
 	NVIC_EnableIRQ(TA1_0_IRQn);
+	NVIC_EnableIRQ(TA2_0_IRQn);
 
 	while(1) {
 	    if (activationFlag) {
@@ -88,20 +90,19 @@ void timer_init(void)
     TA1CCR0 = 0;                        // Timer will start when this is set to a nonzero value.
 }
 
-
-/****** Helper Function To Start the Timer ******/
 void timer_start(void)
 {
     TA1EX0 |= (BIT2 | BIT1 | BIT0);     // Reset the clock divider
     TA1CTL |= MC_1;
     TA1CCR0 = QUARTER_SECOND;
 }
-/****** Helper Function to Stop Timer ******/
+
 void timer_stop(void)
 {
     TA1CCR0 = 0;
     TA1CTL &= ~(BIT4 | BIT5);
 }
+
 
 void PORT3_IRQHandler()
 {
@@ -120,6 +121,7 @@ void PORT3_IRQHandler()
         activationFlag = 1;
     }
 }
+
 /****** Timer Interrupt ******/
 void TA1_0_IRQHandler()
 {

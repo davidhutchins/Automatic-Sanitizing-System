@@ -16,6 +16,8 @@ char DEVICE_ID[] = "30";
 char Recvbuff[MAX_RECV_BUFF_SIZE];
 char SendBuff[MAX_SEND_BUFF_SIZE];
 
+uint8_t stopConnectionAttempt = 0;
+uint8_t connectionTimerCount = 0;
 
 typedef struct updateConnectionConfig {
      signed char SSID[32];
@@ -42,7 +44,9 @@ uint8_t wifi_init()
 
     Delay(750); // Delay as wifi module needs a second switching from AP to Station mode
 
-    establishConnectionWithAP();
+    if(establishConnectionWithAP() < 0) {
+        printf("Could not establish connection with AP.\n");
+    }
 
     sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
 
@@ -372,12 +376,17 @@ int32_t configureSimpleLinkToDefaultState(void)
 //*/
 int32_t establishConnectionWithAP(void)
 {
-//    Make watch dog watch this for 10 seconds
+    connectionTimer_init();
+    connectionTimer_start();
 
     /* Wait */
     while ((!IS_CONNECTED(g_Status)) || (!IS_IP_ACQUIRED(g_Status)))
     {
         _SlNonOsMainLoopTask();
+
+        if (stopConnectionAttempt) {
+            return FAILURE;
+        }
     }
 
     return SUCCESS;
@@ -669,4 +678,41 @@ void SimpleLinkSockEventHandler(SlSockEvent_t *pSock)
         return;
     }
 
+}
+
+void connectionTimer_init(void)
+{
+    TA2CTL |= TASSEL_2 | ID_3;    // Configuring Timer A2 to SMCLK and Divider 8.
+    TA2CCTL0 |= CCIE;                    // Enabling interrupt for CC0 on Timer A2
+    TA2EX0 |= (BIT2 | BIT1 | BIT0);     // Dividing by 8 a second time.
+    TA2CCR0 = 0;                        // Timer will start when this is set to a nonzero value.
+}
+
+/****** Helper Function To Start the Timer ******/
+void connectionTimer_start(void)
+{
+    TA2EX0 |= (BIT2 | BIT1 | BIT0);     // Reset the clock divider
+    TA2CTL |= MC_1;
+    TA2CCR0 = QUARTERSECOND;
+}
+/****** Helper Function to Stop Timer ******/
+void connectionTimer_stop(void)
+{
+    TA2CCR0 = 0;
+    TA2CTL &= ~(BIT4 | BIT5);
+}
+
+void TA2_0_IRQHandler()
+{
+    TA2CCTL0 &= ~CCIFG;
+    if (connectionTimerCount < 40)      // With a clock time of .25 seconds. This will count for 10 seconds.
+    {
+       connectionTimerCount++;
+    }
+    else
+    {
+       connectionTimerCount = 0;
+       connectionTimer_stop();    // Stop the timer
+       stopConnectionAttempt = 1;
+    }
 }

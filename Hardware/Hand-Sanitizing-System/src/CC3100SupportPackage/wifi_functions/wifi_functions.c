@@ -12,6 +12,7 @@
 char SSID_AP_MODE[100]       =    "AHCS-30";
 
 char DEVICE_ID[] = "30";
+char REG_CODE[] = "716928";
 
 char Recvbuff[MAX_RECV_BUFF_SIZE];
 char SendBuff[MAX_SEND_BUFF_SIZE];
@@ -571,7 +572,8 @@ void SimpleLinkNetAppEventHandler(SlNetAppEvent_t *pNetAppEvent)
 
 _u8 POST_token_DC[] = "__SL_P_UDC";
 _u8 POST_token_UP[] = "__SL_P_UUP";
-_u8 GET_token[]  = "__SL_G_UID";
+_u8 GET_token_ID[]  = "__SL_G_UID";
+_u8 GET_token_RC[]  = "__SL_G_URC";
 
 /*!
     \brief This function handles callback for the HTTP server events
@@ -599,12 +601,21 @@ void SimpleLinkHttpServerCallback(SlHttpServerEvent_t *pEvent,
 
                ptr = pResponse->ResponseData.token_value.data;
                pResponse->ResponseData.token_value.len = 0;
-               if(pal_Memcmp(pEvent->EventData.httpTokenName.data, GET_token,
-                                            pal_Strlen(GET_token)) == 0)
+               if(pal_Memcmp(pEvent->EventData.httpTokenName.data, GET_token_ID,
+                                            pal_Strlen(GET_token_ID)) == 0)
                {
                    memcpy(ptr, DEVICE_ID, sizeof(DEVICE_ID));
                    ptr += sizeof(DEVICE_ID) - 1;
                    pResponse->ResponseData.token_value.len += sizeof(DEVICE_ID) - 1;
+
+                   *ptr = '\0';
+               }
+               else if(pal_Memcmp(pEvent->EventData.httpTokenName.data, GET_token_RC,
+                                  pal_Strlen(GET_token_RC)) == 0)
+               {
+                   memcpy(ptr, REG_CODE, sizeof(REG_CODE));
+                   ptr += sizeof(REG_CODE) - 1;
+                   pResponse->ResponseData.token_value.len += sizeof(REG_CODE) - 1;
 
                    *ptr = '\0';
                }

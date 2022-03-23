@@ -4,6 +4,7 @@
 #include "BSP.h"
 
 #define HANDLE_ID 30
+#define REGISTRATION_CODE 716928
 
 #define QUARTER_SECOND 46875
  
@@ -12,10 +13,11 @@ void timer_init();
 void timer_start();
 void timer_stop();
 
-
 uint8_t count = 0;
 uint8_t activationFlag = 0;
 uint8_t timerFlag = 0;
+uint8_t connectedToServer = 0;
+uint8_t connectionConfigured = 0;
 
 int main(void)
 {
@@ -25,10 +27,16 @@ int main(void)
 	timer_init();
 	gpio_init();
 
-    if (P5->IN & BIT2)
+    if (P5->IN & BIT2) {
         AP_init();
+        connectionConfigured = 1;
+    }
 
-	while(wifi_init() != 1);
+	connectedToServer = wifi_init();
+
+	if (connectedToServer && connectionConfigured) {
+	    sendRegistrationCode(HANDLE_ID, REGISTRATION_CODE);
+	}
 
 	NVIC_EnableIRQ(PORT3_IRQn);
 	NVIC_EnableIRQ(TA1_0_IRQn);
@@ -40,11 +48,13 @@ int main(void)
 	        count = 0;
             P6OUT &= ~BIT0;
 
-            uint8_t attempts = 0;
-            while(incrementInteractionCounter(HANDLE_ID) == 0) { // Update handle interaction counter, quit after 3 tries
-                attempts++;
-                if (attempts == 3)
-                    break;
+            if (connectedToServer) {
+                uint8_t attempts = 0;
+                while(incrementInteractionCounter(HANDLE_ID) == 0) { // Update handle interaction counter, quit after 3 tries, pass if not connected to WIFI
+                    attempts++;
+                    if (attempts == 3)
+                        break;
+                }
             }
 
             timer_start();

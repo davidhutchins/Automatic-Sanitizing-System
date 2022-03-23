@@ -12,8 +12,8 @@ uint8_t incrementInteractionCounter(int16_t handleID) {
     return 0;
 }
 
-uint8_t updateBatteryLevel(int16_t handleID, int16_t powerLevel) {
-    sprintf(requestParams, "/updateBatteryLevel/%u/%u", handleID, powerLevel);
+uint8_t sendRegistrationCode(int16_t handleID, int16_t regCode) {
+    sprintf(requestParams, "/api/register?handleId=%u&verificationCode=%u", handleID, regCode);
     sendRequestToServer(requestParams);
     if (searchResponse("success")) {
         return 1;

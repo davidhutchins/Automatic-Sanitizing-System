@@ -8,6 +8,47 @@
 
 <head>
 <title>A.H.C.S Configuration</title>
+
+<style>
+	body {font-family: Arial;}
+	
+	/* Style the tab */
+	.tab {
+	  overflow: hidden;
+	  background-color: #080404;
+	}
+	
+	/* Style the buttons inside the tab */
+	.tab button {
+	  background-color: inherit;
+	  float: left;
+	  border: none;
+	  outline: none;
+	  cursor: pointer;
+	  padding: 14px 16px;
+	  transition: 0.3s;
+	  font-size: 17px;
+	}
+	
+	/* Change background color of buttons on hover */
+	.tab button:hover {
+	  background-color: #ddd;
+	}
+	
+	/* Create an active/current tablink class */
+	.tab button.active {
+	  background-color: #ccc;
+	}
+	
+	/* Style the tab content */
+	.tabcontent {
+	  display: none;
+	  padding: 6px 12px;
+	  border: 1px solid #ccc;
+	  border-top: none;
+	}
+	</style>
+
 </head>
 
 <script type="text/javascript">
@@ -16,6 +57,9 @@
 	{
 		var deviceID = "__SL_G_UID";
 		document.getElementById("dev_id").innerHTML=deviceID;
+
+		var regCode = "__SL_G_URC";
+		document.getElementById("reg_code").innerHTML=regCode;
 
 		var currentSSID = "__SL_G_PN1";
 		document.getElementById("cur_ssid").innerHTML=currentSSID;
@@ -70,6 +114,20 @@
 		HTTPrequest.send(params);
 	}
 
+	function openTab(evt, tabName) {
+		var i, tabcontent, tablinks;
+		tabcontent = document.getElementsByClassName("tabcontent");
+		for (i = 0; i < tabcontent.length; i++) {
+			tabcontent[i].style.display = "none";
+		}
+		tablinks = document.getElementsByClassName("tablinks");
+		for (i = 0; i < tablinks.length; i++) {
+			tablinks[i].className = tablinks[i].className.replace(" active", "");
+		}
+		document.getElementById(tabName).style.display = "block";
+		evt.currentTarget.className += " active";
+	}
+
 </script>
 
 <body class="in-frame" onload="GetCurrentProfile()"  style=
@@ -85,64 +143,91 @@
 >
 
 	<div style="background-color: #080404; position: relative; bottom: 10px; right: 600px; padding: 10px 1080px; width: 1080px;" >
-		<h1 style="font-size: x-large; position: relative; left: -450px">A.H.C.S. WIFI Configuration</h1>
+		<h1 style="font-size: x-large; position: relative; left: -450px">A.H.C.S. Configuration</h1>
 	</div>
 
-	<form>
-		<!-- <input type="hidden" name="__SL_P_S.R" value="Index.html"> -->
+	<table border="0"  width="540px" cellpadding="3" cellspacing="0" style="align-items: left; text-align: left; padding: 13px 16px;" >
+		<tr>
+			<td class="frame-title"  align=left colspan=1 > 
+				Device ID:  </td>
+			<td  class="label" dir=LTR align=left><span id="dev_id"></span></td>
+		</tr>
+	</table>
+
+	<div class="tab">
+		<button class="tablinks" onclick="openTab(event, 'Configuration')">Wi-Fi Configuration</button>
+		<button class="tablinks" onclick="openTab(event, 'Registration')">Registration</button>
+	</div>
+	
+	<div id="Configuration" class="tabcontent">
+		<form>
+			<!-- <input type="hidden" name="__SL_P_S.R" value="Index.html"> -->
+			<table border="0"  width="540px" cellpadding="3" cellspacing="0" style="align-items: left; text-align: left; padding: 13px 16px;" >
+				<tr>
+					<td class="frame-title"  align=left colspan=1 > 
+						Device ID:  </td>
+					<td  class="label" dir=LTR align=left><span id="dev_id"></span></td>
+				</tr>
+	
+				<tr>
+					<td class="frame-title"  align=left colspan=1 > 
+						Current SSID:  </td>
+					<td  class="label" dir=LTR align=left><span id="cur_ssid"></span></td>
+				</tr>
+	
+				<tr>
+					<td class="frame-title" align=left colspan=1 > 
+						Security:  </td>
+					<td  class="label" dir=LTR align=left><span id="cur_sec"></span></td>
+				</tr>
+	
+				<tr>
+					<td  class="label" dir=LTR align=left colspan=1 style="padding-bottom: 15px;padding-top: 30px;"><span id="ssid_label"> Edit WIFI Configuration </span></td>
+	
+				</tr>
+				<tr>
+					<td  class="label" dir=LTR align=left ><span id="ssid_label"> SSID </span></td>
+					<td  class="user-input" dir=LTR align=left><input type="text" name="ssid"></td>
+				</tr>
+				<tr>
+					<td class="label" dir=LTR align=left style="padding-top: 15px;"> Security Type:</td>
+					<td style="padding-top: 15px;">
+						<input type="radio" name="sec" value="0" checked="">Open
+						<input type="radio" name="sec" value="1">WEP
+						<input type="radio" name="sec" value="2">WPA/WPA2
+					</td>
+				</tr>
+					<td  class="label" dir=LTR align=left style="padding-top: 15px;"><span id="pass_label"> PASSKEY </span></td>
+					<td class="user-input" dir=LTR align=left style="padding-top: 15px;"><input type="text" name="passkey"></td>
+				</tr>
+				<tr>
+					<td class = "empty-line-in-box" colspan=1></td>
+					<td class="user-input" dir=LTR align=left style="padding-top: 15px;"><input type="button" value="Apply" onclick="Apply()"></input></td>
+				</tr>
+							
+				<tr>
+					<td class="user-input" dir=LTR align=left colspan=2 style="padding-top: 40px;"><input type="button" value="Exit and Restart Device" onclick="Disconnect()"></input></td>
+				</tr>
+	
+				<tr >
+					<td class = "border-line-top" colspan=2 >
+					</td>
+				</tr>
+			</table>
+		</form>
+	</div>
+	
+	<div id="Registration" class="tabcontent">
 		<table border="0"  width="540px" cellpadding="3" cellspacing="0" style="align-items: left; text-align: left; padding: 13px 16px;" >
 			<tr>
 				<td class="frame-title"  align=left colspan=1 > 
-					Device ID:  </td>
-				<td  class="label" dir=LTR align=left><span id="dev_id"></span></td>
-			</tr>
-
-			<tr>
-				<td class="frame-title"  align=left colspan=1 > 
-					Current SSID:  </td>
-				<td  class="label" dir=LTR align=left><span id="cur_ssid"></span></td>
-			</tr>
-
-			<tr>
-				<td class="frame-title" align=left colspan=1 > 
-					Security:  </td>
-				<td  class="label" dir=LTR align=left><span id="cur_sec"></span></td>
-			</tr>
-
-			<tr>
-				<td  class="label" dir=LTR align=left colspan=1 style="padding-bottom: 15px;padding-top: 30px;"><span id="ssid_label"> Edit WIFI Configuration </span></td>
-
-			</tr>
-			<tr>
-				<td  class="label" dir=LTR align=left ><span id="ssid_label"> SSID </span></td>
-				<td  class="user-input" dir=LTR align=left><input type="text" name="ssid"></td>
-			</tr>
-			<tr>
-				<td class="label" dir=LTR align=left style="padding-top: 15px;"> Security Type:</td>
-				<td style="padding-top: 15px;">
-					<input type="radio" name="sec" value="0" checked="">Open
-					<input type="radio" name="sec" value="1">WEP
-					<input type="radio" name="sec" value="2">WPA/WPA2
-				</td>
-			</tr>
-				<td  class="label" dir=LTR align=left style="padding-top: 15px;"><span id="pass_label"> PASSKEY </span></td>
-				<td class="user-input" dir=LTR align=left style="padding-top: 15px;"><input type="text" name="passkey"></td>
-			</tr>
-			<tr>
-				<td class = "empty-line-in-box" colspan=1></td>
-				<td class="user-input" dir=LTR align=left style="padding-top: 15px;"><input type="button" value="Apply" onclick="Apply()"></input></td>
-			</tr>
-						
-			<tr>
-				<td class="user-input" dir=LTR align=left colspan=2 style="padding-top: 40px;"><input type="button" value="Exit and Restart Device" onclick="Disconnect()"></input></td>
-			</tr>
-
-			<tr >
-				<td class = "border-line-top" colspan=2 >
-				</td>
+					Registration Code:  </td>
+				<td  class="label" dir=LTR align=left><span id="reg_code"></span></td>
 			</tr>
 		</table>
-	</form>
+	</div>
+
+	
 </body>
 
 </html>

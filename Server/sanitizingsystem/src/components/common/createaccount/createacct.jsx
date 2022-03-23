@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import './homepage.css';
+import './createacct.css';
 import axios from 'axios';
  
 export default function Create() {
@@ -67,7 +67,7 @@ export default function Create() {
         window.alert(error);
       });
 
-      window.alert("Account successfully created!");
+      window.alert("Account successfully created! Redirecting to the homepage.");
       setForm({ username: "", password: ""});
       navigate("/");
     }

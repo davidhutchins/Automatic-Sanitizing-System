@@ -8,12 +8,12 @@ import {
     Route,
     Link
   } from "react-router-dom";
-  import{Levels, Home, Stats, Data} from '../../common';
-  import GUIDE from '../../../components/setup.pdf'
+import{Levels, Home, Stats, Data, Create} from '../../common';
+import GUIDE from '../../../components/setup.pdf'
 
-  import Login from './Login';
-  import ErrorPage from '../errorpage/ErrorPage';
-  import { userToken } from '../stats/stats';
+import Login from './Login';
+import ErrorPage from '../errorpage/ErrorPage';
+import { userToken } from '../stats/stats';
 
 
 function Navbar() {
@@ -49,9 +49,9 @@ function Navbar() {
             <li>
               <Link to="/" className="link" onClick={() => window.href.reload(true)}> Home </Link>
             </li>
-            {/* <li>
-              <Link to="/login" className="link" id="login">Login</Link>
-            </li> */}
+            <li>
+              <Link to="/createAccount" className="link">Create Account</Link>
+            </li>
             <li>
               <Link to={ifNoAuth} onClick={() => window.href.reload(true)} className="link">Sanitizing Statistics</Link>
             </li>
@@ -66,6 +66,7 @@ function Navbar() {
       <Route path="/data" element={<Data/>}/>
       <Route path="/" element={<Home/>}/>
       <Route path="/error" element={<ErrorPage/>}/>
+      <Route path="/createAccount" element={<Create/>}/>
       <Route path="/guide" component={() => {window.location.href = {GUIDE} 
           return null;
         }}/>

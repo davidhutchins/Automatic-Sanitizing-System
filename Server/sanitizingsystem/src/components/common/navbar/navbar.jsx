@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getToken, getUser, removeUserSession, setUserSession } from './Common';
+import { getToken, removeUserSession, setUserSession } from './Common';
 import './navbar.css'
 import {
     BrowserRouter as Router,

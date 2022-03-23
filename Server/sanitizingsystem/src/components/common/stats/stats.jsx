@@ -3,7 +3,7 @@ import './stats.css'
 import { Data } from '../../common';
 import { ldata } from "../data/linechart";
 import { graphQuery } from "../data/data";
-import { getUser, getToken } from "../navbar/Common"
+import { getToken } from "../navbar/Common"
 import Dropdown from 'react-bootstrap/Dropdown'
 import { overallTotal } from "../data/data";
 

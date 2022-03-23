@@ -4,7 +4,7 @@ import { PieChart, Pie, Tooltip } from 'recharts';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis ,Radar, Legend } from 'recharts'
 import { BarChart, CartesianGrid, XAxis, YAxis, Bar } from 'recharts'
 import './data.css'
-import {data, LineChartData} from './linechart';
+import {LineChartData} from './linechart';
 import Dropdown from 'react-bootstrap/Dropdown'
 import { dataQuery } from '../stats/stats'
 
@@ -12,6 +12,8 @@ import { dataQuery } from '../stats/stats'
 // export let data = [{name: "Device 1", value: 10}];
 export let url = new URL(window.location.href);
 export let graphQuery = "&graph=";
+export let overallTotal = 0;
+export let data = [{name: "Device 1", value: 10}];
 
 function DropDownMenu() {
   return (
@@ -30,9 +32,9 @@ function DropDownMenu() {
 
         <Dropdown.Menu variant="dark">
           {/* must do a window href location refresh followed by a page refresh in order to change the text when you click the button*/}
-          <Dropdown.Item href= {"?graph=pie" + dataQuery} onClick={() => {window.location.href = url.searchParams.set('graph', 'pie'); window.location.reload(false);}}> Pie Chart </Dropdown.Item>
-          <Dropdown.Item href={"?graph=bar"+ dataQuery}  onClick={() => {window.location.href = url.searchParams.set('graph', 'bar'); window.location.reload(false);}}> Bar Chart </Dropdown.Item>
-          <Dropdown.Item href={"?graph=radar" + dataQuery}  onClick={() => {window.location.href = url.searchParams.set('graph', 'radar'); window.location.reload(false);}}> Radar Chart </Dropdown.Item>
+          <Dropdown.Item href= {"?graph=pie" + dataQuery} onClick={() => {window.location.reload(true);}}> Pie Chart </Dropdown.Item>
+          <Dropdown.Item href={"?graph=bar"+ dataQuery}  onClick={() => {window.location.reload(true);}}> Bar Chart </Dropdown.Item>
+          <Dropdown.Item href={"?graph=radar" + dataQuery}  onClick={() => {window.location.reload(true);}}> Radar Chart </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
@@ -41,6 +43,7 @@ function DropDownMenu() {
 }
 
 function displayData(fetchedData) {
+  console.log(fetchedData);
   if (window.location.href.includes("pie"))
   {
     graphQuery = "&graph=pie" 
@@ -78,7 +81,6 @@ function displayData(fetchedData) {
           <PolarGrid />
           <PolarAngleAxis dataKey="name"/>
           <PolarRadiusAxis angle={30} domain={[0, 4000]} />
-          {/* TODO: Figure out how to make chart dynamic */}
           <Radar dataKey="value" data={fetchedData} stroke="#5E9A50" fill="#5E9A50" fillOpacity={0.6} />
           <Legend />
         </RadarChart>
@@ -87,7 +89,7 @@ function displayData(fetchedData) {
   }
   else 
   {
-    graphQuery="&graph=pie"; //hi
+    graphQuery="&graph=pie";
     return (
       <div id="pie">
         <PieChart width={440} height={340}>
@@ -103,17 +105,32 @@ export default function Data() {
 
   // get data from the database
   const [fetchedData, setData] = useState([]);
-  const [graph, setGraph] = useState([]);
   
   useEffect(() => {
-  async function getStats() 
-  {
-      console.log(data);
-      setData(data);
-  }
+    async function getStats() 
+    {
+        const resp = await axios.get(`http://localhost:2000/handleData`);
+        const getData = resp.data;
+        
+        //Clear the template data
+        data.pop();
 
+        for (let i = 0; i < getData.length; i++)
+        {
+          if (typeof data[i] == 'undefined')
+          {
+            data.push({name: 'Device ' + (getData[i].deviceId).toString(), value: getData[i].lifetimeInteractions});
+          }
+
+          if (data[i].name === 'Device ' + (getData[i].deviceId).toString() && getData[i].value !== getData[i].lifetimeInteractions)
+          {
+            data[i].value = getData[i].lifetimeInteractions;
+          }
+          overallTotal += getData[i].lifetimeInteractions; 
+        }
+        setData(data);
+    }
     getStats();
-    setGraph(displayData(fetchedData));
   }, []);
 
   return (
@@ -122,7 +139,7 @@ export default function Data() {
         <div id = "desc1">
           <h1>Sanitizings Per Device</h1>
         </div>
-        {graph}
+        {displayData(fetchedData)}
         <div id="dropdown">{DropDownMenu()}</div>
       </section>
 

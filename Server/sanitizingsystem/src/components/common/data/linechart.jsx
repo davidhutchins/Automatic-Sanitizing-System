@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from "react";
 import {  Legend, Tooltip, LineChart, Line, XAxis, YAxis, CartesianGrid } from 'recharts';
-import './data.css'
+import './data.css';
+import {data} from '../data/data'
 //import database from  '../../../server/database/connector'
-export let weeklyTotal;
-export let overallTotal = 0;
+export let weeklyTotal = 0;
 export let ldata = [
     {
       day: "Sun",
@@ -35,12 +35,10 @@ export let ldata = [
     }
 ];
 
-export let data = [{name: "Device 1", value: 10}];
-
 export function LineChartData() {  
 
     // //get data from the database
-    // const [wk, setwk] = useState([]);
+    const [weekData, setWeekData] = useState([]);
   
     useEffect(() => {
           async function getLineData() 
@@ -78,23 +76,8 @@ export function LineChartData() {
                   getData[0].Thursday + 
                   getData[0].Friday + 
                   getData[0].Saturday;
-
-              //Get stats about device itself
-              data.pop();
-              for (let i = 0; i < getData.length; i++)
-              {
-                if (typeof data[i] == 'undefined')
-                {
-                  data.push({name: 'Device ' + (getData[i].deviceId).toString(), value: getData[i].lifetimeInteractions});
-                }
-
-                if (data[i].name === 'Device ' + (getData[i].deviceId).toString() && getData[i].value !== getData[i].lifetimeInteractions)
-                {
-                  data[i].value = getData[i].lifetimeInteractions;
-                }
-                overallTotal += getData[i].lifetimeInteractions; 
-              }
-
+              
+              setWeekData(ldata);
             }
             getLineData();
             console.log(data);
@@ -106,7 +89,7 @@ export function LineChartData() {
         
         <section>
             <div id="line">
-              <LineChart width={440} height={340} data={ldata} margin={{top: 40, right: 0, left: 0, bottom: 0}}>
+              <LineChart width={440} height={340} data={weekData} margin={{top: 40, right: 0, left: 0, bottom: 0}}>
               <CartesianGrid stroke="#ccc" strokeDasharray="1 1"  />
               <XAxis dataKey="day" />
               <YAxis />

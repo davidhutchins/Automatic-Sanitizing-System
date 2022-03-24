@@ -40,7 +40,6 @@ int main(void)
 
 	NVIC_EnableIRQ(PORT3_IRQn);
 	NVIC_EnableIRQ(TA1_0_IRQn);
-	NVIC_EnableIRQ(TA2_0_IRQn);
 
 	while(1) {
 	    if (activationFlag) {

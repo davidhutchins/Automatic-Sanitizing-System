@@ -59,7 +59,7 @@ uint8_t wifi_init()
         return 1;
     }
 
-    printf("Could not connect to server. Retrying.\n");
+    printf("Could not connect to server.\n");
     sl_Stop(SL_STOP_TIMEOUT);
     return 0;
 }
@@ -378,6 +378,8 @@ int32_t configureSimpleLinkToDefaultState(void)
 int32_t establishConnectionWithAP(void)
 {
     connectionTimer_init();
+    NVIC_EnableIRQ(TA2_0_IRQn);
+
     connectionTimer_start();
 
     /* Wait */
@@ -390,6 +392,7 @@ int32_t establishConnectionWithAP(void)
         }
     }
 
+    connectionTimer_stop();
     return SUCCESS;
 }
 

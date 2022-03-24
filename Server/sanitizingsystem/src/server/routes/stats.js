@@ -57,8 +57,8 @@ stats.route("/users").get(function (req, res) {
     });
 });
 
-//Add deviceID to a user account
-stats.route("/addDevice").post(function(req, res) {
+//Add user account to a device
+stats.route("/addDevice").put(function(req, res) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer")
   let deviceId = parseInt(req.query.deviceId);
   db_connect

@@ -44,9 +44,7 @@ export default function AddDevice() {
     const newPerson = { ...form };
     const username = getUser().username;
 
-    // useEffect(() => {
-    //   const resp = await axios.post(`http://localhost:2000/handleData?deviceId=${parseInt(form.Device)}`);
-    // })
+      const resp = await axios.put(`http://localhost:2000/handleData?deviceId=${parseInt(form.Device)}`);
 
     // await fetch("http://54.90.139.97/api/users/add", {
     //   method: "POST",

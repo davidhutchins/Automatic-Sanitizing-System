@@ -46,12 +46,24 @@ stats.route("/handleData").get(function (req, res) {
     });
 });
 
-
 stats.route("/users").get(function (req, res) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
   db_connect
       .collection("users")
       .find({})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
+//Add deviceID to a user account
+stats.route("/addDevice").post(function(req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer")
+  let deviceId = parseInt(req.query.deviceId);
+  db_connect
+    .collection("handleData")
+    .find({deviceId: deviceId})
     .toArray(function (err, result) {
       if (err) throw err;
       res.json(result);

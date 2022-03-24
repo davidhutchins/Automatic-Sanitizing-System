@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './homepage.css';
 import axios from 'axios';
@@ -43,7 +43,11 @@ export default function AddDevice() {
     // When a post request is sent to the create url, we'll add a new record to the database.
     const newPerson = { ...form };
     const username = getUser().username;
-  
+
+    // useEffect(() => {
+    //   const resp = await axios.post(`http://localhost:2000/handleData?deviceId=${parseInt(form.Device)}`);
+    // })
+
     // await fetch("http://54.90.139.97/api/users/add", {
     //   method: "POST",
     //   headers: {
@@ -70,7 +74,7 @@ export default function AddDevice() {
         <div id='moveit'>
         <form onSubmit={onSubmit}>
             <div className="form-group">
-            <label htmlFor="deviceName" id='glow' className="User">Device Name <br/></label>
+            <label htmlFor="deviceName" id='glow' className="User">Choose a Device to add <br/></label>
             <input
                 type="text"
                 required

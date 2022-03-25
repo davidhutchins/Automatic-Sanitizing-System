@@ -1,3 +1,6 @@
+// import { getUser } from "../../components/common/navbar/Common";
+// const username = String(getUser().username);
+
 const express = require("express");
 const { ObjectId } = require("mongodb").ObjectId;
 
@@ -57,18 +60,19 @@ stats.route("/users").get(function (req, res) {
     });
 });
 
-// //Add user account to a device
-// stats.route("/addDevice").put(function(req, res) {
-//   let db_connect = dbConn.returnDatabase("uss-sanitizer")
-//   let deviceId = parseInt(req.query.deviceId);
-//   db_connect
-//     .collection("handleData")
-//     .find({deviceId: deviceId})
-//     .toArray(function (err, result) {
-//       if (err) throw err;
-//       res.json(result);
-//     });
-// });
+//Bronte- idk what this is for
+//Add user account to a device
+stats.route("/addDevice").put(function(req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer")
+  let deviceId = parseInt(req.query.deviceId);
+  db_connect
+    .collection("handleData")
+    .find({deviceId: deviceId})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
 
 // creates new user
 stats.route("/users/add").post(function (req, response) {
@@ -83,10 +87,33 @@ stats.route("/users/add").post(function (req, response) {
   });
 });
 
+
+
+//Deprecated,
+// why is this using weekdata?
+stats.route("/weekdata").get(function (req, res) {
+  let deviceId = parseInt(req.query.deviceId);
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  db_connect
+    .collection("weekdata")
+    .find({deviceId: deviceId})
+    .toArray(function (err, result) {
+      if (err) throw err;
+
+      db_connect
+        .updateOne({deviceId: deviceId}, {$set: {
+          linkedAccount: sessionStorage.getItem('user').username
+        }})
+      res.json(result);
+      res.send('User account successfully linked.')
+    });
+});
+
+//parse int converts to int
 stats.route("/handleData/add").post(function (req, response) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
   let myobj = {
-    deviceId: req.body.deviceId,
+    deviceId: parseInt(req.body.deviceId),
     lifetimeInteractions: 0,
     Sunday: 0,
     Monday: 0,
@@ -95,7 +122,8 @@ stats.route("/handleData/add").post(function (req, response) {
     Thursday: 0,
     Friday: 0,
     Saturday: 0,
-    linkedAccount: "",
+    // well, this does add a null user lmao req.body.username
+    linkedAccount:  req.body.linkedAccount,
     verificationCode: "",
   };
   db_connect.collection("handleData").insertOne(myobj, function (err, res) {
@@ -116,24 +144,6 @@ stats.route("/users/:id").get(function (req, res) {
       });
 });
 
-//Deprecated
-stats.route("/weekdata").get(function (req, res) {
-  let deviceId = parseInt(req.query.deviceId);
-  let db_connect = dbConn.returnDatabase("uss-sanitizer");
-  db_connect
-    .collection("weekdata")
-    .find({deviceId: deviceId})
-    .toArray(function (err, result) {
-      if (err) throw err;
-
-      db_connect
-        .updateOne({deviceId: deviceId}, {$set: {
-          linkedAccount: sessionStorage.getItem('user').username
-        }})
-      res.json(result);
-      res.send('User account successfully linked.')
-    });
-});
 
 //TODO: Update this endpoint
 stats.route("/updateInteractions").get(function (req, res) {

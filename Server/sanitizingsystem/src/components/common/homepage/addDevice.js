@@ -4,6 +4,7 @@ import './homepage.css';
 import axios from 'axios';
 import { getUser } from "../navbar/Common"
  
+// const
 export default function AdddeviceId() {
  const [form, setForm] = useState({
    deviceId: "",
@@ -21,6 +22,8 @@ export default function AdddeviceId() {
 
  const navigate = useNavigate()
  
+ let user = String(getUser().username);
+
  // These methods will update the state properties.
  function updateForm(value) {
    return setForm((prev) => {
@@ -123,7 +126,7 @@ export default function AdddeviceId() {
             className="form-control"
             id="deviceId"
             value={form.deviceId}
-            onChange={(e) => updateForm({ deviceId: e.target.value })}
+            onChange={(e) => updateForm({ deviceId: e.target.value, linkedAccount: user })}
           />
           </div>
             <br/>

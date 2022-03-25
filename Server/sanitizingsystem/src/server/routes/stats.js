@@ -11,7 +11,7 @@ const dbConn = require("../database/connector");
 
 
 
-// Gets a list of everything under the data collection
+//Deprecated
 stats.route("/data").get(function (req, res) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
   db_connect
@@ -46,12 +46,24 @@ stats.route("/handleData").get(function (req, res) {
     });
 });
 
-
 stats.route("/users").get(function (req, res) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
   db_connect
       .collection("users")
       .find({})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
+//Add user account to a device
+stats.route("/addDevice").put(function(req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer")
+  let deviceId = parseInt(req.query.deviceId);
+  db_connect
+    .collection("handleData")
+    .find({deviceId: deviceId})
     .toArray(function (err, result) {
       if (err) throw err;
       res.json(result);
@@ -83,7 +95,7 @@ stats.route("/users/:id").get(function (req, res) {
       });
 });
 
-//make sure this isnt broken later
+//Deprecated
 stats.route("/weekdata").get(function (req, res) {
   let deviceId = parseInt(req.query.deviceId);
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
@@ -92,10 +104,17 @@ stats.route("/weekdata").get(function (req, res) {
     .find({deviceId: deviceId})
     .toArray(function (err, result) {
       if (err) throw err;
+
+      db_connect
+        .updateOne({deviceId: deviceId}, {$set: {
+          linkedAccount: sessionStorage.getItem('user').username
+        }})
       res.json(result);
+      res.send('User account successfully linked.')
     });
 });
 
+//TODO: Update this endpoint
 stats.route("/updateInteractions").get(function (req, res) {
   const d = new Date();
   let day = d.toLocaleDateString('en-US', { weekday: 'long' });

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { getToken, getUser, removeUserSession, setUserSession } from './Common';
+import { getToken, removeUserSession, setUserSession } from './Common';
 import './navbar.css'
 import {
     BrowserRouter as Router,
@@ -8,11 +8,12 @@ import {
     Route,
     Link
   } from "react-router-dom";
-  import{Levels, Home, Stats, Data} from '../../common';
-  import GUIDE from '../../../components/setup.pdf'
+import{Levels, Home, Stats, Data, Create} from '../../common';
+import GUIDE from '../../../components/setup.pdf'
 
-  import Login from './Login';
-  import ErrorPage from '../errorpage/ErrorPage';
+import Login from './Login';
+import ErrorPage from '../errorpage/ErrorPage';
+import { userToken } from '../stats/stats';
 
 
 function Navbar() {
@@ -37,21 +38,22 @@ function Navbar() {
   if (authLoading && getToken()) {
     return <div className="content">Checking Authentication...</div>
   }
+  console.log(userToken);
+  let ifNoAuth = (userToken === null) ? "/error" : "/stats";
   return (
     <section>
-    {/* {console.log(getUser())} */}
     <Router>
       <div>
         <nav>
           <ul>
             <li>
-              <Link to="/" className="link">Home</Link>
+              <Link to="/" className="link" onClick={() => window.href.reload(true)}> Home </Link>
             </li>
-            {/* <li>
-              <Link to="/login" className="link" id="login">Login</Link>
-            </li> */}
             <li>
-              <Link to={getUser() || getToken() ? "/stats" : "/error"} className="link">Sanitizing Statistics</Link>
+              <Link to="/createAccount" className="link">Create Account</Link>
+            </li>
+            <li>
+              <Link to={ifNoAuth} onClick={() => window.href.reload(true)} className="link">Sanitizing Statistics</Link>
             </li>
             <li>
               <Link to={GUIDE} target="_blank"className="link">Setup Guide</Link>
@@ -64,6 +66,7 @@ function Navbar() {
       <Route path="/data" element={<Data/>}/>
       <Route path="/" element={<Home/>}/>
       <Route path="/error" element={<ErrorPage/>}/>
+      <Route path="/createAccount" element={<Create/>}/>
       <Route path="/guide" component={() => {window.location.href = {GUIDE} 
           return null;
         }}/>

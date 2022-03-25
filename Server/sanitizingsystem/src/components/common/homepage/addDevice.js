@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './homepage.css';
 import axios from 'axios';
@@ -38,12 +38,17 @@ export default function AddDevice() {
 
   //TODO: Add an edge case to prevent same user from adding the same device
 
-  if (!errorWithCreation)
-  {
+  if (!errorWithCreation) {
     // When a post request is sent to the create url, we'll add a new record to the database.
-    const newPerson = { ...form };
-    const username = getUser().username;
-  
+      const newPerson = { ...form };
+      const username = String(getUser().username);
+      console.log(username);
+      const resp = await axios.put(
+                                    `http://localhost:2000/addDevice?deviceId=${parseInt(form.Device)}`, 
+                                    {
+                                      linkedAccount: username
+                                    }
+                                  );
     // await fetch("http://54.90.139.97/api/users/add", {
     //   method: "POST",
     //   headers: {
@@ -56,6 +61,7 @@ export default function AddDevice() {
     //   });
 
       window.alert(`Device successfully added for ${username}!`);
+      console.log(resp);
       setForm({Device: ""});
       navigate("/");
     }
@@ -70,7 +76,7 @@ export default function AddDevice() {
         <div id='moveit'>
         <form onSubmit={onSubmit}>
             <div className="form-group">
-            <label htmlFor="deviceName" id='glow' className="User">Device Name <br/></label>
+            <label htmlFor="deviceName" id='glow' className="User">Choose a Device to add <br/></label>
             <input
                 type="text"
                 required

@@ -57,18 +57,18 @@ stats.route("/users").get(function (req, res) {
     });
 });
 
-//Add user account to a device
-stats.route("/addDevice").put(function(req, res) {
-  let db_connect = dbConn.returnDatabase("uss-sanitizer")
-  let deviceId = parseInt(req.query.deviceId);
-  db_connect
-    .collection("handleData")
-    .find({deviceId: deviceId})
-    .toArray(function (err, result) {
-      if (err) throw err;
-      res.json(result);
-    });
-});
+// //Add user account to a device
+// stats.route("/addDevice").put(function(req, res) {
+//   let db_connect = dbConn.returnDatabase("uss-sanitizer")
+//   let deviceId = parseInt(req.query.deviceId);
+//   db_connect
+//     .collection("handleData")
+//     .find({deviceId: deviceId})
+//     .toArray(function (err, result) {
+//       if (err) throw err;
+//       res.json(result);
+//     });
+// });
 
 // creates new user
 stats.route("/users/add").post(function (req, response) {
@@ -78,6 +78,27 @@ stats.route("/users/add").post(function (req, response) {
     password: req.body.password,
   };
   db_connect.collection("users").insertOne(myobj, function (err, res) {
+    if (err) throw err;
+    response.json(res);
+  });
+});
+
+stats.route("/handleData/add").post(function (req, response) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  let myobj = {
+    deviceId: req.body.deviceId,
+    lifetimeInteractions: 0,
+    Sunday: 0,
+    Monday: 0,
+    Tuesday: 0,
+    Wednesday: 0,
+    Thursday: 0,
+    Friday: 0,
+    Saturday: 0,
+    linkedAccount: "",
+    verificationCode: "",
+  };
+  db_connect.collection("handleData").insertOne(myobj, function (err, res) {
     if (err) throw err;
     response.json(res);
   });

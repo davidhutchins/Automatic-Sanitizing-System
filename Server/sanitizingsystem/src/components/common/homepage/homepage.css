@@ -101,13 +101,20 @@ animation: title 2.5s ease-in-out infinite alternate;
   left: -10%;
 }
 
-.form-groups
+
+.form-groupb
 {
   position: absolute;
-  top: 100%;
+  top: 85%;
   left: -10%;
 }
 
+.form-groups
+{
+  position: absolute;
+  top: 90%;
+  left: -10%;
+}
 
 
 

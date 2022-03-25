@@ -90,7 +90,6 @@ stats.route("/users/add").post(function (req, response) {
 
 
 //Deprecated,
-// why is this using weekdata?
 stats.route("/weekdata").get(function (req, res) {
   let deviceId = parseInt(req.query.deviceId);
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
@@ -144,20 +143,18 @@ stats.route("/users/:id").get(function (req, res) {
       });
 });
 
-
-//TODO: Update this endpoint
 stats.route("/updateInteractions").get(function (req, res) {
   const d = new Date();
   let day = d.toLocaleDateString('en-US', { weekday: 'long' });
 
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
-  let handleId = parseInt(req.query.handleId);
+  let deviceId = parseInt(req.query.deviceId);
 
   let newGrmsKild = -1;
   
   db_connect
     .collection("data")
-    .find({doorsSanid: handleId})
+    .find({deviceId: deviceId})
     .toArray(function (err, result) {
       if (err) throw err;
 
@@ -169,13 +166,13 @@ stats.route("/updateInteractions").get(function (req, res) {
       newGrmsKild = result[0].grmsKild + 1;
 
       db_connect
-      .collection("data")
-      .updateOne({doorsSanid: handleId}, {$set: {grmsKild: newGrmsKild}});
+      .collection("handleId")
+      .updateOne({deviceId: deviceId}, {$set: {lifetimeInteractions: newGrmsKild}});
 
       //Update week data
       db_connect
-      .collection("weekdata")
-      .find({doorsSanid: handleId})
+      .collection("handleId")
+      .find({deviceId: deviceId})
       .toArray(function (err, resultweekdays) {
         if (err) throw err;
 
@@ -184,8 +181,8 @@ stats.route("/updateInteractions").get(function (req, res) {
 
         db_connect
        .collection("weekdata")
-       .updateOne({doorsSanid: handleId}, {$set: {
-            doorsSanid : handleId,
+       .updateOne({deviceId: deviceId}, {$set: {
+            deviceId : deviceId,
             Sunday:    weekdays["Sunday"], 
             Monday:    weekdays["Monday"], 
             Tuesday:   weekdays["Tuesday"], 

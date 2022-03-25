@@ -50,7 +50,7 @@ function Navbar() {
               <Link to="/" className="link" onClick={() => window.href.reload(true)}> Home </Link>
             </li>
             <li>
-              <Link to="/createAccount" className="link">Create Account</Link>
+              <Link to="/createAccount" onClick={() => window.href.reload(true)} className="link">Create Account</Link>
             </li>
             <li>
               <Link to={ifNoAuth} onClick={() => window.href.reload(true)} className="link">Sanitizing Statistics</Link>
@@ -61,16 +61,15 @@ function Navbar() {
           </ul>
         </nav>
     <Routes>
-      <Route path="/stats" element={<Stats/>}/>
-      <Route path="/levels" element={<Levels/>}/>
-      <Route path="/data" element={<Data/>}/>
       <Route path="/" element={<Home/>}/>
-      <Route path="/error" element={<ErrorPage/>}/>
       <Route path="/createAccount" element={<Create/>}/>
+      <Route path="/stats" element={<Stats/>}/>
+      <Route path="/error" element={<ErrorPage/>}/>
       <Route path="/guide" component={() => {window.location.href = {GUIDE} 
           return null;
         }}/>
-      <Route path="/login" element={<Login/>}/>
+        {/* what is this? */}
+      {/* <Route path="/login" element={<Login/>}/> */}
     </Routes>
       </div>
     </Router>

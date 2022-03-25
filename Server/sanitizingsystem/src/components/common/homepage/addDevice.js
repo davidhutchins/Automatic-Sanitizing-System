@@ -72,22 +72,23 @@ export default function AddDevice() {
         <div>
         <div id='deviceAdd'>
             <h3  id='glow'>Add Device</h3>
+            <br/>
         </div>
         <div id='moveit'>
         <form onSubmit={onSubmit}>
-            <div className="form-group">
+            <div className="form-groupa">
             <label htmlFor="deviceName" id='glow' className="User">Choose a Device to add <br/></label>
             <input
                 type="text"
                 required
-                className="form-control"
+                className="form-controls"
                 id="Device"
                 value={form.Device}
                 onChange={(e) => updateForm({ Device: e.target.value })}
                 />
             </div>
             <br/>
-            <div className="form-group">
+            <div className="form-groups">
             <input
                 type="submit"
                 value="Add Device"

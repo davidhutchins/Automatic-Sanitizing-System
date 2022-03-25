@@ -77,10 +77,10 @@ export default function Create() {
   return (
       <div>
 
-      <div id='title'>
-      <h3  id='glow'>Create Account</h3>
+      <div id='heads'>
+      <h1 className="bigHead" id='glow'>Create Account</h1>
         </div>
-            <div id='move'>
+            <div id='moves'>
       <form onSubmit={onSubmit}>
         <div className="form-group">
           <label htmlFor="username" id='glow' className="User">Username <br/></label>

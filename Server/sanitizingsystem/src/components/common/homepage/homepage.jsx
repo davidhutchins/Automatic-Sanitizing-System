@@ -29,9 +29,14 @@ function Home() {
                 <section id="Titletxt">
                     <h1 id="headerText">Automatic Handle Cleaning System</h1>   
                 </section>
+                <section id='login'>
                     <h2 id='subtext'>{loginText}</h2> 
+                </section>
                 {renderLoginOrLogout}
+                
+                <section id="device">
                 {renderAddDevice}
+                </section>
 
         </section>
 

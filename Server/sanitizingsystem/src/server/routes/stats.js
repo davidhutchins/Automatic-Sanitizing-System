@@ -37,6 +37,20 @@ stats.route("/handleData").get(function (req, res) {
     });
 });
 
+//get specific collections depending on linked users
+stats.route("/handleData/getLinkedAccount").get(function (req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  let linkedAccount = req.query.linkedAccount;
+  // console.log(linkedAccount);
+  db_connect
+    .collection("handleData")
+    .find({linkedAccount: { $elemMatch:{$eq: linkedAccount}}})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
 //get all collections from database
 stats.route("/handleData/all").get(function (req, res) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
@@ -60,20 +74,6 @@ stats.route("/users").get(function (req, res) {
     });
 });
 
-// //Bronte- idk what this is for
-// //Add user account to a device
-// stats.route("/addDevice").put(function(req, res) {
-//   let db_connect = dbConn.returnDatabase("uss-sanitizer")
-//   let deviceId = parseInt(req.query.deviceId);
-//   db_connect
-//     .collection("handleData")
-//     .find({deviceId: deviceId})
-//     .toArray(function (err, result) {
-//       if (err) throw err;
-//       res.json(result);
-//     });
-// });
-
 // creates new user
 stats.route("/users/add").post(function (req, response) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
@@ -86,7 +86,6 @@ stats.route("/users/add").post(function (req, response) {
     response.json(res);
   });
 });
-
 
 
 //Deprecated,
@@ -108,11 +107,6 @@ stats.route("/weekdata").get(function (req, res) {
     });
 });
 
-// async function getDeviceData(deviceId)
-// {
-//   const res = await axios.put(`localhost:2000/handleData?deviceId=${deviceId}`);
-//   return res.data;
-// }
 
 stats.route("/handleData/add").put(async function (req, response) {
   let deviceId = parseInt(req.body.deviceId);
@@ -137,6 +131,11 @@ stats.route("/handleData/add").put(async function (req, response) {
   if (foundData)
   {
     let allLinkedAccounts = foundData.linkedAccount;
+    //Edge case if linkedAccount consists of an empty array
+    if (allLinkedAccounts.length === 1 && allLinkedAccounts[0] === "") {
+      allLinkedAccounts = [];
+    }
+
     let accountAlreadyExists = false;
     for (let i = 0; i < allLinkedAccounts.length; i++)
     {
@@ -146,6 +145,7 @@ stats.route("/handleData/add").put(async function (req, response) {
         break;
       }
     }
+    
     if (!accountAlreadyExists) {
       allLinkedAccounts.push(req.body.linkedAccount);
     }

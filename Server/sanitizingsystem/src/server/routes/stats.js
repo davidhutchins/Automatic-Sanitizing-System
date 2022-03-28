@@ -197,7 +197,7 @@ stats.route("/updateInteractions").get(function (req, res) {
         return;
       } 
       
-      newGrmsKild = result[0].grmsKild + 1;
+      newGrmsKild = result[0].lifetimeInteractions + 1;
 
       db_connect
       .collection("handleData")

@@ -12,8 +12,6 @@ const stats = express.Router();
 // This will help us connect to the database
 const dbConn = require("../database/connector");
 
-
-
 //Deprecated
 stats.route("/data").get(function (req, res) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
@@ -26,19 +24,21 @@ stats.route("/data").get(function (req, res) {
     });
 });
 
-// stats.route("/handleData").get(function (req, res) {
-//   let db_connect = dbConn.returnDatabase("uss-sanitizer");
-//   let deviceId = parseInt(req.query.deviceId);
-//   db_connect
-//     .collection("handleData")
-//     .find({deviceId: deviceId})
-//     .toArray(function (err, result) {
-//       if (err) throw err;
-//       res.json(result);
-//     });
-// });
-
+//get specific collections depending on deviceId
 stats.route("/handleData").get(function (req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  let deviceId = parseInt(req.query.deviceId);
+  db_connect
+    .collection("handleData")
+    .find({deviceId: deviceId})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
+//get all collections from database
+stats.route("/handleData/all").get(function (req, res) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
   db_connect
     .collection("handleData")
@@ -60,19 +60,19 @@ stats.route("/users").get(function (req, res) {
     });
 });
 
-//Bronte- idk what this is for
-//Add user account to a device
-stats.route("/addDevice").put(function(req, res) {
-  let db_connect = dbConn.returnDatabase("uss-sanitizer")
-  let deviceId = parseInt(req.query.deviceId);
-  db_connect
-    .collection("handleData")
-    .find({deviceId: deviceId})
-    .toArray(function (err, result) {
-      if (err) throw err;
-      res.json(result);
-    });
-});
+// //Bronte- idk what this is for
+// //Add user account to a device
+// stats.route("/addDevice").put(function(req, res) {
+//   let db_connect = dbConn.returnDatabase("uss-sanitizer")
+//   let deviceId = parseInt(req.query.deviceId);
+//   db_connect
+//     .collection("handleData")
+//     .find({deviceId: deviceId})
+//     .toArray(function (err, result) {
+//       if (err) throw err;
+//       res.json(result);
+//     });
+// });
 
 // creates new user
 stats.route("/users/add").post(function (req, response) {
@@ -108,11 +108,17 @@ stats.route("/weekdata").get(function (req, res) {
     });
 });
 
-//parse int converts to int
-stats.route("/handleData/add").post(function (req, response) {
+// async function getDeviceData(deviceId)
+// {
+//   const res = await axios.put(`localhost:2000/handleData?deviceId=${deviceId}`);
+//   return res.data;
+// }
+
+stats.route("/handleData/add").put(async function (req, response) {
+  let deviceId = parseInt(req.body.deviceId);
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
   let myobj = {
-    deviceId: parseInt(req.body.deviceId),
+    deviceId: deviceId,
     lifetimeInteractions: 0,
     Sunday: 0,
     Monday: 0,
@@ -122,13 +128,41 @@ stats.route("/handleData/add").post(function (req, response) {
     Friday: 0,
     Saturday: 0,
     // well, this does add a null user lmao req.body.username
-    linkedAccount:  req.body.linkedAccount,
+    linkedAccount:  [req.body.linkedAccount],
+    // linkedAccount: sessionStorage.getItem('user').username,
     verificationCode: "",
   };
-  db_connect.collection("handleData").insertOne(myobj, function (err, res) {
-    if (err) throw err;
-    response.json(res);
-  });
+  const foundData = await db_connect.collection("handleData").findOne({deviceId: deviceId});
+  console.log(foundData);
+  if (foundData)
+  {
+    let allLinkedAccounts = foundData.linkedAccount;
+    let accountAlreadyExists = false;
+    for (let i = 0; i < allLinkedAccounts.length; i++)
+    {
+      if (req.body.linkedAccount === allLinkedAccounts[i])
+      {
+        accountAlreadyExists = true;
+        break;
+      }
+    }
+    if (!accountAlreadyExists) {
+      allLinkedAccounts.push(req.body.linkedAccount);
+    }
+    
+    db_connect.collection("handleData").updateOne({deviceId:deviceId}, {$set: {
+      linkedAccount: allLinkedAccounts
+    }});
+    response.send('User successfully linked.');
+    console.log(req.body);
+  }
+  else
+  {
+    db_connect.collection("handleData").insertOne(myobj, function(err, res) {
+      if (err) throw err;
+      response.json(res);
+    })
+  }
 });
 
 // This section will help you get a single record by id
@@ -153,7 +187,7 @@ stats.route("/updateInteractions").get(function (req, res) {
   let newGrmsKild = -1;
   
   db_connect
-    .collection("data")
+    .collection("handleData")
     .find({deviceId: deviceId})
     .toArray(function (err, result) {
       if (err) throw err;
@@ -166,12 +200,12 @@ stats.route("/updateInteractions").get(function (req, res) {
       newGrmsKild = result[0].grmsKild + 1;
 
       db_connect
-      .collection("handleId")
+      .collection("handleData")
       .updateOne({deviceId: deviceId}, {$set: {lifetimeInteractions: newGrmsKild}});
 
       //Update week data
       db_connect
-      .collection("handleId")
+      .collection("handleData")
       .find({deviceId: deviceId})
       .toArray(function (err, resultweekdays) {
         if (err) throw err;
@@ -180,7 +214,7 @@ stats.route("/updateInteractions").get(function (req, res) {
         weekdays[day] = weekdays[day] + 1;
 
         db_connect
-       .collection("weekdata")
+       .collection("handleData")
        .updateOne({deviceId: deviceId}, {$set: {
             deviceId : deviceId,
             Sunday:    weekdays["Sunday"], 

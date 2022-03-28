@@ -85,7 +85,7 @@ export default function Statistics()
       //gets the data from the database at the localhost specified
       //const weekDater = await fetch(`http://54.90.139.97/api/weekdata?handleId=30`);
       //TODO: Make the handleID user specific
-      const stats = await fetch(`http://localhost:2000/handleData`);
+      const stats = await fetch(`http://localhost:2000/handleData/all`);
 
         //if there is no response then give this message
         if (!stats.ok) 

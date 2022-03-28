@@ -109,7 +109,7 @@ export default function Data() {
   useEffect(() => {
     async function getStats() 
     {
-        const resp = await axios.get(`http://localhost:2000/handleData`);
+        const resp = await axios.get(`http://localhost:2000/handleData/all`);
         const getData = resp.data;
         
         //Clear the template data

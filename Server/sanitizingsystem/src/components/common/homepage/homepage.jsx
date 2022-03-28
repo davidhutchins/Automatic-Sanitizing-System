@@ -2,7 +2,6 @@ import React from 'react';
 import './homepage.css'
 import Login from '../navbar/Login'
 import { getUser, removeUserSession } from "../navbar/Common"
-import Create from '../createaccount/createacct';
 import AddDevice from './addDevice';
 
 function LogOut() {

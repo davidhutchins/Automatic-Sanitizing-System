@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import './homepage.css';
-import axios from 'axios';
 import { getUser } from "../navbar/Common"
  
 // const
@@ -66,7 +65,7 @@ export default function AdddeviceId() {
                                  
   
     await fetch("http://localhost:2000/handleData/add", {
-      method: "POST",
+      method: "PUT",
       headers: {
         "Content-Type": "application/json",
       },
@@ -90,10 +89,10 @@ export default function AdddeviceId() {
     //     window.alert(error);
     //   });
 
-      window.alert(`deviceId successfully added for ${username}!`);
-    //  console.log(resp);
-      setForm({deviceId: ""});
-      navigate("/");
+    //   window.alert(`deviceId successfully added for ${username}!`);
+    // //  console.log(resp);
+    //   setForm({deviceId: ""});
+    //   navigate("/");
     }
   }
 

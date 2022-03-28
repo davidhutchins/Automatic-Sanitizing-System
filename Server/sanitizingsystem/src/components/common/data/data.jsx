@@ -7,6 +7,8 @@ import './data.css'
 import {LineChartData} from './linechart';
 import Dropdown from 'react-bootstrap/Dropdown'
 import { dataQuery } from '../stats/stats'
+import { deviceQuery } from "./linechart";
+import { getUser } from "../navbar/Common";
 
 
 // export let data = [{name: "Device 1", value: 10}];
@@ -32,9 +34,9 @@ function DropDownMenu() {
 
         <Dropdown.Menu variant="dark">
           {/* must do a window href location refresh followed by a page refresh in order to change the text when you click the button*/}
-          <Dropdown.Item href= {"?graph=pie" + dataQuery} onClick={() => {window.location.reload(true);}}> Pie Chart </Dropdown.Item>
-          <Dropdown.Item href={"?graph=bar"+ dataQuery}  onClick={() => {window.location.reload(true);}}> Bar Chart </Dropdown.Item>
-          <Dropdown.Item href={"?graph=radar" + dataQuery}  onClick={() => {window.location.reload(true);}}> Radar Chart </Dropdown.Item>
+          <Dropdown.Item href= {"?graph=pie" + dataQuery + deviceQuery} onClick={() => {window.location.reload(true);}}> Pie Chart </Dropdown.Item>
+          <Dropdown.Item href={"?graph=bar"+ dataQuery + deviceQuery}  onClick={() => {window.location.reload(true);}}> Bar Chart </Dropdown.Item>
+          <Dropdown.Item href={"?graph=radar" + dataQuery + deviceQuery}  onClick={() => {window.location.reload(true);}}> Radar Chart </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
@@ -105,11 +107,12 @@ export default function Data() {
 
   // get data from the database
   const [fetchedData, setData] = useState([]);
+  let username = getUser().username;
   
   useEffect(() => {
     async function getStats() 
     {
-        const resp = await axios.get(`http://localhost:2000/handleData/all`);
+        const resp = await axios.get(`http://localhost:2000/handleData/getLinkedAccount?linkedAccount=${username}`);
         const getData = resp.data;
         
         //Clear the template data

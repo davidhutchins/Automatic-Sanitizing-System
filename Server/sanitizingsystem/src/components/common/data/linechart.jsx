@@ -59,7 +59,7 @@ function DropDownMenu(linkedAccounts) {
       </style>
       <Dropdown>
 
-        <Dropdown.Toggle id="dark" variant="secondary">  Data Select </Dropdown.Toggle>
+        <Dropdown.Toggle id="dark" variant="secondary"> Device Select </Dropdown.Toggle>
         <Dropdown.Menu variant="dark">
           {selectDevice(linkedAccounts)}
         </Dropdown.Menu>
@@ -171,7 +171,7 @@ export function LineChartData() {
                 <Line type="monotone" dataKey="Sanitizations" stroke="#5E9A50" activeDot={{ r: 10 }}/>
               </LineChart>
             </div>
-            <div>
+            <div id="deselMenu">
               {DropDownMenu(linkedAccounts)}
             </div>
         </section>

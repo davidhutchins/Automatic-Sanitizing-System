@@ -51,7 +51,7 @@ function displayDevice(totals)
 
 function DropDownMenu() {
   return (
-    <div>
+    <div className="devicesss">
       <style>
       <link
           rel="stylesheet"
@@ -122,8 +122,10 @@ export default function Statistics()
             <h2 id="saniz">Total Number Of Doors Sanitized</h2>
             <div id="subheader">
               <br></br>
-            <br></br>
+              <br></br>
+              <div id="dataMenu">
               {DropDownMenu()}
+              </div>
               <br></br>
               <div id="stats">
                   {displayDevice([ldata[d.getDay()].Sanitizations, weeklyTotal, overallTotal])}

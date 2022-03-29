@@ -111,3 +111,10 @@
         width: 440px;
         /* border: 3px solid #00c451; */
     }
+
+    #deselMenu
+    {
+        position:absolute;
+        top: 28.5%;
+        left: 18%;
+    }

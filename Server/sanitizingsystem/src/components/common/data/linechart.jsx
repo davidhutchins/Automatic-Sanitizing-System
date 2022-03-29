@@ -6,7 +6,6 @@ import { getUser } from "../navbar/Common";
 import { graphQuery } from "../data/data";
 import { dataQuery } from '../stats/stats'
 import Dropdown from 'react-bootstrap/Dropdown'
-import { useSearchParams } from "react-router-dom";
 
 
 //import database from  '../../../server/database/connector'
@@ -85,7 +84,7 @@ async function ChangeCharts(linkedAccounts)
     console.log(linkedAccounts);
     const urlParams = new URLSearchParams(window.location.search);
     let id = parseInt(urlParams.get('deviceID'));
-    console.log(id);
+    deviceQuery = `&deviceID=${id}`;
     let index = linkedAccounts.indexOf(id, 0);
     return index;
   }

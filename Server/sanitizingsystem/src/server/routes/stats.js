@@ -51,6 +51,20 @@ stats.route("/handleData/getLinkedAccount").get(function (req, res) {
     });
 });
 
+//get specific collections depending on verification code
+stats.route("/handleData/getVerificationCode").get(function (req, res) {
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  let verificationCode = req.query.verificationCode;
+  // console.log(linkedAccount);
+  db_connect
+    .collection("handleData")
+    .find({verificationCode:  verificationCode})
+    .toArray(function (err, result) {
+      if (err) throw err;
+      res.json(result);
+    });
+});
+
 //get all collections from database
 stats.route("/handleData/all").get(function (req, res) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
@@ -107,9 +121,9 @@ stats.route("/weekdata").get(function (req, res) {
     });
 });
 
-
-stats.route("/handleData/add").put(async function (req, response) {
+stats.route("/handleData/register").put(async function (req, response) {
   let deviceId = parseInt(req.body.deviceId);
+  let verificationCode = parseInt(req.body.verificationCode);
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
   let myobj = {
     deviceId: deviceId,
@@ -121,10 +135,8 @@ stats.route("/handleData/add").put(async function (req, response) {
     Thursday: 0,
     Friday: 0,
     Saturday: 0,
-    // well, this does add a null user lmao req.body.username
     linkedAccount:  [req.body.linkedAccount],
-    // linkedAccount: sessionStorage.getItem('user').username,
-    verificationCode: "",
+    verificationCode: verificationCode,
   };
   const foundData = await db_connect.collection("handleData").findOne({deviceId: deviceId});
   console.log(foundData);
@@ -151,7 +163,8 @@ stats.route("/handleData/add").put(async function (req, response) {
     }
     
     db_connect.collection("handleData").updateOne({deviceId:deviceId}, {$set: {
-      linkedAccount: allLinkedAccounts
+      linkedAccount: allLinkedAccounts,
+      verificationCode: req.body.verificationCode,
     }});
     response.send('User successfully linked.');
     console.log(req.body);

@@ -43,6 +43,7 @@ export let ldata = [
 
 export let deviceQuery = "&deviceID=";
 let deviceIndex = 0;
+export let deviceID = 0;
 
 
 function DropDownMenu(linkedAccounts) {
@@ -58,7 +59,7 @@ function DropDownMenu(linkedAccounts) {
       </style>
       <Dropdown>
 
-        <Dropdown.Toggle id="dark" variant="secondary">  Data Select </Dropdown.Toggle>
+        <Dropdown.Toggle id="dark" variant="secondary">  Device Select </Dropdown.Toggle>
         <Dropdown.Menu variant="dark">
           {selectDevice(linkedAccounts)}
         </Dropdown.Menu>
@@ -84,12 +85,14 @@ async function ChangeCharts(linkedAccounts)
     console.log(linkedAccounts);
     const urlParams = new URLSearchParams(window.location.search);
     let id = parseInt(urlParams.get('deviceID'));
+    deviceID = id;
     deviceQuery = `&deviceID=${id}`;
     let index = linkedAccounts.indexOf(id, 0);
     return index;
   }
   else
   {
+    deviceID = linkedAccounts[0];
     deviceQuery = `&deviceID=${linkedAccounts[0]}`;
     return 0;
   }
@@ -171,7 +174,7 @@ export function LineChartData() {
                 <Line type="monotone" dataKey="Sanitizations" stroke="#5E9A50" activeDot={{ r: 10 }}/>
               </LineChart>
             </div>
-            <div>
+            <div id="deselMenu">
               {DropDownMenu(linkedAccounts)}
             </div>
         </section>

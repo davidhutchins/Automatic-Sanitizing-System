@@ -1,9 +1,8 @@
 import React, { useEffect, useState } from "react";
 import './stats.css'
 import { Data } from '../../common';
-import { ldata } from "../data/linechart";
+import { ldata, deviceID, deviceQuery } from "../data/linechart";
 import { graphQuery } from "../data/data";
-import { deviceQuery } from "../data/linechart";
 import { getUser, getToken } from "../navbar/Common"
 import Dropdown from 'react-bootstrap/Dropdown'
 import { overallTotal } from "../data/data";
@@ -51,7 +50,7 @@ function displayDevice(totals)
 
 function DropDownMenu() {
   return (
-    <div>
+    <div className="devicesss">
       <style>
       <link
           rel="stylesheet"
@@ -122,6 +121,7 @@ export default function Statistics()
             <h2 id="saniz">Total Number Of Doors Sanitized</h2>
             <div id="subheader">
               <br></br>
+            <h2 id="saniz">Device Selected: {deviceID}</h2>
             <br></br>
               {DropDownMenu()}
               <br></br>

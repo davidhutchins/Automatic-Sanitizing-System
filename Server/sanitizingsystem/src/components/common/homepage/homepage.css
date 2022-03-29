@@ -105,18 +105,16 @@ animation: title 2.5s ease-in-out infinite alternate;
 .form-groupb
 {
   position: absolute;
-  top: 85%;
+  top: 70%;
   left: -10%;
 }
 
 .form-groups
 {
   position: absolute;
-  top: 90%;
+  top: 120%;
   left: -10%;
 }
-
-
 
 .form-controls
 {
@@ -127,4 +125,9 @@ animation: title 2.5s ease-in-out infinite alternate;
 {
  top: 500%;
  width: 400px;
+}
+
+.textWidth
+{
+  font-size: medium;
 }

@@ -81,7 +81,7 @@ function displayData(fetchedData) {
       <div id="radar">
         <RadarChart outerRadius={90} width={440} height={340} data={fetchedData}>
           <PolarGrid />
-          <PolarAngleAxis dataKey="name"/>
+          <PolarAngleAxis dataKey="name" stroke="#666666"/>
           <PolarRadiusAxis angle={30} domain={[0, 4000]} />
           <Radar dataKey="value" data={fetchedData} stroke="#5E9A50" fill="#5E9A50" fillOpacity={0.6} />
           <Legend />
@@ -122,10 +122,10 @@ export default function Data() {
         {
           if (typeof data[i] == 'undefined')
           {
-            data.push({name: 'Device ' + (getData[i].deviceId).toString(), value: getData[i].lifetimeInteractions});
+            data.push({name: (getData[i].deviceId).toString(), value: getData[i].lifetimeInteractions});
           }
 
-          if (data[i].name === 'Device ' + (getData[i].deviceId).toString() && getData[i].value !== getData[i].lifetimeInteractions)
+          if (data[i].name === (getData[i].deviceId).toString() && getData[i].value !== getData[i].lifetimeInteractions)
           {
             data[i].value = getData[i].lifetimeInteractions;
           }

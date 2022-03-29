@@ -90,6 +90,7 @@ async function ChangeCharts(linkedAccounts)
   }
   else
   {
+    deviceQuery = `&deviceID=${linkedAccounts[0]}`;
     return 0;
   }
 }

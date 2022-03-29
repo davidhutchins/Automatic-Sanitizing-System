@@ -3,7 +3,8 @@ import './stats.css'
 import { Data } from '../../common';
 import { ldata } from "../data/linechart";
 import { graphQuery } from "../data/data";
-import { getToken } from "../navbar/Common"
+import { deviceQuery } from "../data/linechart";
+import { getUser, getToken } from "../navbar/Common"
 import Dropdown from 'react-bootstrap/Dropdown'
 import { overallTotal } from "../data/data";
 
@@ -64,9 +65,9 @@ function DropDownMenu() {
         <Dropdown.Toggle id="dark" variant="secondary">  Data Select </Dropdown.Toggle>
         <Dropdown.Menu variant="dark">
           {/* must do a window href location refresh followed by a page refresh in order to change the text when you click the button */}
-          <Dropdown.Item href={"?sanitizations=daily" + graphQuery} onClick={() => {window.location.reload(true);}}> Daily </Dropdown.Item>
-          <Dropdown.Item href={"?sanitizations=weekly" + graphQuery} onClick={() => {window.location.reload(true);}}> Weekly </Dropdown.Item>
-          <Dropdown.Item href={"?sanitizations=overall" + graphQuery} onClick={() => {window.location.reload(true);}}> Overall </Dropdown.Item>
+          <Dropdown.Item href={"?sanitizations=daily" + graphQuery + deviceQuery} onClick={() => {window.location.reload(true);}}> Daily </Dropdown.Item>
+          <Dropdown.Item href={"?sanitizations=weekly" + graphQuery + deviceQuery} onClick={() => {window.location.reload(true);}}> Weekly </Dropdown.Item>
+          <Dropdown.Item href={"?sanitizations=overall" + graphQuery + deviceQuery} onClick={() => {window.location.reload(true);}}> Overall </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
@@ -78,14 +79,14 @@ function DropDownMenu() {
 export default function Statistics() 
 {
   const [weeklyTotal, setTotal] = useState([]);
+  let username = getUser().username;
 
   useEffect(() => {
     async function getLineData() 
     {
       //gets the data from the database at the localhost specified
       //const weekDater = await fetch(`http://54.90.139.97/api/weekdata?handleId=30`);
-      //TODO: Make the handleID user specific
-      const stats = await fetch(`http://localhost:2000/handleData/all`);
+      const stats = await fetch(`http://localhost:2000/handleData/getLinkedAccount?linkedAccount=${username}`);
 
         //if there is no response then give this message
         if (!stats.ok) 

@@ -1,6 +1,7 @@
 #include <msp432.h>
 #include "wifi_functions.h"
 #include "handleServer.h"
+#include "led.h"
 #include "BSP.h"
 
 #define HANDLE_ID 30
@@ -27,12 +28,20 @@ int main(void)
 	timer_init();
 	gpio_init();
 
-    if (P5->IN & BIT2) {
+	LED_setColor(RED);
+	PWM_set(15);
+	PWM_init();
+	PWM_start();
+	NVIC_EnableIRQ(TA3_0_IRQn);
+
+	if (P5->IN & BIT2) {
+        LED_setColor(YELLOW);
         AP_init();
         connectionConfigured = 1;
     }
 
 	connectedToServer = wifi_init();
+	(connectedToServer) ?  LED_setColor(BLUE) :  LED_setColor(GREEN);
 
 	if (connectedToServer && connectionConfigured) {
 	    sendRegistrationCode(HANDLE_ID, REGISTRATION_CODE);
@@ -46,6 +55,7 @@ int main(void)
 	        activationFlag = 0;
 	        count = 0;
             P6OUT &= ~BIT0;
+            LED_setColor(PURPLE);
 
             if (connectedToServer) {
                 uint8_t attempts = 0;
@@ -61,7 +71,7 @@ int main(void)
 
 	    if (timerFlag) {
 	        timerFlag = 0;
-            if (count < 16)      // With a clock time of .25 seconds. This will count for 4 seconds.
+            if (count < 120)      // With a clock time of .25 seconds. This will count for 30 seconds.
             {
                 count++;
             }
@@ -70,6 +80,7 @@ int main(void)
                 count = 0;
                 P6OUT |= BIT0; // Turn off light after time has passed
                 timer_stop();    // Stop the timer
+                LED_setColor(BLUE);
             }
 	    }
 	}
@@ -89,6 +100,9 @@ void gpio_init(void) {
     P3IES   &= ~BIT5;           // Bit 5 is low-to-high, so safety mechanism
     P3IE    |= BIT5 | BIT7;     // Enabling both interrupts
     P3OUT   &= BIT5 | BIT7;
+
+    P4DIR |= BIT0 | BIT2 | BIT4 | BIT5;
+    P4OUT |= BIT0 | BIT2 | BIT4 | BIT5;
 }
 
 void timer_init(void)
@@ -112,7 +126,7 @@ void timer_stop(void)
     TA1CTL &= ~(BIT4 | BIT5);
 }
 
-
+// I/O Interrupt
 void PORT3_IRQHandler()
 {
     // Disable UV if light is currently on
@@ -121,6 +135,7 @@ void PORT3_IRQHandler()
        P3IFG &= ~BIT5;     // clearing the interrupt flag
        count = 0;
        P6OUT |= BIT0;
+       LED_setColor(BLUE);
     }
 
     // Enable UV
@@ -136,4 +151,35 @@ void TA1_0_IRQHandler()
 {
     TA1CCTL0 &= ~CCIFG;
     timerFlag = 1;
+}
+
+void TA3_0_IRQHandler()
+{
+    TA3CCTL0 &= ~CCIFG;
+    PWMCount++;
+    if (lightOn) {
+       if (PWMCount >= PWMPercent) {
+           lightOn = 0;
+           P4OUT &= ~(BIT5);
+           PWMCount = 0;
+       }
+    } else {
+       if (PWMCount >= 100 - PWMPercent) {
+           lightOn = 1;
+           if (PWMPercent != 0)
+               P4OUT |= BIT5 ;
+           PWMCount = 0;
+       }
+    }
+
+    // Cut down red brightness in mixed colors
+    if (currentColor == PURPLE || currentColor == YELLOW) {
+        if (redToggle) {
+            redToggle = 0;
+            P4OUT |= BIT0;
+        } else {
+            redToggle = 1;
+            P4OUT &= ~(BIT0);
+        }
+    }
 }

@@ -34,7 +34,7 @@ int main(void)
 	PWM_start();
 	NVIC_EnableIRQ(TA3_0_IRQn);
 
-	if (P5->IN & BIT2) {
+	if (P5->IN & BIT0) {
         LED_setColor(YELLOW);
         AP_init();
         connectionConfigured = 1;
@@ -91,8 +91,8 @@ void gpio_init(void) {
     P6DIR   = 0xFF;             // Set P6 as Output
     P6OUT   |= BIT0;            // Set BIT0 as high to start.
 
-    P5DIR   &= ~BIT2;             // Set P5.2 as input
-    P5OUT   &= ~BIT2;             // Set P5.2 as low to start.
+    P5DIR   &= ~BIT0;             // Set P5.0 as input
+    P5OUT   &= ~BIT0;             // Set P5.0 as low to start.
 
     P3DIR   &= ~(BIT5 | BIT7);
     P3IFG   &= ~(BIT5 | BIT7);  // Setting up main mechanism and safety

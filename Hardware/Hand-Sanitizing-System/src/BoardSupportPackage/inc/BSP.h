@@ -14,6 +14,7 @@
 #include <stdbool.h>
 #include "BackChannelUart.h"
 #include "ClockSys.h"
+#include "sysctl.h"
 #include "msp.h"
 
 

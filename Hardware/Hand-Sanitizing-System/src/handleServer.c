@@ -12,7 +12,7 @@ uint8_t incrementInteractionCounter(int16_t handleID) {
     return 0;
 }
 
-uint8_t sendRegistrationCode(int16_t handleID, int16_t regCode) {
+uint8_t sendRegistrationCode(int16_t handleID, int32_t regCode) {
     sprintf(requestParams, "/api/handleData/register?handleId=%u&verificationCode=%u", handleID, regCode);
     sendRequestToServer(requestParams);
     if (searchResponse("success")) {

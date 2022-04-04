@@ -19,8 +19,6 @@ export default function AdddeviceId() {
    linkedAccount: "",
    verificationCode: ""
  });
-
- const navigate = useNavigate()
  
  let user = String(getUser().username);
 
@@ -34,75 +32,54 @@ export default function AdddeviceId() {
  // This function will handle the submission.
  async function onSubmit(e) 
  {
-  const username = String(getUser().username);
   let errorWithCreation = false;
   e.preventDefault();
   
-  if(form.deviceId === "") {
-    //throw an error and tell them to try again
-    window.alert("Please enter a valid Device ID.");
-    errorWithCreation = true;
-    setForm({deviceId: ""});
-  }
   if (form.deviceId.includes(" "))
   {
-    window.alert("deviceID contains whitespace. Please enter a valid ID number.");
-    errorWithCreation = true;
-    setForm({ deviceId: "", verificationCode: ""});
+    form.deviceId.trim();
   }
 
   if (form.verificationCode.length !== 6)
   {
-    window.alert("The verification code entered is not 6 digits. Please enter a valid verification code.");
-  }
-
-  // Add an edge case to prevent same user from adding the same deviceId (note: there should only be one unique deviceID)
-  const getDeviceIDRes = await axios.get(`http://54.90.139.97/api/handleData?deviceId=${form.deviceId}`);
-  const deviceData = getDeviceIDRes.data;
-  for (let i = 0; i < deviceData[0].linkedAccount.length; i++)
-  {
-    if (deviceData[0].linkedAccount[i] === username)
-    {
-      window.alert("Device ID is already linked to your account.");
-      errorWithCreation = true;
-      setForm({ deviceId: "", verificationCode: ""});
-      break;
-    }
+    errorWithCreation = true;
   }
   
   //Add a case to reject when verification code does not match
   //Get all collections that matches verification code
-  const verCodeRes = await axios.get(`http://54.90.139.97/api/handleData/getVerificationCode?verificationCode=${form.verificationCode}`);
+  const verCodeRes = await axios.get(`http://localhost:2000/handleData/getVerificationCode?verificationCode=${form.verificationCode}`);
   const verCodeCollections = verCodeRes.data;
   console.log(verCodeCollections);
 
   //If the response is empty, that means no device ID matches the verification code
   if (verCodeCollections.length === 0)
   {
-    window.alert("Verification code does not match Device ID. Please try again.");
     errorWithCreation = true;
+  }
+
+  if (errorWithCreation)
+  {
+    window.alert("Device linking failed. Please try again.");
     setForm({ deviceId: "", verificationCode: ""});
   }
 
-  //If there are no problems with deviceID or verificationCode fields, then add to database
-  if (!errorWithCreation) 
+  else
   {
-      const newPerson = { ...form };
+    const newPerson = { ...form };
 
-      await fetch("http://54.90.139.97/api/handleData/register", {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newPerson),
-      })
-      .catch(error => {
-        window.alert(error);
-      });
+    await fetch("http://localhost:2000/handleData/linkDevice", {
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newPerson),
+    })
+    .catch(error => {
+      window.alert(error);
+    });
 
-      window.alert("Device successfully linked! Redirecting to the statistics page.");
-      setForm({ deviceId: "", verificationCode: ""});
-      navigate("/stats");
+    window.alert("Device successfully linked!");
+    setForm({ deviceId: "", verificationCode: ""});
   }
 }
 
@@ -145,7 +122,7 @@ export default function AdddeviceId() {
             <input
                 type="submit"
                 value="Add Device"
-                className="btn btn-primary"
+                class="button"
                 />
                 </div>
             </form>

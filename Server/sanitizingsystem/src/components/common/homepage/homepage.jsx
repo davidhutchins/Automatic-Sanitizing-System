@@ -4,6 +4,20 @@ import Login from '../navbar/Login'
 import { getUser, removeUserSession } from "../navbar/Common"
 import AddDevice from './addDevice';
 
+function openTab(evt, tabName) {
+    var i, tabcontent, tablinks;
+    tabcontent = document.getElementsByClassName("tabcontent");
+    for (i = 0; i < tabcontent.length; i++) {
+        tabcontent[i].style.display = "none";
+    }
+    tablinks = document.getElementsByClassName("tablinks");
+    for (i = 0; i < tablinks.length; i++) {
+        tablinks[i].className = tablinks[i].className.replace(" active", "");
+    }
+    document.getElementById(tabName).style.display = "block";
+    evt.currentTarget.className += " active";
+}
+
 function LogOut() {
     
     const handleLogout = () => {
@@ -13,7 +27,7 @@ function LogOut() {
     return (
         <div>
             <section id="page">
-            <input type="button" onClick={handleLogout} value="Logout" />
+            <input type="button" class="button" onClick={handleLogout} value="Logout" />
             </section>
         </div>
     )
@@ -36,10 +50,10 @@ function Home() {
                 <section id="device">
                 {renderAddDevice}
                 </section>
-
         </section>
-
     )
 }
+
+
 
 export default Home;

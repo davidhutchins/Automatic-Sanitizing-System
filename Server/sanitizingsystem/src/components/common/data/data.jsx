@@ -7,7 +7,7 @@ import './data.css'
 import {LineChartData} from './linechart';
 import Dropdown from 'react-bootstrap/Dropdown'
 import { dataQuery } from '../stats/stats'
-import { deviceQuery } from "./linechart";
+import { deviceQuery, deviceIndex } from "./linechart";
 import { getUser } from "../navbar/Common";
 
 
@@ -112,7 +112,7 @@ export default function Data() {
   useEffect(() => {
     async function getStats() 
     {
-        const resp = await axios.get(`http://54.90.139.97/api/handleData/getLinkedAccount?linkedAccount=${username}`);
+        const resp = await axios.get(`http://localhost:2000/handleData/getLinkedAccount?linkedAccount=${username}`);
         const getData = resp.data;
         
         //Clear the template data
@@ -129,8 +129,8 @@ export default function Data() {
           {
             data[i].value = getData[i].lifetimeInteractions;
           }
-          overallTotal += getData[i].lifetimeInteractions; 
         }
+        overallTotal = getData[deviceIndex].lifetimeInteractions;
         setData(data);
     }
     getStats();

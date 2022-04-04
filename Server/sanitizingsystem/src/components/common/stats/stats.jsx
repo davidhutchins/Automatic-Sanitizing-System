@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import './stats.css'
 import { Data } from '../../common';
-import { ldata, deviceID, deviceQuery } from "../data/linechart";
+import { ldata, deviceID, deviceQuery, weeklyTotal } from "../data/linechart";
 import { graphQuery } from "../data/data";
 import { getUser, getToken } from "../navbar/Common"
 import Dropdown from 'react-bootstrap/Dropdown'
@@ -61,7 +61,7 @@ function DropDownMenu() {
       </style>
       <Dropdown>
 
-        <Dropdown.Toggle id="dark" variant="secondary">  Data Select </Dropdown.Toggle>
+        <Dropdown.Toggle id="dd_time" variant="secondary">  Data Select </Dropdown.Toggle>
         <Dropdown.Menu variant="dark">
           {/* must do a window href location refresh followed by a page refresh in order to change the text when you click the button */}
           <Dropdown.Item href={"?sanitizations=daily" + graphQuery + deviceQuery} onClick={() => {window.location.reload(true);}}> Daily </Dropdown.Item>
@@ -77,41 +77,41 @@ function DropDownMenu() {
 //attempt to GET data from the mongodb server
 export default function Statistics() 
 {
-  const [weeklyTotal, setTotal] = useState([]);
-  let username = getUser().username;
+  // const [weeklyTotal, setTotal] = useState([]);
+  // let username = getUser().username;
 
-  useEffect(() => {
-    async function getLineData() 
-    {
-      //gets the data from the database at the localhost specified
-      //const weekDater = await fetch(`http://54.90.139.97/api/weekdata?handleId=30`);
-      const stats = await fetch(`http://54.90.139.97/api/handleData/getLinkedAccount?linkedAccount=${username}`);
+  // useEffect(() => {
+  //   async function getLineData() 
+  //   {
+  //     //gets the data from the database at the localhost specified
+  //     //const weekDater = await fetch(`http://54.90.139.97/api/weekdata?handleId=30`);
+  //     const stats = await fetch(`http://localhost:2000/handleData/getLinkedAccount?linkedAccount=${username}`);
 
-        //if there is no response then give this message
-        if (!stats.ok) 
-        {
-            const msg = `An error occurred: ${stats.statusText}`;
-            window.alert(msg);
-            return;
-        }
+  //       //if there is no response then give this message
+  //       if (!stats.ok) 
+  //       {
+  //           const msg = `An error occurred: ${stats.statusText}`;
+  //           window.alert(msg);
+  //           return;
+  //       }
 
-        //stat = the fetched data in json format
-        const getData = await stats.json();
+  //       //stat = the fetched data in json format
+  //       const getData = await stats.json();
                   
-        const weeklyData = getData[0].Sunday + 
-            getData[0].Monday + 
-            getData[0].Tuesday + 
-            getData[0].Wednesday + 
-            getData[0].Thursday + 
-            getData[0].Friday + 
-            getData[0].Saturday;
+  //       const weeklyData = getData[0].Sunday + 
+  //           getData[0].Monday + 
+  //           getData[0].Tuesday + 
+  //           getData[0].Wednesday + 
+  //           getData[0].Thursday + 
+  //           getData[0].Friday + 
+  //           getData[0].Saturday;
 
-        setTotal(weeklyData);
+  //       setTotal(weeklyData);
         
-      }
-      getLineData();
-      // console.log(wk)
-    }, []);
+  //     }
+  //     getLineData();
+  //     // console.log(wk)
+  //   }, []);
 
   return (
     <section className="content">

@@ -54,7 +54,7 @@ stats.route("/handleData/getLinkedAccount").get(function (req, res) {
 //get specific collections depending on verification code
 stats.route("/handleData/getVerificationCode").get(function (req, res) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
-  let verificationCode = req.query.verificationCode;
+  let verificationCode = parseInt(req.query.verificationCode);
   // console.log(linkedAccount);
   db_connect
     .collection("handleData")
@@ -121,10 +121,12 @@ stats.route("/weekdata").get(function (req, res) {
     });
 });
 
-stats.route("/handleData/register").put(async function (req, response) {
-  let deviceId = parseInt(req.body.deviceId);
-  let verificationCode = parseInt(req.body.verificationCode);
+stats.route("/handleData/register").get(async function(req, response)
+{
+  let deviceId = parseInt(req.query.deviceId);
+  let verificationCode = parseInt(req.query.verificationCode);
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
+
   let myobj = {
     deviceId: deviceId,
     lifetimeInteractions: 0,
@@ -135,9 +137,24 @@ stats.route("/handleData/register").put(async function (req, response) {
     Thursday: 0,
     Friday: 0,
     Saturday: 0,
-    linkedAccount:  [req.body.linkedAccount],
+    linkedAccount:  [],
     verificationCode: verificationCode,
   };
+
+  const foundData = await db_connect.collection("handleData").findOne({deviceId: deviceId, verificationCode: verificationCode});
+  
+  if (!foundData) {
+    db_connect.collection("handleData").insertOne(myobj, function(err, res) {
+      if (err) throw err;
+      response.json(res);
+    })
+  }
+})
+
+stats.route("/handleData/linkDevice").put(async function (req, response) {
+  let deviceId = parseInt(req.body.deviceId);
+  let db_connect = dbConn.returnDatabase("uss-sanitizer");
+  
   const foundData = await db_connect.collection("handleData").findOne({deviceId: deviceId});
   console.log(foundData);
   if (foundData)
@@ -160,21 +177,13 @@ stats.route("/handleData/register").put(async function (req, response) {
     
     if (!accountAlreadyExists) {
       allLinkedAccounts.push(req.body.linkedAccount);
+      db_connect.collection("handleData").updateOne({deviceId: deviceId}, {$set: {
+        linkedAccount: allLinkedAccounts
+      }});
     }
-    
-    db_connect.collection("handleData").updateOne({deviceId:deviceId}, {$set: {
-      linkedAccount: allLinkedAccounts,
-      verificationCode: req.body.verificationCode,
-    }});
+
     response.send('User successfully linked.');
     console.log(req.body);
-  }
-  else
-  {
-    db_connect.collection("handleData").insertOne(myobj, function(err, res) {
-      if (err) throw err;
-      response.json(res);
-    })
   }
 });
 
@@ -197,7 +206,7 @@ stats.route("/updateInteractions").get(function (req, res) {
   let db_connect = dbConn.returnDatabase("uss-sanitizer");
   let deviceId = parseInt(req.query.deviceId);
 
-  let newGrmsKild = -1;
+  let lifetimeInteractions = -1;
   
   db_connect
     .collection("handleData")
@@ -210,11 +219,11 @@ stats.route("/updateInteractions").get(function (req, res) {
         return;
       } 
       
-      newGrmsKild = result[0].lifetimeInteractions + 1;
+      lifetimeInteractions = result[0].lifetimeInteractions + 1;
 
       db_connect
       .collection("handleData")
-      .updateOne({deviceId: deviceId}, {$set: {lifetimeInteractions: newGrmsKild}});
+      .updateOne({deviceId: deviceId}, {$set: {lifetimeInteractions: lifetimeInteractions}});
 
       //Update week data
       db_connect

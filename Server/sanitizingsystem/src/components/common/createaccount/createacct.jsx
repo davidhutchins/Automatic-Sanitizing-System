@@ -97,7 +97,7 @@ export default function Create() {
         <div className="form-group">
           <label htmlFor="password" id='glow'>Password <br/></label>
           <input
-            type="text"
+            type="password"
             required
             className="form-control"
             id="password"
@@ -110,7 +110,7 @@ export default function Create() {
           <input
             type="submit"
             value="Create Account"
-            className="btn btn-primary"
+            class="button"
             />
             </div>
           </form>

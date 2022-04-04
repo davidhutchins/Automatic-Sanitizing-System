@@ -18,8 +18,8 @@ function Login(props) {
     axios.post('http://54.90.139.97/api/users/signin', { username: username.value, password: password.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
-      window.alert("Successfully logged in! Redirecting to the statistics page.")
-      navigate('/stats')
+      window.alert("Successfully logged in!")
+      window.location.reload(true);
     }).catch(function (error) {
       setLoading(false);
       if (error.response.status === 401)
@@ -54,7 +54,7 @@ function Login(props) {
           <input type="password" {...password} autoComplete="new-password" />
         </div>
         {error && <><small style={{ color: 'red' }}>{error}</small><br /></>}<br />
-        <input type="button" value={loading ? 'Loading...' : 'Login'} onClick={handleLogin} disabled={loading} /><br />
+        <input type="button" class="button" value={loading ? 'Loading...' : 'Login'} onClick={() => handleLogin()} disabled={loading} /><br />
         </section>
       </div>
     );

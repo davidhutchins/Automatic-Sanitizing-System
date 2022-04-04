@@ -85,7 +85,7 @@ export default function Statistics()
     {
       //gets the data from the database at the localhost specified
       //const weekDater = await fetch(`http://54.90.139.97/api/weekdata?handleId=30`);
-      const stats = await fetch(`http://localhost:2000/handleData/getLinkedAccount?linkedAccount=${username}`);
+      const stats = await fetch(`http://54.90.139.97/api/handleData/getLinkedAccount?linkedAccount=${username}`);
 
         //if there is no response then give this message
         if (!stats.ok) 

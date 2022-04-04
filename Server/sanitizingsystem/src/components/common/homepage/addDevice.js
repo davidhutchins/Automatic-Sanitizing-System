@@ -57,7 +57,7 @@ export default function AdddeviceId() {
   }
 
   // Add an edge case to prevent same user from adding the same deviceId (note: there should only be one unique deviceID)
-  const getDeviceIDRes = await axios.get(`http://localhost:2000/handleData?deviceId=${form.deviceId}`);
+  const getDeviceIDRes = await axios.get(`http://54.90.139.97/api/handleData?deviceId=${form.deviceId}`);
   const deviceData = getDeviceIDRes.data;
   for (let i = 0; i < deviceData[0].linkedAccount.length; i++)
   {
@@ -72,7 +72,7 @@ export default function AdddeviceId() {
   
   //Add a case to reject when verification code does not match
   //Get all collections that matches verification code
-  const verCodeRes = await axios.get(`http://localhost:2000/handleData/getVerificationCode?verificationCode=${form.verificationCode}`);
+  const verCodeRes = await axios.get(`http://54.90.139.97/api/handleData/getVerificationCode?verificationCode=${form.verificationCode}`);
   const verCodeCollections = verCodeRes.data;
   console.log(verCodeCollections);
 
@@ -89,7 +89,7 @@ export default function AdddeviceId() {
   {
       const newPerson = { ...form };
 
-      await fetch("http://localhost:2000/handleData/register", {
+      await fetch("http://54.90.139.97/api/handleData/register", {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",

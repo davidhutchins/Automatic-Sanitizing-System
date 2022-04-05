@@ -3,7 +3,7 @@
 char requestParams[512];
 
 uint8_t incrementInteractionCounter(int16_t handleID) {
-    sprintf(requestParams, "/api/updateInteractions?handleId=%u", handleID);
+    sprintf(requestParams, "/api/updateInteractions?deviceId=%u", handleID);
     sendRequestToServer(requestParams);
     if (searchResponse("success")) {
         return 1;
@@ -13,7 +13,7 @@ uint8_t incrementInteractionCounter(int16_t handleID) {
 }
 
 uint8_t sendRegistrationCode(int16_t handleID, int32_t regCode) {
-    sprintf(requestParams, "/api/handleData/register?handleId=%u&verificationCode=%u", handleID, regCode);
+    sprintf(requestParams, "/api/handleData/register?deviceId=%u&verificationCode=%u", handleID, regCode);
     sendRequestToServer(requestParams);
     if (searchResponse("success")) {
         return 1;

@@ -6,12 +6,9 @@
 
 #include "wifi_functions.h"
 
-// AP Name and Password
-//signed char SSID_NAME[100]   =    "The GAT";
-//char PASSKEY[100]            =    "cloudyjungle778";
-char SSID_AP_MODE[100]       =    "AHCS-30";
+char SSID_AP_MODE[100]       =    "AHCS-%s";
 
-char DEVICE_ID[] = "30";
+char DEVICE_ID[] = "593";
 char REG_CODE[] = "716928";
 
 char Recvbuff[MAX_RECV_BUFF_SIZE];
@@ -51,7 +48,6 @@ uint8_t wifi_init()
 
     sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
 
-
     sendRequestToServer("/api/ping");
     if (searchResponse("pong"))
     {
@@ -64,7 +60,10 @@ uint8_t wifi_init()
     return 0;
 }
 
-void AP_init() {
+void AP_init()
+{
+    sprintf(SSID_AP_MODE, SSID_AP_MODE, DEVICE_ID);
+
     int16_t retVal = configureSimpleLinkToDefaultState();
     if (retVal < 0)
         printf("Error with SL configuration!");
@@ -129,9 +128,8 @@ void AP_init() {
     }
 
     printf("\r\nDevice is configured in AP mode");
-
     printf("\r\nWaiting for client to connect\n\r");
-    /* wait for client to connect */
+
     while((!IS_IP_LEASED(g_Status))) { _SlNonOsMainLoopTask(); }
 
     printf("Client Connected!\n\r");
@@ -141,7 +139,7 @@ void AP_init() {
         _SlNonOsMainLoopTask();
     }
 
-    printf("Client Disconnected, Restarting in Station Mode!\n\r");
+    printf("Client disconnected, restarting in station mode!\n\r");
     retVal = sl_Stop(SL_STOP_TIMEOUT);
 
     retVal = configureSimpleLinkToDefaultState();
@@ -154,8 +152,8 @@ void AP_init() {
     }
 }
 
-int32_t sendRequestToServer(char* requestParams){
-
+int32_t sendRequestToServer(char* requestParams)
+{
     sprintf(request, requestTemplate, requestParams);
 
     int32_t retVal;
@@ -191,7 +189,8 @@ int32_t sendRequestToServer(char* requestParams){
     return 1;
 }
 
-uint8_t searchResponse(char* keyword) {
+uint8_t searchResponse(char* keyword)
+{
     char *pt = strstr(Recvbuff, keyword);
     if (pt != 0)
         return 1;
@@ -199,7 +198,8 @@ uint8_t searchResponse(char* keyword) {
         return 0;
 }
 
-void parseServerResponse(char* parsedResponse, char* keyword){
+void parseServerResponse(char* parsedResponse, char* keyword)
+{
     char *pt = 0;
     char *endpt = 0;
     char parsedRecvBuff[MAX_RECV_BUFF_SIZE];
@@ -224,7 +224,8 @@ void parseServerResponse(char* parsedResponse, char* keyword){
     }
 }
 
-void restartWIFI(){
+void restartWIFI()
+{
     disconnectFromAP();
     sl_Stop(SL_STOP_TIMEOUT);
 
@@ -382,7 +383,6 @@ int32_t establishConnectionWithAP(void)
 
     connectionTimer_start();
 
-    /* Wait */
     while ((!IS_CONNECTED(g_Status)) || (!IS_IP_ACQUIRED(g_Status)))
     {
         _SlNonOsMainLoopTask();
@@ -431,9 +431,8 @@ int32_t disconnectFromAP(void)
     return SUCCESS;
 }
 
-uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, uint8_t SEC) {
-//    sl_WlanPolicySet(SL_POLICY_CONNECTION, SL_CONNECTION_POLICY(0,0,0,0,0), 0, 0);
-
+uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, uint8_t SEC)
+{
     int8_t retVal = sl_WlanProfileDel(0xFF);
 
     _u8   g_BSSID[SL_BSSID_LENGTH];
@@ -446,8 +445,6 @@ uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, 
     retVal = sl_WlanProfileAdd((_i8 *)SEC_SSID_NAME,
     pal_Strlen(SEC_SSID_NAME), g_BSSID, &secParams, 0, 7, 0);
     ASSERT_ON_ERROR(retVal);
-
-//    sl_WlanPolicySet(SL_POLICY_CONNECTION, SL_CONNECTION_POLICY(1,0,0,0,0), 0, 0);
 
     return SUCCESS;
 }
@@ -696,8 +693,8 @@ void SimpleLinkSockEventHandler(SlSockEvent_t *pSock)
 
 void connectionTimer_init(void)
 {
-    TA2CTL |= TASSEL_2 | ID_3;    // Configuring Timer A2 to SMCLK and Divider 8.
-    TA2CCTL0 |= CCIE;                    // Enabling interrupt for CC0 on Timer A2
+    TA2CTL |= TASSEL_2 | ID_3;          // Configuring Timer A2 to SMCLK and Divider 8.
+    TA2CCTL0 |= CCIE;                   // Enabling interrupt for CC0 on Timer A2
     TA2EX0 |= (BIT2 | BIT1 | BIT0);     // Dividing by 8 a second time.
     TA2CCR0 = 0;                        // Timer will start when this is set to a nonzero value.
 }
@@ -726,7 +723,7 @@ void TA2_0_IRQHandler()
     else
     {
        connectionTimerCount = 0;
-       connectionTimer_stop();    // Stop the timer
+       connectionTimer_stop();          // Stop the timer
        stopConnectionAttempt = 1;
     }
 }

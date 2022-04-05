@@ -18,7 +18,7 @@ _u32 g_Status;
 #define SUCCESS 0
 #define PORT 80
 
-#define WEBPAGE "54.90.139.97"
+#define WEBPAGE "3.91.185.66"
 
 extern int8_t updateFlag;
 extern int8_t disconnectFlag;

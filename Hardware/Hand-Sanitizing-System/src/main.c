@@ -4,7 +4,7 @@
 #include "led.h"
 #include "BSP.h"
 
-#define HANDLE_ID 30
+#define HANDLE_ID 593
 #define REGISTRATION_CODE 716928
 
 #define QUARTER_SECOND 46875
@@ -47,6 +47,7 @@ int main(void)
         LED_setColor(YELLOW);
         AP_init();
         connectionConfigured = 1;
+        LED_setColor(RED);
     }
 
 	connectedToServer = wifi_init();
@@ -65,10 +66,10 @@ int main(void)
 	        activationFlag = 0;
 	        count = 0;
 
+	        safetyCount = 0;
 	        safetyTimer_start();
 	        while(!safetyTimerDone);
 	        safetyTimerDone = 0;
-
 
             UVC_on();
             LED_setColor(PURPLE);
@@ -103,7 +104,22 @@ int main(void)
 }
 
 
-void gpio_init(void) {
+void gpio_init(void)
+{
+    // Ensure no pins are floating
+    P1->OUT = 0x00; P1->DIR = 0xFF;
+    P2->OUT = 0x00; P2->DIR = 0xFF;
+    P3->OUT = 0x00; P3->DIR = 0xFF;
+    P4->OUT = 0x00; P4->DIR = 0xFF;
+    P5->OUT = 0x00; P5->DIR = 0xFF;
+    P6->OUT = 0x00; P6->DIR = 0xFF;
+    P7->OUT = 0x00; P7->DIR = 0xFF;
+    P8->OUT = 0x00; P8->DIR = 0xFF;
+    P9->OUT = 0x00; P9->DIR = 0xFF;
+    P10->OUT = 0x00; P10->DIR = 0xFF;
+    PJ->OUT = 0x00; PJ->DIR = 0xFF;
+
+
     P6DIR   = 0xFF;             // Set P6 as Output
     P6OUT   |= BIT0;            // Set BIT0 as high to start.
 

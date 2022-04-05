@@ -47,7 +47,7 @@ export default function AdddeviceId() {
   
   //Add a case to reject when verification code does not match
   //Get all collections that matches verification code
-  const verCodeRes = await axios.get(`http://localhost:2000/handleData/getVerificationCode?verificationCode=${form.verificationCode}`);
+  const verCodeRes = await axios.get(`http://54.90.139.97/api/handleData/getVerificationCode?verificationCode=${form.verificationCode}`);
   const verCodeCollections = verCodeRes.data;
   console.log(verCodeCollections);
 
@@ -67,7 +67,7 @@ export default function AdddeviceId() {
   {
     const newPerson = { ...form };
 
-    await fetch("http://localhost:2000/handleData/linkDevice", {
+    await fetch("http://54.90.139.97/api/handleData/linkDevice", {
     method: "PUT",
     headers: {
       "Content-Type": "application/json",

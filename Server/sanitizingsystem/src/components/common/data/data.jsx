@@ -112,7 +112,7 @@ export default function Data() {
   useEffect(() => {
     async function getStats() 
     {
-        const resp = await axios.get(`http://localhost:2000/handleData/getLinkedAccount?linkedAccount=${username}`);
+        const resp = await axios.get(`http://54.90.139.97/api/handleData/getLinkedAccount?linkedAccount=${username}`);
         const getData = resp.data;
         
         //Clear the template data

@@ -38,7 +38,7 @@ int main(void)
 	gpio_init();
 
 	LED_setColor(RED);
-	PWM_set(15);
+	PWM_set(6);
 	PWM_init();
 	PWM_start();
 	NVIC_EnableIRQ(TA3_0_IRQn);
@@ -197,7 +197,7 @@ void PORT3_IRQHandler()
 void TA0_0_IRQHandler()
 {
     TA0CCTL0 &= ~CCIFG;
-    if (safetyCount < 16)  // With a clock time of .25 seconds. This will count for 4 seconds.
+    if (safetyCount < 12)  // With a clock time of .25 seconds. This will count for 3 seconds.
     {
         safetyCount++;
     }

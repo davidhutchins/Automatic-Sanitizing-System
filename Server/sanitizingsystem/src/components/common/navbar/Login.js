@@ -15,7 +15,7 @@ function Login(props) {
   const handleLogin = () => {
     setError(null);
     setLoading(true);
-    axios.post('http://54.90.139.97/api/users/signin', { username: username.value, password: password.value }).then(response => {
+    axios.post('http://3.91.185.66/api/users/signin', { username: username.value, password: password.value }).then(response => {
       setLoading(false);
       setUserSession(response.data.token, response.data.user);
       window.alert("Successfully logged in!")

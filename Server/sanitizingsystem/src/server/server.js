@@ -53,7 +53,7 @@ app.get('/', (req, res) => {
 // validate the user credentials
 app.post('/users/signin', async function (req, res) {
 
-  const response = await axios.get('http://54.90.139.97/api/users/')
+  const response = await axios.get('http://3.91.185.66/api/users/')
   const allAccounts = response.data;
 
   const user = req.body.username;

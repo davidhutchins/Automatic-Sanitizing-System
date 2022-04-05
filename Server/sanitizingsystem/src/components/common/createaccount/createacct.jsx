@@ -37,7 +37,7 @@ export default function Create() {
   }
 
   //Grab all existing accounts and if a username already exists, throw an error
-  const response = await axios.get('http://54.90.139.97/api/users/')
+  const response = await axios.get('http://3.91.185.66/api/users/')
   const allAccounts = response.data;
 
   for (var i = 0; i < allAccounts.length; i++)
@@ -56,7 +56,7 @@ export default function Create() {
     // When a post request is sent to the create url, we'll add a new record to the database.
     const newPerson = { ...form };
   
-    await fetch("http://54.90.139.97/api/users/add", {
+    await fetch("http://3.91.185.66/api/users/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

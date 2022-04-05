@@ -4,9 +4,6 @@
 #include "led.h"
 #include "BSP.h"
 
-#define HANDLE_ID 593
-#define REGISTRATION_CODE 716928
-
 #define QUARTER_SECOND 46875
  
 void gpio_init();
@@ -27,6 +24,7 @@ uint8_t safetyTimerFlag = 0;
 uint8_t safetyTimerDone = 0;
 uint8_t connectedToServer = 0;
 uint8_t connectionConfigured = 0;
+uint8_t breakSafetyLoop = 0;
 
 int main(void)
 {
@@ -51,11 +49,12 @@ int main(void)
     }
 
 	connectedToServer = wifi_init();
-	(connectedToServer) ?  LED_setColor(BLUE) :  LED_setColor(GREEN);
 
 	if (connectedToServer && connectionConfigured) {
-	    sendRegistrationCode(HANDLE_ID, REGISTRATION_CODE);
+	    sendRegistrationCode(DEVICE_ID, REG_CODE);
 	}
+
+	(connectedToServer) ?  LED_setColor(BLUE) :  LED_setColor(GREEN);
 
 	NVIC_EnableIRQ(PORT3_IRQn);
 	NVIC_EnableIRQ(TA0_0_IRQn);
@@ -67,16 +66,22 @@ int main(void)
 	        count = 0;
 
 	        safetyCount = 0;
+	        breakSafetyLoop = 0;
 	        safetyTimer_start();
-	        while(!safetyTimerDone);
+	        while(!safetyTimerDone && !breakSafetyLoop);
 	        safetyTimerDone = 0;
+
+	        if(breakSafetyLoop) {
+	            breakSafetyLoop = 0;
+	            continue;
+	        }
 
             UVC_on();
             LED_setColor(PURPLE);
 
             if (connectedToServer) {
                 uint8_t attempts = 0;
-                while(incrementInteractionCounter(HANDLE_ID) == 0) { // Update handle interaction counter, quit after 3 tries, pass if not connected to WIFI
+                while(incrementInteractionCounter(DEVICE_ID) == 0) { // Update handle interaction counter, quit after 3 tries, pass if not connected to WIFI
                     attempts++;
                     if (attempts == 3)
                         break;
@@ -84,21 +89,6 @@ int main(void)
             }
 
             timer_start();
-	    }
-
-	    if (timerFlag) {
-	        timerFlag = 0;
-            if (count < 120)       // With a clock time of .25 seconds. This will count for 30 seconds.
-            {
-                count++;
-            }
-            else
-            {
-                count = 0;
-                UVC_off();         // Turn off light after time has passed
-                timer_stop();      // Stop the timer
-                (connectedToServer) ?  LED_setColor(BLUE) :  LED_setColor(GREEN);
-            }
 	    }
 	}
 }
@@ -196,8 +186,15 @@ void PORT3_IRQHandler()
     if (P3IFG & BIT5)       // Bit 5 is safety (low-to-high)
     {
        P3IFG &= ~BIT5;      // clearing the interrupt flag
-       count = 0;
+
        UVC_off();
+
+       count = 0;
+       safetyCount = 0;
+       breakSafetyLoop = 1;
+
+       safetyTimer_stop();
+       timer_stop();
        (connectedToServer) ?  LED_setColor(BLUE) :  LED_setColor(GREEN);
     }
 
@@ -228,7 +225,17 @@ void TA0_0_IRQHandler()
 void TA1_0_IRQHandler()
 {
     TA1CCTL0 &= ~CCIFG;
-    timerFlag = 1;
+    if (count < 120)       // With a clock time of .25 seconds. This will count for 30 seconds.
+    {
+        count++;
+    }
+    else
+    {
+        count = 0;
+        UVC_off();         // Turn off light after time has passed
+        timer_stop();      // Stop the timer
+        (connectedToServer) ?  LED_setColor(BLUE) :  LED_setColor(GREEN);
+    }
 }
 
 void TA3_0_IRQHandler()

@@ -220,125 +220,125 @@ class AppTest(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(token, verifyToken)
     
-    # # data endpoint (/handleData)
-    # def test_weekdata_get_success_deployed(self):
-    #     print("Testing that GET request to weekdata endpoint returns with a 200 code DEPLOYED...")
-    #     response = requests.get(deployedUrl + "handleData")
-    #     self.assertEqual(response.status_code, 200)
+    # data endpoint (/handleData)
+    def test_weekdata_get_success_deployed(self):
+        print("Testing that GET request to weekdata endpoint returns with a 200 code DEPLOYED...")
+        response = requests.get(deployedUrl + "handleData")
+        self.assertEqual(response.status_code, 200)
 
-    # def test_weekdata_get_query_success_deployed(self):
-    #     print("Testing that GET request to weekdata endpoint after querying an ID returns with a 200 code DEPLOYED...")
-    #     response = requests.get(deployedUrl + "handleData?deviceId=30")
-    #     self.assertEqual(response.status_code, 200)
+    def test_weekdata_get_query_success_deployed(self):
+        print("Testing that GET request to weekdata endpoint after querying an ID returns with a 200 code DEPLOYED...")
+        response = requests.get(deployedUrl + "handleData?deviceId=30")
+        self.assertEqual(response.status_code, 200)
 
-    # def test_weekdata_post_failure_deployed(self):
-    #     print("Testing that POST request to weekdata endpoint returns with a 404 code DEPLOYED...")
-    #     response = requests.post(deployedUrl + "handleData")
-    #     self.assertEqual(response.status_code, 404)
+    def test_weekdata_post_failure_deployed(self):
+        print("Testing that POST request to weekdata endpoint returns with a 404 code DEPLOYED...")
+        response = requests.post(deployedUrl + "handleData")
+        self.assertEqual(response.status_code, 404)
     
-    # def test_weekdata_get_content_size_deployed(self):
-    #     print("Testing that the weekdata JSON is not an empty collection DEPLOYED...")
-    #     response = requests.get(deployedUrl + "handleData/all")
-    #     respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
-    #     self.assertNotEqual(len(respJSON), 0)
+    def test_weekdata_get_content_size_deployed(self):
+        print("Testing that the weekdata JSON is not an empty collection DEPLOYED...")
+        response = requests.get(deployedUrl + "handleData/all")
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+        self.assertNotEqual(len(respJSON), 0)
 
-    # def test_weekdata_get_content_fields_deployed(self):
-    #     print("Checking types of the specific fields in weekdata response DEPLOYED...")
-    #     response = requests.get(deployedUrl + "handleData?deviceId=30")
-    #     respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
-    #     self.assertEqual(type(respJSON[0]['_id']), str)
-    #     self.assertEqual(type(respJSON[0]['deviceId']), int)
-    #     self.assertEqual(type(respJSON[0]['Sunday']), int)
-    #     self.assertEqual(type(respJSON[0]['Monday']), int)
-    #     self.assertEqual(type(respJSON[0]['Tuesday']), int)
-    #     self.assertEqual(type(respJSON[0]['Wednesday']), int)
-    #     self.assertEqual(type(respJSON[0]['Thursday']), int)
-    #     self.assertEqual(type(respJSON[0]['Friday']), int)
-    #     self.assertEqual(type(respJSON[0]['Saturday']), int)
+    def test_weekdata_get_content_fields_deployed(self):
+        print("Checking types of the specific fields in weekdata response DEPLOYED...")
+        response = requests.get(deployedUrl + "handleData?deviceId=30")
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+        self.assertEqual(type(respJSON[0]['_id']), str)
+        self.assertEqual(type(respJSON[0]['deviceId']), int)
+        self.assertEqual(type(respJSON[0]['Sunday']), int)
+        self.assertEqual(type(respJSON[0]['Monday']), int)
+        self.assertEqual(type(respJSON[0]['Tuesday']), int)
+        self.assertEqual(type(respJSON[0]['Wednesday']), int)
+        self.assertEqual(type(respJSON[0]['Thursday']), int)
+        self.assertEqual(type(respJSON[0]['Friday']), int)
+        self.assertEqual(type(respJSON[0]['Saturday']), int)
     
-    # def test_weekdata_get_content_read_deployed(self):
-    #     print("Testing/mocking that we can extract values from JSON (weekdata endpoint) onto a data array DEPLOYED...")
-    #     dataArray = []
-    #     response = requests.get(url + 'handleData?deviceId=30')
-    #     respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+    def test_weekdata_get_content_read_deployed(self):
+        print("Testing/mocking that we can extract values from JSON (weekdata endpoint) onto a data array DEPLOYED...")
+        dataArray = []
+        response = requests.get(url + 'handleData?deviceId=30')
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         
-    #     for key in respJSON[0]:
-    #         if (key != '_id') and (key != 'deviceId') \
-    #             and (key != 'lifetimeInteractions') and (key != 'linkedAccount') \
-    #             and (key != 'verificationCode'):
-    #                 templateObject = {'day': key, 'sanitizations': respJSON[0][key]}
-    #                 dataArray.append(templateObject)
+        for key in respJSON[0]:
+            if (key != '_id') and (key != 'deviceId') \
+                and (key != 'lifetimeInteractions') and (key != 'linkedAccount') \
+                and (key != 'verificationCode'):
+                    templateObject = {'day': key, 'sanitizations': respJSON[0][key]}
+                    dataArray.append(templateObject)
         
-    #     for i in range(len(dataArray)):
-    #         self.assertEqual(type(dataArray[i]['day']), str)
-    #         self.assertEqual(type(dataArray[i]['sanitizations']), int)
+        for i in range(len(dataArray)):
+            self.assertEqual(type(dataArray[i]['day']), str)
+            self.assertEqual(type(dataArray[i]['sanitizations']), int)
     
-    # def test_weekdata_update_sanitizations_deployed(self):
-    #     print("Testing that number of sanitizations updates DEPLOYED...")
-    #     response = requests.get(url + 'handleData?deviceId=30')
-    #     respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
-    #     currentNumOfSanitizations = respJSON[0][datetime.today().strftime('%A')]
+    def test_weekdata_update_sanitizations_deployed(self):
+        print("Testing that number of sanitizations updates DEPLOYED...")
+        response = requests.get(url + 'handleData?deviceId=30')
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+        currentNumOfSanitizations = respJSON[0][datetime.today().strftime('%A')]
 
-    #     updatedResponse = requests.get(deployedUrl + 'updateInteractions?handleId=30')
-    #     self.assertEqual(updatedResponse.status_code, 200)
+        updatedResponse = requests.get(deployedUrl + 'updateInteractions?handleId=30')
+        self.assertEqual(updatedResponse.status_code, 200)
 
-    #     #Fetch data again
-    #     response = requests.get(deployedUrl + 'handleData?deviceId=30')
-    #     respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
-    #     self.assertGreaterEqual(respJSON[0][datetime.today().strftime('%A')], currentNumOfSanitizations)
+        #Fetch data again
+        response = requests.get(deployedUrl + 'handleData?deviceId=30')
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+        self.assertGreaterEqual(respJSON[0][datetime.today().strftime('%A')], currentNumOfSanitizations)
 
-    # # data endpoint (/handleData)
-    # def test_data_get_success_deployed(self):
-    #     print("Testing that GET request to data endpoint returns with a 200 code DEPLOYED...")
-    #     response = requests.get(deployedUrl + "handleData")
-    #     self.assertEqual(response.status_code, 200)
+    # data endpoint (/handleData)
+    def test_data_get_success_deployed(self):
+        print("Testing that GET request to data endpoint returns with a 200 code DEPLOYED...")
+        response = requests.get(deployedUrl + "handleData")
+        self.assertEqual(response.status_code, 200)
 
-    # def test_data_post_failure_deployed(self):
-    #     print("Testing that POST request to data endpoint returns with a 404 code DEPLOYED...")
-    #     response = requests.post(deployedUrl + "handleData")
-    #     self.assertEqual(response.status_code, 404)
+    def test_data_post_failure_deployed(self):
+        print("Testing that POST request to data endpoint returns with a 404 code DEPLOYED...")
+        response = requests.post(deployedUrl + "handleData")
+        self.assertEqual(response.status_code, 404)
     
-    # def test_data_get_content_size_deployed(self):
-    #     print("Testing that data JSON exists (i.e. has a size >= 0) DEPLOYED...")
-    #     response = requests.get(deployedUrl + 'handleData/all')
-    #     respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
-    #     self.assertGreaterEqual(len(respJSON), 0)
+    def test_data_get_content_size_deployed(self):
+        print("Testing that data JSON exists (i.e. has a size >= 0) DEPLOYED...")
+        response = requests.get(deployedUrl + 'handleData/all')
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+        self.assertGreaterEqual(len(respJSON), 0)
 
-    # def test_data_get_content_fields_deployed(self):
-    #     print("Checking types of the specific fields in data response deployed...")
-    #     response = requests.get(deployedUrl + 'handleData/all')
-    #     respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
-    #     if (len(respJSON) > 0):
-    #         for i in range(len(respJSON)):
-    #             self.assertEqual(type(respJSON[i]["_id"]), str)
-    #             self.assertEqual(type(respJSON[i]["deviceId"]), int)
-    #             self.assertEqual(type(respJSON[i]["lifetimeInteractions"]), int)
-    #     else:
-    #         self.assertEqual(True, True)
+    def test_data_get_content_fields_deployed(self):
+        print("Checking types of the specific fields in data response deployed...")
+        response = requests.get(deployedUrl + 'handleData/all')
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+        if (len(respJSON) > 0):
+            for i in range(len(respJSON)):
+                self.assertEqual(type(respJSON[i]["_id"]), str)
+                self.assertEqual(type(respJSON[i]["deviceId"]), int)
+                self.assertEqual(type(respJSON[i]["lifetimeInteractions"]), int)
+        else:
+            self.assertEqual(True, True)
 
-    # def test_data_get_content_read_deployed(self):
-    #     print("Testing/mocking that we can extract values from JSON (data endpoint) onto a data array DEPLOYED...")
-    #     dataArray = []
-    #     response = requests.get(deployedUrl + 'handleData/all')
-    #     respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+    def test_data_get_content_read_deployed(self):
+        print("Testing/mocking that we can extract values from JSON (data endpoint) onto a data array DEPLOYED...")
+        dataArray = []
+        response = requests.get(deployedUrl + 'handleData/all')
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
         
-    #     if (len(respJSON) > 0):
-    #         for i in range(len(respJSON)):
-    #             templateObject = {'name': "Device " + str(respJSON[i]['deviceId']), 'value': respJSON[i]['lifetimeInteractions']}
-    #             dataArray.append(templateObject)
-    #     else:
-    #         self.assertEqual(True, True)
+        if (len(respJSON) > 0):
+            for i in range(len(respJSON)):
+                templateObject = {'name': "Device " + str(respJSON[i]['deviceId']), 'value': respJSON[i]['lifetimeInteractions']}
+                dataArray.append(templateObject)
+        else:
+            self.assertEqual(True, True)
         
-    #     for i in range(len(dataArray)):
-    #         self.assertEqual(type(dataArray[i]['name']), str)
-    #         self.assertEqual(type(dataArray[i]['value']), int)
+        for i in range(len(dataArray)):
+            self.assertEqual(type(dataArray[i]['name']), str)
+            self.assertEqual(type(dataArray[i]['value']), int)
     
-    # def test_data_get_linkedaccounts_deployed(self):
-    #     print("Testing that a device can be linked to more than 0 accounts DEPLOYED...")
-    #     response = requests.get(deployedUrl + "handleData?deviceId=30")
-    #     respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
+    def test_data_get_linkedaccounts_deployed(self):
+        print("Testing that a device can be linked to more than 0 accounts DEPLOYED...")
+        response = requests.get(deployedUrl + "handleData?deviceId=30")
+        respJSON = json.loads(response.content.decode("utf").replace("'", '"'))
 
-    #     self.assertGreaterEqual(len(respJSON[0]['linkedAccount']), 0)
+        self.assertGreaterEqual(len(respJSON[0]['linkedAccount']), 0)
 
 
 if __name__ == '__main__':

@@ -1,5 +1,5 @@
 #include "wifi_functions.h"
 
-uint8_t incrementInteractionCounter(int16_t handleID);
-uint8_t sendRegistrationCode(int16_t handleID, int32_t regCode);
+uint8_t incrementInteractionCounter(char* deviceID);
+uint8_t sendRegistrationCode(char* deviceID, char* regCode);
 uint8_t test();

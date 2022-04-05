@@ -27,9 +27,7 @@ void LED_setColor(uint8_t color) {
 }
 
 void PWM_set(uint16_t percent) {
-    if (percent < 0)
-        PWMPercent = 0;
-    else if (percent > 100)
+    if (percent > 100)
         PWMPercent = 100;
 
     PWMPercent = percent;
@@ -45,7 +43,7 @@ void PWM_init(void)
 void PWM_start(void)
 {
     TA3CTL |= MC_1;
-    TA3CCR0 = 100;
+    TA3CCR0 = 250;
 }
 
 void PWM_stop(void)

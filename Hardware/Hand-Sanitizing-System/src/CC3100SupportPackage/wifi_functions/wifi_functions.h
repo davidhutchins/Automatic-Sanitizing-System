@@ -33,6 +33,9 @@ unsigned long DestinationIP;
 int SockID;
 static volatile uint32_t localIP;
 
+extern char DEVICE_ID[];
+extern char REG_CODE[];
+
 uint8_t wifi_init();
 void AP_init();
 extern int32_t establishConnectionWithAP(void);

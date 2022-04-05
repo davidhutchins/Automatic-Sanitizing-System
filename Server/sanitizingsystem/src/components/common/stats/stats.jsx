@@ -8,7 +8,7 @@ import Dropdown from 'react-bootstrap/Dropdown'
 import { overallTotal } from "../data/data";
 
 const d = new Date();
-export let dataQuery = "&sanitizations="
+export let dataQuery = "&sanitizations=daily"
 export const userToken = getToken();
 
 function displayDropDownData(data) {

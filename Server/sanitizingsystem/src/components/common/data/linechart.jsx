@@ -41,9 +41,9 @@ export let ldata = [
     }
 ];
 
-export let deviceQuery = "&deviceID=";
 export let deviceIndex = 0;
-export let deviceID = 0;
+export let deviceID = 30;
+export let deviceQuery = `&deviceID=${deviceID}`;
 
 
 function DropDownMenu(linkedAccounts) {
@@ -104,6 +104,8 @@ export function LineChartData() {
     const [weekData, setWeekData] = useState([]);
     const [linkedAccounts, setAccounts] = useState([]);
     let username = getUser().username;
+
+    
   
     useEffect(() => {
           async function getLineData() 

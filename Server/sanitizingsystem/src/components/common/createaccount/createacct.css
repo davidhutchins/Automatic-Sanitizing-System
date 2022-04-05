@@ -1,0 +1,22 @@
+
+#heads{
+  position: absolute;
+  text-align: center;
+  font-size: xx-large;
+  top : 100%;
+  left: 35%;
+  width: 440px;
+  text-shadow: -5px 4px 4px black;
+  animation: title 2.5s ease-in-out infinite alternate;
+}
+
+#moves
+{
+  position: absolute;
+  text-align: left;
+  top : 200%;
+  left: 44%;
+  width: 440px;
+  text-shadow: -5px 4px 4px black;
+  animation: title 2.5s ease-in-out infinite alternate;
+}

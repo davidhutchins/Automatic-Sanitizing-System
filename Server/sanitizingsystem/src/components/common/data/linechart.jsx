@@ -9,7 +9,6 @@ import Dropdown from 'react-bootstrap/Dropdown'
 
 
 //import database from  '../../../server/database/connector'
-export let weeklyTotal = 0;
 export let ldata = [
     {
       day: "Sun",
@@ -145,14 +144,6 @@ export function LineChartData() {
               ldata[4].Sanitizations = getData[deviceIndex].Thursday;
               ldata[5].Sanitizations = getData[deviceIndex].Friday;
               ldata[6].Sanitizations = getData[deviceIndex].Saturday;
-                
-              weeklyTotal = getData[deviceIndex].Sunday + 
-                  getData[deviceIndex].Monday + 
-                  getData[deviceIndex].Tuesday + 
-                  getData[deviceIndex].Wednesday + 
-                  getData[deviceIndex].Thursday + 
-                  getData[deviceIndex].Friday + 
-                  getData[deviceIndex].Saturday;
               
               setWeekData(ldata);
               setAccounts(allAccounts);

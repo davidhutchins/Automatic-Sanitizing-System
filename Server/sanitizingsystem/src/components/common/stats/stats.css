@@ -49,8 +49,7 @@
     }
 
     #stats{
-       
-        margin-left: 44%;
+        margin-left: 74%;
         text-align: center;
         width: 440 px;
         font-size: x-large;
@@ -68,4 +67,9 @@
     color: white;
                   width: 700; 
                   padding: 30;
+}
+
+.devicesss
+{
+    margin-left: 50%;
 }

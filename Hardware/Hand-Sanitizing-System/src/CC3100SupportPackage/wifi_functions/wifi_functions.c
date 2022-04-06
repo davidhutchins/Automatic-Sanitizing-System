@@ -6,16 +6,16 @@
 
 #include "wifi_functions.h"
 
-// AP Name and Password
-//signed char SSID_NAME[100]   =    "The GAT";
-//char PASSKEY[100]            =    "cloudyjungle778";
-char SSID_AP_MODE[100]       =    "AHCS-30";
+char SSID_AP_MODE[100]       =    "AHCS-%s";
 
-char DEVICE_ID[] = "30";
+char DEVICE_ID[] = "593";
+char REG_CODE[] = "716928";
 
 char Recvbuff[MAX_RECV_BUFF_SIZE];
 char SendBuff[MAX_SEND_BUFF_SIZE];
 
+uint8_t stopConnectionAttempt = 0;
+uint8_t connectionTimerCount = 0;
 
 typedef struct updateConnectionConfig {
      signed char SSID[32];
@@ -42,10 +42,11 @@ uint8_t wifi_init()
 
     Delay(750); // Delay as wifi module needs a second switching from AP to Station mode
 
-    establishConnectionWithAP();
+    if(establishConnectionWithAP() < 0) {
+        printf("Could not establish connection with AP.\n");
+    }
 
     sl_NetAppDnsGetHostByName((_i8 *)WEBPAGE, strlen(WEBPAGE), &DestinationIP, SL_AF_INET);
-
 
     sendRequestToServer("/api/ping");
     if (searchResponse("pong"))
@@ -54,12 +55,15 @@ uint8_t wifi_init()
         return 1;
     }
 
-    printf("Could not connect to server. Retrying.\n");
+    printf("Could not connect to server.\n");
     sl_Stop(SL_STOP_TIMEOUT);
     return 0;
 }
 
-void AP_init() {
+void AP_init()
+{
+    sprintf(SSID_AP_MODE, SSID_AP_MODE, DEVICE_ID);
+
     int16_t retVal = configureSimpleLinkToDefaultState();
     if (retVal < 0)
         printf("Error with SL configuration!");
@@ -124,9 +128,8 @@ void AP_init() {
     }
 
     printf("\r\nDevice is configured in AP mode");
-
     printf("\r\nWaiting for client to connect\n\r");
-    /* wait for client to connect */
+
     while((!IS_IP_LEASED(g_Status))) { _SlNonOsMainLoopTask(); }
 
     printf("Client Connected!\n\r");
@@ -136,7 +139,7 @@ void AP_init() {
         _SlNonOsMainLoopTask();
     }
 
-    printf("Client Disconnected, Restarting in Station Mode!\n\r");
+    printf("Client disconnected, restarting in station mode!\n\r");
     retVal = sl_Stop(SL_STOP_TIMEOUT);
 
     retVal = configureSimpleLinkToDefaultState();
@@ -149,8 +152,8 @@ void AP_init() {
     }
 }
 
-int32_t sendRequestToServer(char* requestParams){
-
+int32_t sendRequestToServer(char* requestParams)
+{
     sprintf(request, requestTemplate, requestParams);
 
     int32_t retVal;
@@ -186,7 +189,8 @@ int32_t sendRequestToServer(char* requestParams){
     return 1;
 }
 
-uint8_t searchResponse(char* keyword) {
+uint8_t searchResponse(char* keyword)
+{
     char *pt = strstr(Recvbuff, keyword);
     if (pt != 0)
         return 1;
@@ -194,7 +198,8 @@ uint8_t searchResponse(char* keyword) {
         return 0;
 }
 
-void parseServerResponse(char* parsedResponse, char* keyword){
+void parseServerResponse(char* parsedResponse, char* keyword)
+{
     char *pt = 0;
     char *endpt = 0;
     char parsedRecvBuff[MAX_RECV_BUFF_SIZE];
@@ -219,7 +224,8 @@ void parseServerResponse(char* parsedResponse, char* keyword){
     }
 }
 
-void restartWIFI(){
+void restartWIFI()
+{
     disconnectFromAP();
     sl_Stop(SL_STOP_TIMEOUT);
 
@@ -372,14 +378,21 @@ int32_t configureSimpleLinkToDefaultState(void)
 //*/
 int32_t establishConnectionWithAP(void)
 {
-//    Make watch dog watch this for 10 seconds
+    connectionTimer_init();
+    NVIC_EnableIRQ(TA2_0_IRQn);
 
-    /* Wait */
+    connectionTimer_start();
+
     while ((!IS_CONNECTED(g_Status)) || (!IS_IP_ACQUIRED(g_Status)))
     {
         _SlNonOsMainLoopTask();
+
+        if (stopConnectionAttempt) {
+            return FAILURE;
+        }
     }
 
+    connectionTimer_stop();
     return SUCCESS;
 }
 
@@ -418,9 +431,8 @@ int32_t disconnectFromAP(void)
     return SUCCESS;
 }
 
-uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, uint8_t SEC) {
-//    sl_WlanPolicySet(SL_POLICY_CONNECTION, SL_CONNECTION_POLICY(0,0,0,0,0), 0, 0);
-
+uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, uint8_t SEC)
+{
     int8_t retVal = sl_WlanProfileDel(0xFF);
 
     _u8   g_BSSID[SL_BSSID_LENGTH];
@@ -433,8 +445,6 @@ uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, 
     retVal = sl_WlanProfileAdd((_i8 *)SEC_SSID_NAME,
     pal_Strlen(SEC_SSID_NAME), g_BSSID, &secParams, 0, 7, 0);
     ASSERT_ON_ERROR(retVal);
-
-//    sl_WlanPolicySet(SL_POLICY_CONNECTION, SL_CONNECTION_POLICY(1,0,0,0,0), 0, 0);
 
     return SUCCESS;
 }
@@ -562,7 +572,8 @@ void SimpleLinkNetAppEventHandler(SlNetAppEvent_t *pNetAppEvent)
 
 _u8 POST_token_DC[] = "__SL_P_UDC";
 _u8 POST_token_UP[] = "__SL_P_UUP";
-_u8 GET_token[]  = "__SL_G_UID";
+_u8 GET_token_ID[]  = "__SL_G_UID";
+_u8 GET_token_RC[]  = "__SL_G_URC";
 
 /*!
     \brief This function handles callback for the HTTP server events
@@ -590,12 +601,21 @@ void SimpleLinkHttpServerCallback(SlHttpServerEvent_t *pEvent,
 
                ptr = pResponse->ResponseData.token_value.data;
                pResponse->ResponseData.token_value.len = 0;
-               if(pal_Memcmp(pEvent->EventData.httpTokenName.data, GET_token,
-                                            pal_Strlen(GET_token)) == 0)
+               if(pal_Memcmp(pEvent->EventData.httpTokenName.data, GET_token_ID,
+                                            pal_Strlen(GET_token_ID)) == 0)
                {
                    memcpy(ptr, DEVICE_ID, sizeof(DEVICE_ID));
                    ptr += sizeof(DEVICE_ID) - 1;
                    pResponse->ResponseData.token_value.len += sizeof(DEVICE_ID) - 1;
+
+                   *ptr = '\0';
+               }
+               else if(pal_Memcmp(pEvent->EventData.httpTokenName.data, GET_token_RC,
+                                  pal_Strlen(GET_token_RC)) == 0)
+               {
+                   memcpy(ptr, REG_CODE, sizeof(REG_CODE));
+                   ptr += sizeof(REG_CODE) - 1;
+                   pResponse->ResponseData.token_value.len += sizeof(REG_CODE) - 1;
 
                    *ptr = '\0';
                }
@@ -669,4 +689,41 @@ void SimpleLinkSockEventHandler(SlSockEvent_t *pSock)
         return;
     }
 
+}
+
+void connectionTimer_init(void)
+{
+    TA2CTL |= TASSEL_2 | ID_3;          // Configuring Timer A2 to SMCLK and Divider 8.
+    TA2CCTL0 |= CCIE;                   // Enabling interrupt for CC0 on Timer A2
+    TA2EX0 |= (BIT2 | BIT1 | BIT0);     // Dividing by 8 a second time.
+    TA2CCR0 = 0;                        // Timer will start when this is set to a nonzero value.
+}
+
+/****** Helper Function To Start the Timer ******/
+void connectionTimer_start(void)
+{
+    TA2EX0 |= (BIT2 | BIT1 | BIT0);     // Reset the clock divider
+    TA2CTL |= MC_1;
+    TA2CCR0 = QUARTERSECOND;
+}
+/****** Helper Function to Stop Timer ******/
+void connectionTimer_stop(void)
+{
+    TA2CCR0 = 0;
+    TA2CTL &= ~(BIT4 | BIT5);
+}
+
+void TA2_0_IRQHandler()
+{
+    TA2CCTL0 &= ~CCIFG;
+    if (connectionTimerCount < 40)      // With a clock time of .25 seconds. This will count for 10 seconds.
+    {
+       connectionTimerCount++;
+    }
+    else
+    {
+       connectionTimerCount = 0;
+       connectionTimer_stop();          // Stop the timer
+       stopConnectionAttempt = 1;
+    }
 }

@@ -9,6 +9,8 @@ font-size:xx-large;
 animation: title 2.5s ease-in-out infinite alternate;
 }
 
+
+    
 #subtext{
   font-size: large;
   text-align: center;
@@ -16,6 +18,20 @@ animation: title 2.5s ease-in-out infinite alternate;
   top: 300%;
   left: 30%;
   color : eggshell;
+  text-shadow: -5px 4px 4px black;
+  animation: title 2.5s ease-in-out infinite alternate;
+}
+
+
+#login
+{
+  font-size: large;
+  text-align: center;
+  position: absolute;
+  top: 330%;
+  left: 35%;
+  color : eggshell;
+  width: 400px;
   text-shadow: -5px 4px 4px black;
   animation: title 2.5s ease-in-out infinite alternate;
 }
@@ -68,4 +84,75 @@ animation: title 2.5s ease-in-out infinite alternate;
     text-shadow: -5px 4px 4px black;
     font-size:large;
     animation: title 2.5s ease-in-out infinite alternate;
+}
+
+#device
+{
+  position: absolute;
+  top: 500%;
+  left: 45%;
+  
+}
+
+.form-groupa
+{
+  position: absolute;
+  top: 30%;
+  left: -10%;
+}
+
+
+.form-groupb
+{
+  position: absolute;
+  top: 70%;
+  left: -10%;
+}
+
+.form-groups
+{
+  position: absolute;
+  top: 120%;
+  left: -10%;
+}
+
+.form-controls
+{
+  top: 390%;
+}
+
+#deviceAdd h3
+{
+ top: 500%;
+ width: 400px;
+}
+
+.textWidth
+{
+  font-size: medium;
+}
+
+.button {
+  background-color: #080404; 
+  border: none;
+  color: white;
+  padding: 10px 24px;
+  text-align: center;
+  text-decoration: none;
+  text-shadow: -4px 3px 3.5px #666666;
+  display: inline-block;
+  font-size: 16px;
+  font-family:Arial, sans-serif;
+  display: block;
+  font-size: 12pt;
+  font-weight: bold;
+  border-radius: 4px;
+}
+
+.button:hover {
+  background-color: rgb(12, 15, 29);
+}
+
+.button:active {
+  background-color: rgb(17, 21, 41);
 }

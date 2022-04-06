@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import axios from 'axios';
 import { PieChart, Pie, Tooltip } from 'recharts';
 import { RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis ,Radar, Legend } from 'recharts'
 import { BarChart, CartesianGrid, XAxis, YAxis, Bar } from 'recharts'
@@ -6,12 +7,15 @@ import './data.css'
 import {LineChartData} from './linechart';
 import Dropdown from 'react-bootstrap/Dropdown'
 import { dataQuery } from '../stats/stats'
+import { deviceQuery, deviceIndex } from "./linechart";
+import { getUser } from "../navbar/Common";
 
 
-export let data = [{name: "Device 1", value: 10}];
-export let overallTotal = 0;
+// export let data = [{name: "Device 1", value: 10}];
 export let url = new URL(window.location.href);
 export let graphQuery = "&graph=";
+export let overallTotal = 0;
+export let data = [{name: "Device 1", value: 10}];
 
 function DropDownMenu() {
   return (
@@ -30,9 +34,9 @@ function DropDownMenu() {
 
         <Dropdown.Menu variant="dark">
           {/* must do a window href location refresh followed by a page refresh in order to change the text when you click the button*/}
-          <Dropdown.Item href= {"?graph=pie" + dataQuery} onClick={() => {window.location.href = url.searchParams.set('graph', 'pie'); window.location.reload(true);}}> Pie Chart </Dropdown.Item>
-          <Dropdown.Item href={"?graph=bar"+ dataQuery}  onClick={() => {window.location.href = url.searchParams.set('graph', 'bar'); window.location.reload(true);}}> Bar Chart </Dropdown.Item>
-          <Dropdown.Item href={"?graph=radar" + dataQuery}  onClick={() => {window.location.href = url.searchParams.set('graph', 'radar'); window.location.reload(true);}}> Radar Chart </Dropdown.Item>
+          <Dropdown.Item href= {"?graph=pie" + dataQuery + deviceQuery} onClick={() => {window.location.reload(true);}}> Pie Chart </Dropdown.Item>
+          <Dropdown.Item href={"?graph=bar"+ dataQuery + deviceQuery}  onClick={() => {window.location.reload(true);}}> Bar Chart </Dropdown.Item>
+          <Dropdown.Item href={"?graph=radar" + dataQuery + deviceQuery}  onClick={() => {window.location.reload(true);}}> Radar Chart </Dropdown.Item>
         </Dropdown.Menu>
       </Dropdown>
 
@@ -42,10 +46,9 @@ function DropDownMenu() {
 
 function displayData(fetchedData) {
   console.log(fetchedData);
-
   if (window.location.href.includes("pie"))
   {
-    graphQuery += "pie" 
+    graphQuery = "&graph=pie" 
     return (
       <div id="pie">
         <PieChart width={440} height={340}>
@@ -57,7 +60,7 @@ function displayData(fetchedData) {
   }
   else if (window.location.href.includes("bar"))
   {
-    graphQuery+="bar"
+    graphQuery="&graph=bar"
     return (
       <div id="bar">
         <BarChart width={440} height={340} data={fetchedData}>
@@ -73,14 +76,13 @@ function displayData(fetchedData) {
   }
   else if (window.location.href.includes("radar"))
   {
-    graphQuery+="radar";
+    graphQuery="&graph=radar";
     return (
       <div id="radar">
         <RadarChart outerRadius={90} width={440} height={340} data={fetchedData}>
           <PolarGrid />
-          <PolarAngleAxis dataKey="name"/>
+          <PolarAngleAxis dataKey="name" stroke="#666666"/>
           <PolarRadiusAxis angle={30} domain={[0, 4000]} />
-          {/* TODO: Figure out how to make chart dynamic */}
           <Radar dataKey="value" data={fetchedData} stroke="#5E9A50" fill="#5E9A50" fillOpacity={0.6} />
           <Legend />
         </RadarChart>
@@ -89,7 +91,7 @@ function displayData(fetchedData) {
   }
   else 
   {
-    graphQuery="pie";
+    graphQuery="&graph=pie";
     return (
       <div id="pie">
         <PieChart width={440} height={340}>
@@ -103,46 +105,34 @@ function displayData(fetchedData) {
 
 export default function Data() {  
 
-  //get data from the database
+  // get data from the database
   const [fetchedData, setData] = useState([]);
+  let username = getUser().username;
   
-
   useEffect(() => {
-  async function getStats() 
-  {
-      //gets the data from the database at the localhost specified
-      const resp = await fetch(`http://54.90.139.97/api/data/`);
+    async function getStats() 
+    {
+        const resp = await axios.get(`http://3.91.185.66/api/handleData/getLinkedAccount?linkedAccount=${username}`);
+        const getData = resp.data;
+        
+        //Clear the template data
+        data.pop();
 
-
-      //if there is no response then give this message
-      if (!resp.ok) 
-      {
-        const msg = `An error occurred: ${resp.statusText}`;
-        window.alert(msg);
-        return;
-      }
-
-      //stat = the fetched data in json format
-      const stat = await resp.json();
-
-      //Push read data to dynamic data array (pie chart and line graph)
-      data.pop(); //Get rid of default data
-      for (let i = 0; i < stat.length; i++)
-      {
-        if (typeof data[i] == 'undefined')
+        for (let i = 0; i < getData.length; i++)
         {
-          data.push({name: 'Device ' + (stat[i].doorsSanid).toString(), value: stat[i].grmsKild});
-        }
+          if (typeof data[i] == 'undefined')
+          {
+            data.push({name: (getData[i].deviceId).toString(), value: getData[i].lifetimeInteractions});
+          }
 
-        if (data[i].name === 'Device ' + (stat[i].doorsSanid).toString() && data[i].value !== stat[i].grmsKild)
-        {
-          data[i].value = stat[i].grmsKild;
+          if (data[i].name === (getData[i].deviceId).toString() && getData[i].value !== getData[i].lifetimeInteractions)
+          {
+            data[i].value = getData[i].lifetimeInteractions;
+          }
         }
-        overallTotal += stat[i].grmsKild;
-      }
-      setData(data);
+        overallTotal = getData[deviceIndex].lifetimeInteractions;
+        setData(data);
     }
-
     getStats();
   }, []);
 

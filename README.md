@@ -1,7 +1,7 @@
 # Automatic-Sanitizing-System
 ## IoT Automatic Door-Handle Cleaning System
 
-By David Hutchins, Austin Welch, Branden Evangelista, Alejandro Jacbo, and Brontë Cadogan
+By David Hutchins, Austin Welch, Branden Evangelista, Alejandro Jacobo, and Brontë Cadogan
 
 ## Synopsis
 The Automatic Handle Cleaning System (A.H.C.S. for short) is a senior design project that attempts to help make the world a more sanitary place. Inspired by the COVID-19 pandemic and its call for a higher degree of sanitation, the A.H.C.S. uses embedded electronics and UV-C lights to detect motion and disinfect door handles as people use them. The entire system is battery powered, allowing for its use to disinfect any door handle, anywhere. The A.H.C.S. is internet enabled, and each device sends its sensor data to the A.H.C.S. server, which allows user accounts to monitor each of their devices and track usage data. Users can use this data to better understand traffic throughout each of their buildings and learn how frequently each door is used over time. 

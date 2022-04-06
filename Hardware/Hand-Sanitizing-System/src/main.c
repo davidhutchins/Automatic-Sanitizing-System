@@ -75,22 +75,21 @@ int main(void)
 	            breakSafetyLoop = 0;
 	            continue;
 	        }
+        
+          UVC_on();
+          LED_setColor(PURPLE);
 
-            UVC_on();
-            LED_setColor(PURPLE);
-
-            if (connectedToServer) {
-                uint8_t attempts = 0;
-                while(incrementInteractionCounter(DEVICE_ID) == 0) { // Update handle interaction counter, quit after 3 tries, pass if not connected to WIFI
-                    attempts++;
-                    if (attempts == 3)
-                        break;
-                }
-            }
-
-            timer_start();
+          if (connectedToServer) {
+              uint8_t attempts = 0;
+              while(incrementInteractionCounter(DEVICE_ID) == 0) { // Update handle interaction counter, quit after 3 tries, pass if not connected to WIFI
+                  attempts++;
+                  if (attempts == 3)
+                      break;
+              }
+          }
+          timer_start();
 	    }
-	}
+	 }
 }
 
 

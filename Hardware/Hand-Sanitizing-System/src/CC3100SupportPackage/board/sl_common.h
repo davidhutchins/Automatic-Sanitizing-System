@@ -97,6 +97,7 @@ extern char SSID_AP_MODE[100];       /* SSID of the CC3100 in AP mode */
 #define SECOND      0       /* Time - seconds */
 
 #define SUCCESS             0
+#define FAILURE            -1
 
 /* Status bits - These are used to set/reset the corresponding bits in a 'status_variable' */
 typedef enum{

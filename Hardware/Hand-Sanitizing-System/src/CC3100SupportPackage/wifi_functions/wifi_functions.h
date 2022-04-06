@@ -18,7 +18,7 @@ _u32 g_Status;
 #define SUCCESS 0
 #define PORT 80
 
-#define WEBPAGE "54.174.75.180"
+#define WEBPAGE "3.91.185.66"
 
 extern int8_t updateFlag;
 extern int8_t disconnectFlag;
@@ -33,6 +33,9 @@ unsigned long DestinationIP;
 int SockID;
 static volatile uint32_t localIP;
 
+extern char DEVICE_ID[];
+extern char REG_CODE[];
+
 uint8_t wifi_init();
 void AP_init();
 extern int32_t establishConnectionWithAP(void);
@@ -43,3 +46,8 @@ extern void parseServerResponse(char* parsedResponse, char* keyword);
 extern uint8_t searchResponse(char* keyword);
 extern uint8_t configureProfile(signed char* SEC_SSID_NAME, signed char* SEC_SSID_KEY, uint8_t SEC);
 void restartWIFI();
+
+#define QUARTERSECOND 46875
+void connectionTimer_init();
+void connectionTimer_start();
+void connectionTimer_stop();

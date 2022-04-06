@@ -1,5 +1,5 @@
 # Automatic-Sanitizing-System
-## IoT Automatic Door Handle Sanitizing System
+## IoT Automatic Door-Handle Cleaning System
 
 By David Hutchins, Austin Welch, Branden Evangelista, Alejandro Jacbo, and Brontë Cadogan
 
